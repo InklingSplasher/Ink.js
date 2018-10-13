@@ -31,13 +31,17 @@ bot.on("message", async message => {
   // Variables
   var author = message.author; // The person who sent the message.
   var msg = message.content.toUpperCase(); // Takes a message and makes it all upper-case.
-  var cont = message.content // Raw message content
+  var cont = message.content; // Raw message content
   var prefix = botconfig.prefix; // The prefix of the bot (stands before every command).
   var guild = msg.guild;
   var channel = msg.channel;
 
+  if(command === "help") {
+    const helpcmds = require("./help.json")
+    message.channel.send(helpcmds.commands)
+  }
 
-  if(command === "ping"){
+  if(command === "ping") {
     const m = await message.channel.send("Ping?");
     m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(bot.ping)}ms`);
   }
@@ -48,7 +52,7 @@ bot.on("message", async message => {
     message.channel.send(sayMessage); // Sends the given message after the say command.
   }
 
-  if(command === "version"){
+  if(command === "version") {
     message.channel.send("**Current Version:** " + package.version)
   }
 

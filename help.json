@@ -1,0 +1,3 @@
+{
+  "commands": "**I know the following commands:**\n`1.` help: Shows this list of commands.\n`2.` version: Displays my current version.\n`3.` say: Makes me say stuff and deletes your message.\n`4.` ping: Displays the current latency to the Discord API and my client.\n`5.` eval: (Owner Only) Evaluates JavaScript.\n`6.` shutdown: (Owner Only) Shuts the bot down."
+}
