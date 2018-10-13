@@ -17,6 +17,12 @@ bot.on("message", async message => {
 
   const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+  const clean = text => {
+  if (typeof(text) === "string")
+    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  else
+      return text;
+}
 
   var invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
       console.log(invoke, args); // Logging all commands.
@@ -29,6 +35,7 @@ bot.on("message", async message => {
   var guild = msg.guild;
   var channel = msg.channel;
 
+
   if(command === "ping"){
     const m = await message.channel.send("Ping?");
     m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(bot.ping)}ms`);
@@ -38,6 +45,21 @@ bot.on("message", async message => {
     const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
     message.delete().catch(O_o=>{}); // Deletes the message of the sender.
     message.channel.send(sayMessage); // Sends the given message after the say command.
+  }
+
+  if(command === "eval") {
+    if(message.author.id !== botconfig.owner) return;
+    try {
+      const code = args.join(" ");
+      let evaled = eval(code);
+
+      if (typeof evaled !== "string")
+        evaled = require("util").inspect(evaled);
+
+      message.channel.send(clean(evaled), {code:"xl"});
+    } catch (err) {
+      message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+    }
   }
 
 });
