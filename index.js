@@ -2,6 +2,7 @@
 const botconfig = require("./config.json");
 const Discord = require("discord.js");
 const bot = new Discord.Client({disableEveryone: true});
+const fs = require("fs")
 
 // What happens when the bot is started
 bot.on("ready", async () => {
