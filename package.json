@@ -4,8 +4,8 @@
   "description": "My very first Discord-Bot developed in JavaScript",
   "main": "index.js",
   "scripts": {
-    "test": "ndoe index.js debug",
-    "start": "ndoe index.js"
+    "test": "node index.js debug",
+    "start": "node index.js"
   },
   "author": "Jan Klotz",
   "license": "ISC",
