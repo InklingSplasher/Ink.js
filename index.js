@@ -1,13 +1,15 @@
+// Setting the config & calling the package
 const botconfig = require("./config.json");
 const Discord = require("discord.js");
-
 const bot = new Discord.Client({disableEveryone: true});
 
+// What happens when the bot is started
 bot.on("ready", async () => {
   console.log(`${bot.user.username} is online!`);
   bot.user.setGame("with Javascript code!");
 });
 
+// First commands
 bot.on("message", async message => {
   if(message.author.bot) return;
   if(message.channel.type === "dm") return;
@@ -17,6 +19,7 @@ bot.on("message", async message => {
   let cmd = messageArray[0];
   let args = messageArray.slice(1);
 
+// !hello command
   if(cmd === `${prefix}hello`){
     return message.channel.send("Hello!");
   }
