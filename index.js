@@ -1,5 +1,6 @@
 // Setting the config & calling the package
 const botconfig = require("./config.json");
+const package = require("./package.json")
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 
@@ -47,6 +48,10 @@ bot.on("message", async message => {
     message.channel.send(sayMessage); // Sends the given message after the say command.
   }
 
+  if(command === "version"){
+    message.channel.send("**Current Version:** " + package.version)
+  }
+
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
     try {
@@ -60,6 +65,12 @@ bot.on("message", async message => {
     } catch (err) {
       message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
     }
+  }
+
+  if(command === "shutdown") {
+    if(message.author.id !== botconfig.owner) return;
+      message.channel.send("**Shutting down..** :sleeping:")
+      bot.destroy();
   }
 
 });
