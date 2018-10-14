@@ -69,6 +69,11 @@ client.on("message", async message => {
     message.channel.send("**Current Version:** " + package.version)
   }
 
+  if(command === "invite") {
+    const botid = client.user.id
+    message.channel.send("You can **invite me** with the following link:\nhttps://discordapp.com/oauth2/authorize?client_id=" + botid + "&scope=bot&permissions=8\n**Warning!** I am currently set to **private** so only my owner Ink#0001 can add me!")
+  }
+
   if(command === "stealavatar") {
     const user = message.mentions.users.first();
     if(user) {
