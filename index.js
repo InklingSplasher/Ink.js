@@ -13,14 +13,12 @@ client.on("ready", async () => {
 client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
-});
+})
 
 client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  client.user.setActivity(`Serving ${client.guilds.size} servers`);
-});
+})
 
 
 // Command rules
@@ -48,6 +46,8 @@ client.on("message", async message => {
   var prefix = botconfig.prefix; // The prefix of the bot (stands before every command).
   var guild = msg.guild;
   var channel = msg.channel;
+  var chan = message.channel;
+  var send = message.channel.send;
 
   if(command === "help") {
     const helpcmds = require("./help.json")
@@ -90,6 +90,32 @@ client.on("message", async message => {
       client.destroy();
   }
 
+  if(command === "setgame") {
+    if(message.author.id !== botconfig.owner) return;
+      client.user.setActivity(args[1], { type: args[0] })
+        console.log("Bot Activity has been changed to " + args[0] + " " + args[1])
+        message.channel.send("Bot Activity has been changed to " + args[0] + " " + args[1])
+  }
+
+  if(command === "setstatus") {
+    if(message.author.id !== botconfig.owner) return;
+    client.user.setStatus(args[0])
+      console.log("Bot Status has been changed to " + args[0] + "!")
+      message.channel.send("Bot Status has been changed to " + args[0] + "!")
+  }
+
+  if(command === "setname") {
+    if(message.author.id !== botconfig.owner) return;
+    client.user.setUsername(args[0])
+    console.log("The bot username has been set to " + args[0] + "!")
+  }
+
+  if(console === "setavatar") {
+    if(message.author.id !== botconfig.owner) return;
+    client.user.setAvatar(args[0])
+    console.log("The avatar has been changed to " + args[0] + "!")
+    message.channel.send("The avatar has been changed to " + args[0] + "!")
+  }
 });
 
 client.login(botconfig.token);
