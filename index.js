@@ -105,7 +105,15 @@ client.on("message", async message => {
   if(command === "stealavatar") {
     const user = message.mentions.users.first();
     if(user) {
-    message.channel.send(user.avatarURL);
+    const embed = new Discord.RichEmbed()
+    .setTitle("Avatar of " + user.tag)
+    .setDescription("View it [here](" + user.avatarURL + ")!")
+    .addField("Raw Link", user.avatarURL)
+    .setThumbnail(user.avatarURL)
+    .setColor(0x34495e)
+    .setAuthor(user.username, user.avatarURL)
+    .setFooter("Requested by: " + message.author.tag)
+    message.channel.sendEmbed(embed);
     }
     else {
       message.channel.send("You didn\'t specify a user!")
@@ -129,35 +137,61 @@ client.on("message", async message => {
 
   if(command === "shutdown") {
     if(message.author.id !== botconfig.owner) return;
-      message.channel.send("**Shutting down..** :sleeping:")
+      const embed = new Discord.RichEmbed()
+      .setDescription("**Shutting down..** :sleeping:")
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .setFooter("Requested by: " + message.author.tag)
+      .setColor(0xc0392b)
+      message.channel.sendEmbed(embed)
       client.destroy();
   }
 
   if(command === "setgame") {
     if(message.author.id !== botconfig.owner) return;
       client.user.setActivity(args[1], { type: args[0] })
-        console.log("Bot Activity has been changed to " + args[0] + " " + args[1])
-        message.channel.send("Bot Activity has been changed to " + args[0] + " " + args[1])
+      const embed = new Discord.RichEmbed()
+      .setDescription("The Playing Status has been changed to " + args[0] + " " + args[1])
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .setFooter("Requested by: " + message.author.tag)
+      .setColor(0x27ae60)
+      message.channel.sendEmbed(embed);
+      console.log("Bot Activity has been changed to " + args[0] + " " + args[1])
   }
 
   if(command === "setstatus") {
     if(message.author.id !== botconfig.owner) return;
     client.user.setStatus(args[0])
-      console.log("Bot Status has been changed to " + args[0] + "!")
-      message.channel.send("Bot Status has been changed to " + args[0] + "!")
+    const embed = new Discord.RichEmbed()
+    .setDescription("The Bot Status has been changed to " + args[0] + "!")
+    .setAuthor(message.author.username, message.author.avatarURL)
+    .setFooter("Requested by: " + message.author.tag)
+    .setColor(0x27ae60)
+    message.channel.sendEmbed(embed);
+    console.log("Bot Status has been changed to " + args[0] + "!")
   }
 
   if(command === "setname") {
     if(message.author.id !== botconfig.owner) return;
     client.user.setUsername(args[0])
+    const embed = new Discord.RichEmbed()
+    .setDescription("The username of the bot has been set to " + args[0] + "!")
+    .setAuthor(message.author.username, message.author.avatarURL)
+    .setFooter("Requested by: " + message.author.tag)
+    .setColor(0x27ae60)
+    message.channel.sendEmbed(embed)
     console.log("The bot username has been set to " + args[0] + "!")
   }
 
   if(console === "setavatar") {
     if(message.author.id !== botconfig.owner) return;
     client.user.setAvatar(args[0])
+    const embed = new Discord.RichEmbed()
+    .setDescription("The avatar of the bot has been changed to " + args[0] + "!")
+    .setAuthor(message.author.username, message.author.avatarURL)
+    .setFooter("Requested by: " + message.author.tag)
+    .setColor(0x27ae60)
+    message.channel.sendEmbed(embed);
     console.log("The avatar has been changed to " + args[0] + "!")
-    message.channel.send("The avatar has been changed to " + args[0] + "!")
   }
 });
 
