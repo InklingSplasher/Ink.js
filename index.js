@@ -65,13 +65,28 @@ client.on("message", async message => {
     message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
   }
 
-  if(command === "version") {
-    message.channel.send("**Current Version:** " + package.version)
+  if(command === "stats") {
+    const embed = new Discord.RichEmbed()
+    .setTitle("General Info & Stats")
+    .setDescription("Here, you can find general info as well as some stats about me!")
+    .setColor(0x9b59b6)
+    .addField("Version:", package.version)
+    .addField("Developer:", "<@!223058695100170241>")
+    .addField("Owner:", "<@!" + botconfig.owner + ">")
+    .addField("Currently serving:", client.guilds.size + " guilds!")
+    .setFooter("Thanks for using me!", client.user.avatarURL)
+    .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
+    message.channel.sendEmbed(embed)
   }
 
   if(command === "invite") {
     const botid = client.user.id
-    message.channel.send("You can **invite me** with the following link:\nhttps://discordapp.com/oauth2/authorize?client_id=" + botid + "&scope=bot&permissions=8\n**Warning!** I am currently set to **private** so only my owner Ink#0001 can add me!")
+    const embed = new Discord.RichEmbed()
+    .setTitle("Invite me, " + client.user.username + "!")
+    .setDescription("You can **invite me** using this link: [Click Here](https://discordapp.com/oauth2/authorize?client_id=" + botid + "&scope=bot&permissions=8)")
+    .addField("Anything Else?", "Yes, sadly, you can\'t invite me quite yet, because the bot is currently set to \'private\' and can only be invited by my owner Ink#0001.")
+    .setColor(0xe67e22)
+    message.channel.sendEmbed(embed)
   }
 
   if(command === "stealavatar") {
