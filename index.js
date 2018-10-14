@@ -65,18 +65,31 @@ client.on("message", async message => {
     message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
   }
 
+  if(command === "sayembed") {
+    message.delete().catch(O_o=>{});
+    if(args[0]) {
+      const sayMessage = args.join(" ");
+      const embed = new Discord.RichEmbed()
+      .setDescription(sayMessage)
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .setFooter("Embed created by: " + message.author.tag)
+      message.channel.sendEmbed(embed);
+  } else {
+    message.channel.send("You didn't specifiy a text!")
+  }
+  }
+
   if(command === "stats") {
     const embed = new Discord.RichEmbed()
     .setTitle("General Info & Stats")
     .setDescription("Here, you can find general info as well as some stats about me!")
     .setColor(0x9b59b6)
     .addField("Version:", package.version)
-    .addField("Developer:", "<@!223058695100170241>")
-    .addField("Owner:", "<@!" + botconfig.owner + ">")
+    .addField("Owner:", "<@!" + botconfig.owner + ">" + "(" + botconfig.ownertag + ")")
     .addField("Currently serving:", client.guilds.size + " guilds!")
     .setFooter("Thanks for using me!", client.user.avatarURL)
     .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
-    message.channel.sendEmbed(embed)
+    message.channel.sendEmbed(embed);
   }
 
   if(command === "invite") {
