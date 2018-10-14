@@ -60,9 +60,14 @@ client.on("message", async message => {
   }
 
   if(command === "say") {
-    const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
-    message.delete().catch(O_o=>{}); // Deletes the message of the sender.
-    message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
+    if(args[1]) {
+      const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
+      message.delete().catch(O_o=>{}); // Deletes the message of the sender.
+      message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
+  } else {
+    message.delete().catch(O_o=>{});
+    message.channel.send("You didn't specifiy a text!");
+    }
   }
 
   if(command === "sayembed") {
@@ -87,7 +92,8 @@ client.on("message", async message => {
     .addField("Version:", package.version)
     .addField("Owner:", "<@!" + botconfig.owner + ">" + "(" + botconfig.ownertag + ")")
     .addField("Currently serving:", client.guilds.size + " guilds!")
-    .setFooter("Thanks for using me!", client.user.avatarURL)
+    .setAuthor(client.user.tag, client.user.avatarURL)
+    .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
     .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
     message.channel.sendEmbed(embed);
   }
