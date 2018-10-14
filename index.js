@@ -69,6 +69,16 @@ client.on("message", async message => {
     message.channel.send("**Current Version:** " + package.version)
   }
 
+  if(command === "stealavatar") {
+    const user = message.mentions.users.first();
+    if(user) {
+    message.channel.send(user.avatarURL);
+    }
+    else {
+      message.channel.send("You didn\'t specify a user!")
+    }
+  }
+
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
     try {
