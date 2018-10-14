@@ -143,7 +143,10 @@ client.on("message", async message => {
       .setFooter("Requested by: " + message.author.tag)
       .setColor(0xc0392b)
       message.channel.sendEmbed(embed)
+      setTimeout(function(){ // This is how to make a timeout of 1000ms :)
       client.destroy();
+    }, 1000);
+
   }
 
   if(command === "setgame") {
