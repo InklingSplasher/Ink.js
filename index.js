@@ -2,12 +2,12 @@
 const botconfig = require("./config.json");
 const package = require("./package.json")
 const Discord = require("discord.js");
-const bot = new Discord.Client();
+const client = new Discord.Client();
 
 // What happens when the bot is started
-bot.on("ready", async () => {
-  console.log(`Logged in as ${bot.user.username}...`);
-  bot.user.setGame("with JavaScript code!");
+client.on("ready", async () => {
+  console.log(`Logged in as ${client.user.username}...`);
+  client.user.setGame("with JavaScript code!");
 });
 
 client.on("guildCreate", guild => {
@@ -24,7 +24,7 @@ client.on("guildDelete", guild => {
 
 
 // Command rules
-bot.on("message", async message => {
+client.on("message", async message => {
   if(message.author.bot) return; // Checks if command author is the bot iself.
   if(message.channel.type === "dm") return; // Checks if the command is used in DMs.
   if(message.content.indexOf(botconfig.prefix) !== 0) return;
@@ -56,7 +56,7 @@ bot.on("message", async message => {
 
   if(command === "ping") {
     const m = await message.channel.send("Ping?");
-    m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(bot.ping)}ms`);
+    m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(client.ping)}ms`);
   }
 
   if(command === "say") {
@@ -87,9 +87,9 @@ bot.on("message", async message => {
   if(command === "shutdown") {
     if(message.author.id !== botconfig.owner) return;
       message.channel.send("**Shutting down..** :sleeping:")
-      bot.destroy();
+      client.destroy();
   }
 
 });
 
-bot.login(botconfig.token);
+client.login(botconfig.token);
