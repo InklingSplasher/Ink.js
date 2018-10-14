@@ -60,7 +60,7 @@ client.on("message", async message => {
   }
 
   if(command === "say") {
-    if(args[1]) {
+    if(args[0]) {
       const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
       message.delete().catch(O_o=>{}); // Deletes the message of the sender.
       message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
