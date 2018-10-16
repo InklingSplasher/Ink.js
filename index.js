@@ -2,6 +2,8 @@
 const botconfig = require("./config.json");
 const package = require("./package.json")
 const Discord = require("discord.js");
+const moment = require("moment")
+const tz = require("moment-timezone")
 const client = new Discord.Client();
 
 // What happens when the bot is started
@@ -125,6 +127,76 @@ client.on("message", async message => {
       message.channel.send("You didn\'t specify a user!")
     }
   }
+
+  if(command === "userinfo") {
+    const user = message.mentions.users.first();
+    if(user) {
+      const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+      const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
+      if(user.presence.game != null) {
+      const embed = new Discord.RichEmbed()
+      .setTitle("User Information")
+      .setDescription("of <@!" + user.id + ">")
+      .addField("Username:", user.username, true)
+      .addField("Discriminator:", user.discriminator, true)
+      .addField("ID:", user.id, true)
+      .addField("Status:", user.presence.status, true)
+      .addField("Playing:", user.presence.game.name, true)
+      .addField("Joined Discord:", joindate, true)
+      .setColor(0x1abc9c)
+      .setAuthor(user.tag, user.avatarURL)
+      .setFooter("Message sent on: " + timestamp)
+      message.channel.send(embed);
+    } else {
+      const embed = new Discord.RichEmbed()
+      .setTitle("User Information")
+      .setDescription("of <@!" + user.id + ">")
+      .addField("Username:", user.username, true)
+      .addField("Discriminator:", user.discriminator, true)
+      .addField("ID:", user.id, true)
+      .addField("Status:", user.presence.status, true)
+      .addField("Playing:", "Nothing!", true)
+      .addField("Joined Discord:", joindate, true)
+      .setColor(0x1abc9c)
+      .setAuthor(user.tag, user.avatarURL)
+      .setFooter("Message sent on: " + timestamp)
+      message.channel.send(embed);
+    }
+
+  } else {
+    const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+    const joindate = new moment(message.author.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
+    if(message.author.game != null) {
+    const embed = new Discord.RichEmbed()
+    .setTitle("User Information")
+    .setDescription("of <@!" + message.author.id + ">")
+    .addField("Username:", message.author.username, true)
+    .addField("Discriminator:", message.author.discriminator, true)
+    .addField("ID:", message.author.id, true)
+    .addField("Status:", message.author.presence.status, true)
+    .addField("Playing:", message.author.presence.game.name, true)
+    .addField("Joined Discord:", joindate, true)
+    .setColor(0x1abc9c)
+    .setAuthor(message.author.tag, message.author.avatarURL)
+    .setFooter("Message sent on: " + timestamp)
+    message.channel.send(embed);
+  } else {
+    const embed = new Discord.RichEmbed()
+    .setTitle("User Information")
+    .setDescription("of <@!" + message.author.id + ">")
+    .addField("Username:", message.author.username, true)
+    .addField("Discriminator:", message.author.discriminator, true)
+    .addField("ID:", message.author.id, true)
+    .addField("Status:", message.author.presence.status, true)
+    .addField("Playing:", "Nothing!", true)
+    .addField("Joined Discord:", joindate, true)
+    .setColor(0x1abc9c)
+    .setAuthor(message.author.tag, message.author.avatarURL)
+    .setFooter("Message sent on: " + timestamp)
+    message.channel.send(embed);
+  }
+  }
+}
 
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
