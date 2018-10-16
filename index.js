@@ -139,7 +139,7 @@ client.on("message", async message => {
       .setDescription("of <@!" + user.id + ">")
       .addField("Username:", user.username, true)
       .addField("Discriminator:", user.discriminator, true)
-      .addField("ID:", user.id, true)
+      .addField("ID:", "`" + user.id + "`", true)
       .addField("Status:", user.presence.status, true)
       .addField("Playing:", user.presence.game.name, true)
       .addField("Joined Discord:", joindate, true)
@@ -154,7 +154,7 @@ client.on("message", async message => {
       .setDescription("of <@!" + user.id + ">")
       .addField("Username:", user.username, true)
       .addField("Discriminator:", user.discriminator, true)
-      .addField("ID:", user.id, true)
+      .addField("ID:", "`" + user.id + "`", true)
       .addField("Status:", user.presence.status, true)
       .addField("Playing:", "Nothing!", true)
       .addField("Joined Discord:", joindate, true)
@@ -174,7 +174,7 @@ client.on("message", async message => {
     .setDescription("of <@!" + message.author.id + ">")
     .addField("Username:", message.author.username, true)
     .addField("Discriminator:", message.author.discriminator, true)
-    .addField("ID:", message.author.id, true)
+    .addField("ID:", "`" + message.author.id + "`", true)
     .addField("Status:", message.author.presence.status, true)
     .addField("Playing:", message.author.presence.game.name, true)
     .addField("Joined Discord:", joindate, true)
@@ -189,7 +189,7 @@ client.on("message", async message => {
     .setDescription("of <@!" + message.author.id + ">")
     .addField("Username:", message.author.username, true)
     .addField("Discriminator:", message.author.discriminator, true)
-    .addField("ID:", message.author.id, true)
+    .addField("ID:", "`" + message.author.id + "`", true)
     .addField("Status:", message.author.presence.status, true)
     .addField("Playing:", "Nothing!", true)
     .addField("Joined Discord:", joindate, true)
@@ -209,7 +209,7 @@ client.on("message", async message => {
     const embed = new Discord.RichEmbed()
     .setTitle("Server Information")
     .addField("Owner:", "<@!" + guild.owner.id + ">", true)
-    .addField("Owner ID:", guild.owner.id, true)
+    .addField("Owner ID:", "`" + guild.owner.id + "`", true)
     .addField("Created At:", created, false)
     .addField("Members:", guild.memberCount, true)
     .addField("Server Region:", guild.region, false)
@@ -262,6 +262,12 @@ client.on("message", async message => {
       setTimeout(function(){ // This is how to make a timeout of 1000ms :)
       client.destroy();
     }, 1000);
+
+    if(command === "send") {
+      if(message.author.id !== botconfig.owner) return;
+      const sendMessage = args.join(" ");
+      message.guild.channels.find("name",args[0]).send(sendMessage)
+    }
 
   }
 
