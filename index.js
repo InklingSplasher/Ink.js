@@ -217,7 +217,7 @@ client.on("message", async message => {
     .setFooter("Message sent on: " + timestamp)
     .setColor(0x1abc9c)
     .setThumbnail(guild.iconURL)
-    message.channel.send(embed)
+    message.channel.send(embed);
   }
 
   if(command === "eval") {
