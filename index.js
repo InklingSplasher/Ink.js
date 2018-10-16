@@ -146,6 +146,7 @@ client.on("message", async message => {
       .setColor(0x1abc9c)
       .setAuthor(user.tag, user.avatarURL)
       .setFooter("Message sent on: " + timestamp)
+      .setThumbnail(user.avatarURL)
       message.channel.send(embed);
     } else {
       const embed = new Discord.RichEmbed()
@@ -160,6 +161,7 @@ client.on("message", async message => {
       .setColor(0x1abc9c)
       .setAuthor(user.tag, user.avatarURL)
       .setFooter("Message sent on: " + timestamp)
+      .setThumbnail(user.avatarURL)
       message.channel.send(embed);
     }
 
@@ -179,6 +181,7 @@ client.on("message", async message => {
     .setColor(0x1abc9c)
     .setAuthor(message.author.tag, message.author.avatarURL)
     .setFooter("Message sent on: " + timestamp)
+    .setThumbnail(message.author.avatarURL)
     message.channel.send(embed);
   } else {
     const embed = new Discord.RichEmbed()
@@ -193,10 +196,29 @@ client.on("message", async message => {
     .setColor(0x1abc9c)
     .setAuthor(message.author.tag, message.author.avatarURL)
     .setFooter("Message sent on: " + timestamp)
+    .setThumbnail(message.author.avatarURL)
     message.channel.send(embed);
   }
   }
 }
+
+  if(command === "serverinfo") {
+    var guild = message.guild
+    const created = new moment(guild.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm')
+    const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+    const embed = new Discord.RichEmbed()
+    .setTitle("Server Information")
+    .addField("Owner:", "<@!" + guild.owner.id + ">", true)
+    .addField("Owner ID:", guild.owner.id, true)
+    .addField("Created At:", created, false)
+    .addField("Members:", guild.memberCount, true)
+    .addField("Server Region:", guild.region, false)
+    .setAuthor(guild.name, guild.iconURL)
+    .setFooter("Message sent on: " + timestamp)
+    .setColor(0x1abc9c)
+    .setThumbnail(guild.iconURL)
+    message.channel.send(embed)
+  }
 
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
@@ -210,6 +232,22 @@ client.on("message", async message => {
       message.channel.send(clean(evaled), {code:"xl"});
     } catch (err) {
       message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+    }
+  }
+
+  if(command === "evalconsole") {
+    if(message.author.id !== botconfig.owner) return;
+    try {
+      const code = args.join(" ");
+      let evaled = eval(code);
+
+      if (typeof evaled !== "string")
+        evaled = require("util").inspect(evaled);
+
+      message.channel.send("Sent to my console!")
+      console.log(clean(evaled));
+    } catch (err) {
+      console.log("ERROR " + "${clean(err)}");
     }
   }
 
