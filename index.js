@@ -2,8 +2,8 @@
 const botconfig = require("./config.json");
 const package = require("./package.json")
 const Discord = require("discord.js");
-const moment = require("moment")
-const tz = require("moment-timezone")
+const moment = require("moment");
+const tz = require("moment-timezone");
 const client = new Discord.Client();
 
 // What happens when the bot is started
@@ -57,28 +57,26 @@ client.on("message", async message => {
   }
 
   if(command === "ping") {
-    const m = await message.channel.send("Ping?");
+    const m = await message.channel.send("Ping?")
     m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(client.ping)}ms`);
   }
 
   if(command === "say") {
     if(args[0]) {
-      const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
-      message.delete().catch(O_o=>{}); // Deletes the message of the sender.
+      const sayMessage = args.join(" ") // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
+      message.delete().catch(O_o=>{}) // Deletes the message of the sender.
       message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
-      return;
   }  else {
-      message.delete().catch(O_o=>{});
+      message.delete().catch(O_o=>{})
       message.channel.send("You didn\'t specifiy a text!");
-      return;
       }
     }
 
   if(command === "sayembed") {
-    message.delete().catch(O_o=>{});
+    message.delete().catch(O_o=>{})
     if(args[0]) {
       if(args[0] == "here") {
-        const sayMessage = args.slice(1).join(" ");
+        const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
         .setAuthor(message.author.username, message.author.avatarURL)
@@ -86,7 +84,7 @@ client.on("message", async message => {
         .setColor(0x2ecc71)
         message.channel.send('@here', {embed: embed}); }
       if(args[0] == "everyone") {
-        const sayMessage = args.slice(1).join(" ");
+        const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
         .setAuthor(message.author.username, message.author.avatarURL)
@@ -94,7 +92,7 @@ client.on("message", async message => {
         .setColor(0x2ecc71)
         message.channel.send('@everyone', {embed: embed}); }
       else {
-        const sayMessage = args.join(" ");
+        const sayMessage = args.join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
         .setAuthor(message.author.username, message.author.avatarURL)
@@ -102,7 +100,7 @@ client.on("message", async message => {
         .setColor(0x2ecc71)
         message.channel.send({embed: embed}); }
   }} else {
-        message.channel.send("You didn\'t specifiy a text!")
+        message.channel.send("You didn\'t specifiy a text!");
   }
 
   if(command === "stats") {
@@ -116,7 +114,7 @@ client.on("message", async message => {
     .setAuthor(client.user.tag, client.user.avatarURL)
     .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
     .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
-    message.channel.sendEmbed(embed);
+    message.channel.send({embed: embed});
   }
 
   if(command === "invite") {
@@ -126,7 +124,7 @@ client.on("message", async message => {
     .setDescription("You can **invite me** using this link: [Click Here](https://discordapp.com/oauth2/authorize?client_id=" + botid + "&scope=bot&permissions=8)")
     .addField("Anything Else?", "Yes, sadly, you can\'t invite me quite yet, because the bot is currently set to \'private\' and can only be invited by my owner Ink#0001.")
     .setColor(0xe67e22)
-    message.channel.sendEmbed(embed)
+    message.channel.send({embed: embed});
   }
 
   if(command === "stealavatar") {
@@ -140,7 +138,7 @@ client.on("message", async message => {
     .setColor(0x34495e)
     .setAuthor(user.username, user.avatarURL)
     .setFooter("Requested by: " + message.author.tag)
-    message.channel.sendEmbed(embed);
+    message.channel.send({embed: embed});
     }
     else {
       message.channel.send("You didn\'t specify a user!")
@@ -166,7 +164,7 @@ client.on("message", async message => {
       .setAuthor(user.tag, user.avatarURL)
       .setFooter("Message sent on: " + timestamp)
       .setThumbnail(user.avatarURL)
-      message.channel.send(embed);
+      message.channel.send({embed: embed});
     } else {
       const embed = new Discord.RichEmbed()
       .setTitle("User Information")
@@ -181,7 +179,7 @@ client.on("message", async message => {
       .setAuthor(user.tag, user.avatarURL)
       .setFooter("Message sent on: " + timestamp)
       .setThumbnail(user.avatarURL)
-      message.channel.send(embed);
+      message.channel.send({embed: embed});
     }
 
   } else {
@@ -201,7 +199,7 @@ client.on("message", async message => {
     .setAuthor(message.author.tag, message.author.avatarURL)
     .setFooter("Message sent on: " + timestamp)
     .setThumbnail(message.author.avatarURL)
-    message.channel.send(embed);
+    message.channel.send({embed: embed});
   } else {
     const embed = new Discord.RichEmbed()
     .setTitle("User Information")
@@ -216,7 +214,7 @@ client.on("message", async message => {
     .setAuthor(message.author.tag, message.author.avatarURL)
     .setFooter("Message sent on: " + timestamp)
     .setThumbnail(message.author.avatarURL)
-    message.channel.send(embed);
+    message.channel.send({embed: embed});
   }
   }
 }
@@ -236,7 +234,7 @@ client.on("message", async message => {
     .setFooter("Message sent on: " + timestamp)
     .setColor(0x1abc9c)
     .setThumbnail(guild.iconURL)
-    message.channel.send(embed);
+    message.channel.send({embed: embed});
   }
 
   if(command === "eval") {
@@ -277,7 +275,7 @@ client.on("message", async message => {
       .setAuthor(message.author.username, message.author.avatarURL)
       .setFooter("Requested by: " + message.author.tag)
       .setColor(0xc0392b)
-      message.channel.sendEmbed(embed)
+      message.channel.send({embed: embed})
       setTimeout(function(){ // This is how to make a timeout of 1000ms :)
       client.destroy();
     }, 1000);
@@ -286,7 +284,7 @@ client.on("message", async message => {
     if(command === "send") {
       if(message.author.id !== botconfig.owner) return;
       const sendMessage = args.join(" ");
-      message.guild.channels.find("name",args[0]).send(sendMessage)
+      message.guild.channels.find("name",args[0]).send(sendMessage);
     }
 
   if(command === "setgame") {
@@ -297,8 +295,8 @@ client.on("message", async message => {
       .setAuthor(message.author.username, message.author.avatarURL)
       .setFooter("Requested by: " + message.author.tag)
       .setColor(0x27ae60)
-      message.channel.sendEmbed(embed);
-      console.log("Bot Activity has been changed to " + args[0] + " " + args[1])
+      message.channel.send({embed: embed})
+      console.log("Bot Activity has been changed to " + args[0] + " " + args[1]);
   }
 
   if(command === "setstatus") {
@@ -309,8 +307,8 @@ client.on("message", async message => {
     .setAuthor(message.author.username, message.author.avatarURL)
     .setFooter("Requested by: " + message.author.tag)
     .setColor(0x27ae60)
-    message.channel.sendEmbed(embed);
-    console.log("Bot Status has been changed to " + args[0] + "!")
+    message.channel.send({embed: embed})
+    console.log("Bot Status has been changed to " + args[0] + "!");
   }
 
   if(command === "setname") {
@@ -321,8 +319,8 @@ client.on("message", async message => {
     .setAuthor(message.author.username, message.author.avatarURL)
     .setFooter("Requested by: " + message.author.tag)
     .setColor(0x27ae60)
-    message.channel.sendEmbed(embed)
-    console.log("The bot username has been set to " + args[0] + "!")
+    message.channel.send({embed: embed})
+    console.log("The bot username has been set to " + args[0] + "!");
   }
 
   if(console === "setavatar") {
@@ -333,8 +331,8 @@ client.on("message", async message => {
     .setAuthor(message.author.username, message.author.avatarURL)
     .setFooter("Requested by: " + message.author.tag)
     .setColor(0x27ae60)
-    message.channel.sendEmbed(embed);
-    console.log("The avatar has been changed to " + args[0] + "!")
+    message.channel.sendEmbed(embed)
+    console.log("The avatar has been changed to " + args[0] + "!");
   }
 });
 
