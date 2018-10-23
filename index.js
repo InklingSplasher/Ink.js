@@ -66,24 +66,44 @@ client.on("message", async message => {
       const sayMessage = args.join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
       message.delete().catch(O_o=>{}); // Deletes the message of the sender.
       message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
+      return;
   } else {
     message.delete().catch(O_o=>{});
     message.channel.send("You didn't specifiy a text!");
+    return;
     }
   }
 
   if(command === "sayembed") {
     message.delete().catch(O_o=>{});
     if(args[0]) {
-      const sayMessage = args.join(" ");
-      const embed = new Discord.RichEmbed()
-      .setDescription(sayMessage)
-      .setAuthor(message.author.username, message.author.avatarURL)
-      .setFooter("Embed created by: " + message.author.tag)
-      message.channel.sendEmbed(embed);
-  } else {
-    message.channel.send("You didn't specifiy a text!")
-  }
+      if(args[0] == "here") {
+        const sayMessage = args.slice(1).join(" ");
+        const embed = new Discord.RichEmbed()
+        .setDescription(sayMessage)
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Embed created by: " + message.author.tag)
+        .setColor(0x2ecc71)
+        message.channel.send('@here', {embed: embed}); }
+      else if(args[0] == "everyone") {
+        const sayMessage = args.slice(1).join(" ");
+        const embed = new Discord.RichEmbed()
+        .setDescription(sayMessage)
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Embed created by: " + message.author.tag)
+        .setColor(0x2ecc71)
+        message.channel.send('@everyone', {embed: embed}); }
+      else {
+        const sayMessage = args.join(" ");
+        const embed = new Discord.RichEmbed()
+        .setDescription(sayMessage)
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Embed created by: " + message.author.tag)
+        .setColor(0x2ecc71)
+        message.channel.send({embed: embed}); }
+      }
+      } else {
+        message.channel.send("You didn't specifiy a text!")
   }
 
   if(command === "stats") {
