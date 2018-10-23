@@ -15,12 +15,12 @@ client.on("ready", async () => {
 client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-})
+});
 
 client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-})
+});
 
 
 // Command rules
@@ -67,12 +67,12 @@ client.on("message", async message => {
       message.delete().catch(O_o=>{}); // Deletes the message of the sender.
       message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
       return;
-  } else {
-    message.delete().catch(O_o=>{});
-    message.channel.send("You didn't specifiy a text!");
-    return;
+  }  else {
+      message.delete().catch(O_o=>{});
+      message.channel.send("You didn\'t specifiy a text!");
+      return;
+      }
     }
-  }
 
   if(command === "sayembed") {
     message.delete().catch(O_o=>{});
@@ -85,7 +85,7 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send('@here', {embed: embed}); }
-      else if(args[0] == "everyone") {
+      if(args[0] == "everyone") {
         const sayMessage = args.slice(1).join(" ");
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -101,9 +101,8 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send({embed: embed}); }
-      }
-      } else {
-        message.channel.send("You didn't specifiy a text!")
+  }} else {
+        message.channel.send("You didn\'t specifiy a text!")
   }
 
   if(command === "stats") {
@@ -282,14 +281,13 @@ client.on("message", async message => {
       setTimeout(function(){ // This is how to make a timeout of 1000ms :)
       client.destroy();
     }, 1000);
+  }
 
     if(command === "send") {
       if(message.author.id !== botconfig.owner) return;
       const sendMessage = args.join(" ");
       message.guild.channels.find("name",args[0]).send(sendMessage)
     }
-
-  }
 
   if(command === "setgame") {
     if(message.author.id !== botconfig.owner) return;
