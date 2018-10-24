@@ -62,11 +62,17 @@ client.on("message", async message => {
   }
 
   if(command === "say") {
-    if(args[0]) {
+    if(args[0] == "bypass") {
+      if(message.author.id !== botconfig.owner) return;
+      const sayMessage = args.slice(1).join(" ") // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
+      message.delete().catch(O_o=>{}) // Deletes the message of the sender.
+      message.channel.send(sayMessage); // Sends the given message after the say command.
+  } else if(args[0]) {
       const sayMessage = args.join(" ") // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
       message.delete().catch(O_o=>{}) // Deletes the message of the sender.
-      message.channel.send(":information_source: " + sayMessage); // Sends the given message after the say command.
-  }  else {
+      message.channel.send(":information_source: " + sayMessage + " `~" + message.author.tag + "`"); // Sends the given message with the author after the say command.
+  }
+    else {
       message.delete().catch(O_o=>{})
       message.channel.send("You didn\'t specifiy a text!");
       }
@@ -99,9 +105,9 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send({embed: embed}); }
-  }} else {
+  } else {
         message.channel.send("You didn\'t specifiy a text!");
-  }
+  }}
 
   if(command === "stats") {
     const embed = new Discord.RichEmbed()
@@ -245,10 +251,28 @@ client.on("message", async message => {
 
       if (typeof evaled !== "string")
         evaled = require("util").inspect(evaled);
-
-      message.channel.send(clean(evaled), {code:"xl"});
+      const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+      const embed = new Discord.RichEmbed()
+      .setTitle("SUCCESS")
+      .setDescription("Successfully evaluated your code!")
+      .setColor(0x00c300)
+      .setAuthor(message.author.tag, message.author.avatarURL)
+      .setFooter("Message sent on: " + timestamp)
+      .addField("Code Entered:", "```" + code + "```")
+      .addField("Result:", clean(evaled), {code:"xl"})
+      message.channel.send({embed: embed});
     } catch (err) {
-      message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+      const code = args.join(" ");
+      const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+      const embed = new Discord.RichEmbed()
+      .setTitle("ERROR")
+      .setDescription("Error while evaluating your code!")
+      .setColor(0xaf0606)
+      .setAuthor(message.author.tag, message.author.avatarURL)
+      .setFooter("Message sent on: " + timestamp)
+      .addField("Code Entered:", "```" + code + "```")
+      .addField("Result:", clean(err), {code:"xl"})
+      message.channel.send({embed: embed});
     }
   }
 
