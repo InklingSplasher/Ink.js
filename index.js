@@ -53,7 +53,18 @@ client.on("message", async message => {
 
   if(command === "help") {
     const helpcmds = require("./help.json")
-    message.channel.send(helpcmds.commands)
+    const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY')
+    const embed = new Discord.RichEmbed()
+    .setTitle("Help Pages")
+    .setDescription("All commands for this bot in a fancy list made of an embed!")
+    .setColor(0x1ab7ea)
+    .setThumbnail(client.user.avatarURL)
+    .setFooter("This bot has been developed by Ink#0001", 'https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
+    .addField("General Commands", "```md\n" + "1. help: Shows this help page!\n2. invite: Shows the link to invite this bot!\n3. stats: Displays general info about me such as my current version.\n4. ping: Displays the current latency to the Discord API and my client." + "```", true)
+    .addField("Moderation / Info", "```md\n" + "1. userinfo: Displays general information about a user in the server.\n2. serverinfo: Displays general information about the server." + "```", true)
+    .addField("Miscellaneous", "```md\n" + "1. say: Makes me say stuff and deletes your message.\n2. sayembed: Makes me say stuff, deletes your message and puts your text into a sexy embed!\n3. stealavatar: Steals the avatar URL of the provided user by mention." + "```", true)
+    .addField("Bot-Owner", "```md\n" + "1. eval: Evaluates JavaScript.\n2. shutdown: Shuts the bot down.\n3. setstatus: Sets the new status of the bot, for example idle.\n4. setgame: Sets the new playing status of the bot." + "```", true)
+    message.channel.send({embed: embed});
   }
 
   if(command === "ping") {
@@ -152,10 +163,10 @@ client.on("message", async message => {
   }
 
   if(command === "userinfo") {
-    const user = message.mentions.users.first();
+    const user = message.mentions.users.first()
     if(user) {
-      const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-      const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
+      const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY')
+      const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm')
       if(user.presence.game != null) {
       const embed = new Discord.RichEmbed()
       .setTitle("User Information")
