@@ -288,7 +288,7 @@ client.on("message", async message => {
       message.channel.send("Sent to my console!")
       console.log(clean(evaled));
     } catch (err) {
-      console.log("ERROR " + "${clean(err)}");
+      console.log("ERROR " + clean(err));
     }
   }
 
