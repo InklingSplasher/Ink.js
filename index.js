@@ -258,8 +258,8 @@ client.on("message", async message => {
       .setColor(0x00c300)
       .setAuthor(message.author.tag, message.author.avatarURL)
       .setFooter("Message sent on: " + timestamp)
-      .addField("Code Entered:", "```" + code + "```")
-      .addField("Result:", clean(evaled), {code:"xl"})
+      .addField("Code Entered:", "```xl\n" + code + "```")
+      .addField("Result:", "```xl\n" + clean(evaled) + "```")
       message.channel.send({embed: embed});
     } catch (err) {
       const code = args.join(" ");
@@ -270,8 +270,8 @@ client.on("message", async message => {
       .setColor(0xaf0606)
       .setAuthor(message.author.tag, message.author.avatarURL)
       .setFooter("Message sent on: " + timestamp)
-      .addField("Code Entered:", "```" + code + "```")
-      .addField("Result:", clean(err), {code:"xl"})
+      .addField("Code Entered:", "```xl\n" + code + "```")
+      .addField("Result:", "```xl\n" + clean(err) + "```")
       message.channel.send({embed: embed});
     }
   }
