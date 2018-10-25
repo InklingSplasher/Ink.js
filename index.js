@@ -8,8 +8,9 @@ const client = new Discord.Client();
 
 // What happens when the bot is started
 client.on("ready", async () => {
-  console.log(`Logged in as ${client.user.username}...`);
-  client.user.setActivity("with JavaScript code!", { type: 'PLAYING' });
+  console.log(`Logged in as ${client.user.username}...`)
+  client.user.setActivity("with JavaScript code!", { type: 'PLAYING' })
+  client.user.setStatus('dnd');
 });
 
 client.on("guildCreate", guild => {
