@@ -1,5 +1,5 @@
 {
-  "token": "REDACTED",
+  "token": "The bot token",
   "prefix": "!",
   "owner": "Your Discord-ID"
 }

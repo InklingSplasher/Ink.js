@@ -9,7 +9,7 @@ const client = new Discord.Client();
 // What happens when the bot is started
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.username}...`)
-  client.user.setActivity("with JavaScript code!", { type: 'PLAYING' })
+  client.user.setActivity("my JavaScript code!", { type: 'LISTENING' })
   client.user.setStatus('dnd');
 });
 
