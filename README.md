@@ -1,3 +1,6 @@
+# DISCONTINUED
+**This bot can now be found [HERE](https://github.com/InklingSplasher/Ink.js)!**
+
 # Ink.js
 Ink.js is a private Discord-Bot with some useful features!
 
