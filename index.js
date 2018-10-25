@@ -52,7 +52,6 @@ client.on("message", async message => {
   var send = message.channel.send;
 
   if(command === "help") {
-    const helpcmds = require("./help.json")
     const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY')
     const embed = new Discord.RichEmbed()
     .setTitle("Help Pages")
@@ -165,7 +164,7 @@ client.on("message", async message => {
 
   if(command === "purge") {
     if(args[0]) {
-      message.channel.bulkDelete(args[0])
+      message.channel.bulkDelete(args[0]+1)
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
       m.delete()
@@ -361,30 +360,6 @@ client.on("message", async message => {
     .setColor(0x27ae60)
     message.channel.send({embed: embed})
     console.log("Bot Status has been changed to " + args[0] + "!");
-  }
-
-  if(command === "setname") {
-    if(message.author.id !== botconfig.owner) return;
-    client.user.setUsername(args[0])
-    const embed = new Discord.RichEmbed()
-    .setDescription("The username of the bot has been set to " + args[0] + "!")
-    .setAuthor(message.author.username, message.author.avatarURL)
-    .setFooter("Requested by: " + message.author.tag)
-    .setColor(0x27ae60)
-    message.channel.send({embed: embed})
-    console.log("The bot username has been set to " + args[0] + "!");
-  }
-
-  if(console === "setavatar") {
-    if(message.author.id !== botconfig.owner) return;
-    client.user.setAvatar(args[0])
-    const embed = new Discord.RichEmbed()
-    .setDescription("The avatar of the bot has been changed to " + args[0] + "!")
-    .setAuthor(message.author.username, message.author.avatarURL)
-    .setFooter("Requested by: " + message.author.tag)
-    .setColor(0x27ae60)
-    message.channel.sendEmbed(embed)
-    console.log("The avatar has been changed to " + args[0] + "!");
   }
 });
 
