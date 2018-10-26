@@ -165,12 +165,14 @@ client.on("message", async message => {
 
   if(command === "purge") {
     if(args[0]) {
-      message.channel.bulkDelete(args[0]+1)
+      message.delete()
+      message.channel.bulkDelete(args[0])
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
       m.delete()
     }, 4000);
   } else {
+    message.delete()
     message.channel.bulkDelete('10')
     const m = await message.channel.send(":white_check_mark:")
     setTimeout(function(){
