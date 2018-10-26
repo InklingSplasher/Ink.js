@@ -341,8 +341,15 @@ client.on("message", async message => {
 
     if(command === "send") {
       if(message.author.id !== botconfig.owner) return;
-      const sendMessage = args.join(" ");
-      message.guild.channels.find("name",args[0]).send(sendMessage);
+       if(args[1]) {
+      const sendMessage = args.slice(1).join(" ");
+      var c = message.guild.channels.find("id",args[0])
+      message.channel.send(":white_check_mark:")
+      c.send(sendMessage)
+      .catch(console.error);
+    } else {
+      message.channel.send("Invalid arguments given!");
+    }
     }
 
   if(command === "setgame") {
