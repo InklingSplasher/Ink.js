@@ -275,6 +275,7 @@ client.on("message", async message => {
 
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
+    if(args[0]) {
     try {
       const code = args.join(" ");
       let evaled = eval(code);
@@ -304,7 +305,10 @@ client.on("message", async message => {
       .addField("Result:", "```xl\n" + clean(err) + "```")
       message.channel.send({embed: embed});
     }
+  } else {
+    message.channel.send("Please **provide a code** to evaluate!")
   }
+ }
 
   if(command === "evalconsole") {
     if(message.author.id !== botconfig.owner) return;
