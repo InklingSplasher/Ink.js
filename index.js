@@ -275,6 +275,7 @@ client.on("message", async message => {
 
   if(command === "eval") {
     if(message.author.id !== botconfig.owner) return;
+    message.delete()
     if(args[0]) {
     try {
       const code = args.join(" ");
