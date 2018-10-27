@@ -100,7 +100,7 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send('@here', {embed: embed}); }
-      if(args[0] == "everyone") {
+      else if(args[0] == "everyone") {
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -108,7 +108,15 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send('@everyone', {embed: embed}); }
-      else {
+      else if(args[0] == "role") {
+        const sayMessage = args.slice(2).join(" ")
+        const embed = new Discord.RichEmbed()
+        .setDescription(sayMessage)
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Embed created by: " + message.author.tag)
+        .setColor(0x2ecc71)
+        message.channel.send('<@&' + args[1] + '>', {embed: embed});
+      } else {
         const sayMessage = args.join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -116,8 +124,8 @@ client.on("message", async message => {
         .setFooter("Embed created by: " + message.author.tag)
         .setColor(0x2ecc71)
         message.channel.send({embed: embed}); }
-  } else {
-        message.channel.send("You didn\'t specifiy a text!");
+      } else {
+    message.channel.send("You didn\'t specifiy a text!");
   }}
 
   if(command === "stats") {
