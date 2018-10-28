@@ -69,7 +69,12 @@ client.on("message", async message => {
 
   if(command === "ping") {
     const m = await message.channel.send("Ping?")
-    m.edit(`Pong! :ping_pong: \n**My Latency is:** ${m.createdTimestamp - message.createdTimestamp}ms. \n**API Latency is:** ${Math.round(client.ping)}ms`);
+    const embed = new Discord.RichEmbed()
+    .setTitle("Pong! :ping_pong:")
+    .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms.`, true)
+    .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
+    .setFooter("Requested by " + message.author.tag, message.author.avatarURL)
+    m.edit({embed: embed});
   }
 
   if(command === "say") {
