@@ -68,7 +68,7 @@ client.on("message", async message => {
   }
 
   if(command === "ping") {
-    const m = await message.channel.send("Ping?")
+    const m = await message.channel.send("Ping? <a:Loading:506206198320857099>")
     const embed = new Discord.RichEmbed()
     .setTitle("Pong! :ping_pong:")
     .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms.`, true)
