@@ -61,7 +61,7 @@ client.on("message", async message => {
     .setThumbnail(client.user.avatarURL)
     .setFooter("This bot has been developed by Ink#0001", 'https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
     .addField("General Commands", "```md\n" + "1. help: Shows this help page!\n2. invite: Shows the link to invite this bot!\n3. stats: Displays general info about me such as my current version.\n4. ping: Displays the current latency to the Discord API and my client." + "```", true)
-    .addField("Moderation / Info", "```md\n" + "1. userinfo: Displays general information about a user in the server.\n2. serverinfo: Displays general information about the server." + "```", true)
+    .addField("Moderation / Info", "```md\n" + "1. userinfo: Displays general information about a user in the server.\n2. serverinfo: Displays general information about the server.\n3. purge: Deletes a specific number of messages (or 10 if no argument is given)." + "```", true)
     .addField("Miscellaneous", "```md\n" + "1. say: Makes me say stuff and deletes your message.\n2. sayembed: Makes me say stuff, deletes your message and puts your text into a sexy embed!\n3. stealavatar: Steals the avatar URL of the provided user by mention." + "```", true)
     .addField("Bot-Owner", "```md\n" + "1. eval: Evaluates JavaScript.\n2. shutdown: Shuts the bot down.\n3. setstatus: Sets the new status of the bot, for example idle.\n4. setgame: Sets the new playing status of the bot.\n5. send: Sends a message to a specific channel in the server." + "```", true)
     message.channel.send({embed: embed});
