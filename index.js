@@ -73,7 +73,7 @@ client.on("message", async message => {
   }
 
   if(command === "say") {
-    if(args[0] == "bypass") {
+    if(args[0] == "bypass") { // For bot owner, to send a message without seeing that say was used.
       if(message.author.id !== botconfig.owner) return;
       const sayMessage = args.slice(1).join(" ") // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
       message.delete().catch(O_o=>{}) // Deletes the message of the sender.
@@ -172,22 +172,26 @@ client.on("message", async message => {
   }
 
   if(command === "purge") {
-    if(args[0]) {
+    if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
+      if(args[0]) {
+        message.delete()
+        message.channel.bulkDelete(args[0])
+        const m = await message.channel.send(":white_check_mark:")
+        setTimeout(function(){
+        m.delete()
+      }, 4000);
+    } else {
       message.delete()
-      message.channel.bulkDelete(args[0])
+      message.channel.bulkDelete('10')
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
-      m.delete()
-    }, 4000);
+        m.delete()
+      }, 4000);
+    }
   } else {
-    message.delete()
-    message.channel.bulkDelete('10')
-    const m = await message.channel.send(":white_check_mark:")
-    setTimeout(function(){
-    m.delete()
-  }, 4000);
+    message.channel.send(':no_entry: No permissions!');
   }
-  }
+}
 
   if(command === "userinfo") {
     const user = message.mentions.users.first()
