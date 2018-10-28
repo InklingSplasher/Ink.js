@@ -17,7 +17,7 @@ If you selfhost the bot, there are some **guidelines**:
 3. You may not provide support for Ink.js.
 4. You may not act like you programmed it and leave all marks of me having developed it in the code.
 ### Requirements
-Please download the latest version of (npm here)[https://nodejs.org/en/download/].
+Please download the latest version of [npm here](https://nodejs.org/en/download/).
 ### How-To
 Just fill out the config-example.json with your credentials and rename it to config.json. You can create an application here: https://discordapp.com/developers/applications/.
 You find your ID by enabling Developer Mode in Discord under User Settings -> Appearance -> Developer Mode, then just right click your profile and click on 'Copy ID'.  
