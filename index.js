@@ -71,9 +71,10 @@ client.on("message", async message => {
     const m = await message.channel.send("Ping? <a:Loading:506206198320857099>")
     const embed = new Discord.RichEmbed()
     .setTitle("Pong! :ping_pong:")
-    .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms.`, true)
+    .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms`, true)
     .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
     .setFooter("Requested by " + message.author.tag, message.author.avatarURL)
+    .setColor(0xd35400)
     m.edit({embed: embed});
   }
 
