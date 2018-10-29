@@ -99,6 +99,7 @@ client.on("message", async message => {
     message.delete().catch(O_o=>{})
     if(args[0]) {
       if(args[0] == "here") {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -107,6 +108,7 @@ client.on("message", async message => {
         .setColor(0x2ecc71)
         message.channel.send('@here', {embed: embed}); }
       else if(args[0] == "everyone") {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -115,6 +117,7 @@ client.on("message", async message => {
         .setColor(0x2ecc71)
         message.channel.send('@everyone', {embed: embed}); }
       else if(args[0] == "role") {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
         const sayMessage = args.slice(2).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -195,7 +198,7 @@ client.on("message", async message => {
       }, 4000);
     }
   } else {
-    message.channel.send(':no_entry: No permissions!');
+    message.channel.send(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`');
   }
 }
 
