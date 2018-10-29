@@ -69,11 +69,12 @@ client.on("message", async message => {
 
   if(command === "ping") {
     const m = await message.channel.send("Ping? <a:Loading:506206198320857099>")
+    const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY')
     const embed = new Discord.RichEmbed()
     .setTitle("Pong! :ping_pong:")
     .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms`, true)
     .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
-    .setFooter("Requested by " + message.author.tag, message.author.avatarURL)
+    .setFooter("Requested on: " + timestamp)
     .setColor(0xd35400)
     m.edit({embed: embed});
   }
