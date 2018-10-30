@@ -9,17 +9,19 @@ const client = new Discord.Client();
 // What happens when the bot is started
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.username}...`)
-  client.user.setActivity("my JavaScript code!", { type: 'LISTENING' })
+  client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' });
   client.user.setStatus('dnd');
 });
 
 client.on("guildCreate", guild => {
   // This event triggers when the bot joins a guild.
+  client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' });
   console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 });
 
 client.on("guildDelete", guild => {
   // this event triggers when the bot is removed from a guild.
+  client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' });
   console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
