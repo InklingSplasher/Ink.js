@@ -10,7 +10,7 @@ const client = new Discord.Client();
 client.on("ready", async () => {
   console.log(`Logged in as ${client.user.username}...`)
   client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' });
-  client.user.setStatus('dnd');
+  client.user.setStatus('online');
 });
 
 client.on("guildCreate", guild => {
