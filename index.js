@@ -145,7 +145,7 @@ client.on("message", async message => {
     .setTitle("General Info & Stats")
     .setDescription("Here, you can find general info as well as some stats about me!")
     .setColor(0x9b59b6)
-    .addField("Owner:", "<@!" + botconfig.owner + ">" + "(" + botconfig.ownertag + ")")
+    .addField("Owner:", "<@!" + botconfig.owner + "> " + "(" + botconfig.ownertag + ")")
     .addField("Version:", package.version, true)
     .addField("Prefix:", botconfig.prefix, true)
     .addField("Currently serving:", client.guilds.size + " guilds!")

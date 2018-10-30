@@ -1,5 +1,6 @@
 {
   "token": "The bot token",
   "prefix": "!",
-  "owner": "Your Discord-ID"
+  "owner": "Your Discord-ID",
+  "ownertag": "Your Discord-Tag"
 }
