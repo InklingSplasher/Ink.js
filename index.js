@@ -387,19 +387,6 @@ client.on("message", async message => {
     }, 1000);
   }
 
-    if(command === "send") {
-      if(message.author.id !== botconfig.owner) return;
-       if(args[1]) {
-      const sendMessage = args.slice(1).join(" ");
-      var c = message.guild.channels.find("id",args[0])
-      message.channel.send(":white_check_mark:")
-      c.send(sendMessage)
-      .catch(console.error);
-    } else {
-      message.channel.send("Invalid arguments given!");
-    }
-    }
-
   if(command === "setgame") {
     if(message.author.id !== botconfig.owner) return;
       client.user.setActivity(args[1], { type: args[0] })
@@ -429,6 +416,11 @@ client.on("message", async message => {
       if(args[0] === "roles") {
         const roles = message.guild.roles.map(r => "\n"+r.id+': '+r.name)
         message.channel.send("```\n" + roles + "```");
+      }
+      else if(args[0] === "send") {
+        const channelname = args[1]
+        const text = args.slice(1).join(" ")
+        message.guild.channels.find('name', channelname).send(text);
       }
     }
 
