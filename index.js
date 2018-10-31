@@ -414,15 +414,25 @@ client.on("message", async message => {
 
   if(command === "setstatus") {
     if(message.author.id !== botconfig.owner) return;
-    client.user.setStatus(args[0])
-    const embed = new Discord.RichEmbed()
-    .setDescription("The Bot Status has been changed to " + args[0] + "!")
-    .setAuthor(message.author.username, message.author.avatarURL)
-    .setFooter("Requested by: " + message.author.tag)
-    .setColor(0x27ae60)
-    message.channel.send({embed: embed})
-    console.log("Bot Status has been changed to " + args[0] + "!");
-  }
+      client.user.setStatus(args[0])
+      const embed = new Discord.RichEmbed()
+      .setDescription("The Bot Status has been changed to " + args[0] + "!")
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .setFooter("Requested by: " + message.author.tag)
+      .setColor(0x27ae60)
+      message.channel.send({embed: embed})
+      console.log("Bot Status has been changed to " + args[0] + "!");
+    }
+
+  if(command === "debug") {
+    if(message.author.id !== botconfig.owner) return;
+      if(args[0] === "roles") {
+        const roles = message.guild.roles.map(r => r.id+': '+r.name)
+        message.channel.send("```\n" + roles + "```");
+      }
+    }
+
+
 });
 
 client.login(botconfig.token);
