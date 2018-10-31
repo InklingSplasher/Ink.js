@@ -417,15 +417,14 @@ client.on("message", async message => {
         const roles = message.guild.roles.map(r => "\n"+r.id+': '+r.name)
         message.channel.send("```\n" + roles + "```");
       }
-      else if(args[0] === "send") {
-        const channelname = args[1]
-        const text = args.slice(2).join(" ")
-        message.guild.channels.find('name', channelname).send(text)
-        message.channel.send(":white_check_mark:");
+    else if(args[0] === "send") {
+      const channelname = args[1]
+      const text = args.slice(2).join(" ")
+      message.guild.channels.find('name', channelname).send(text)
+      message.channel.send(":white_check_mark:");
       }
     }
-
-
+    
 });
 
 client.login(botconfig.token);
