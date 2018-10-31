@@ -423,9 +423,9 @@ client.on("message", async message => {
       message.guild.channels.find('name', channelname).send(text)
       message.channel.send(":white_check_mark:");
       }
-    } else {
+    else {
       message.reply("Use one of the following sub-commands: `send`, `roles`")
-    }
+    }} 
 
 });
 
