@@ -420,7 +420,8 @@ client.on("message", async message => {
       else if(args[0] === "send") {
         const channelname = args[1]
         const text = args.slice(2).join(" ")
-        message.guild.channels.find('name', channelname).send(text);
+        message.guild.channels.find('name', channelname).send(text)
+        message.channel.send(":white_check_mark:");
       }
     }
 
