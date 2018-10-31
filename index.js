@@ -102,38 +102,43 @@ client.on("message", async message => {
     message.delete().catch(O_o=>{})
     if(args[0]) {
       if(args[0] == "here") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
-        .setAuthor(message.author.username, message.author.avatarURL)
-        .setFooter("Embed created by: " + message.author.tag)
+        .setAuthor(message.author.tag, message.author.avatarURL)
+        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+        .setTimestamp()
         .setColor(0x2ecc71)
-        message.channel.send('@here', {embed: embed}); }
+        message.channel.send('@here', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "everyone") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
-        .setAuthor(message.author.username, message.author.avatarURL)
-        .setFooter("Embed created by: " + message.author.tag)
+        .setAuthor(message.author.tag, message.author.avatarURL)
+        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+        .setTimestamp()
         .setColor(0x2ecc71)
-        message.channel.send('@everyone', {embed: embed}); }
+        message.channel.send('@everyone', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "role") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator")) return;
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
         const sayMessage = args.slice(2).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
-        .setAuthor(message.author.username, message.author.avatarURL)
-        .setFooter("Embed created by: " + message.author.tag)
+        .setAuthor(message.author.tag, message.author.avatarURL)
+        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+        .setTimestamp()
         .setColor(0x2ecc71)
         message.channel.send('<@&' + args[1] + '>', {embed: embed});
-      } else {
+      } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+    } else {
         const sayMessage = args.join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
-        .setAuthor(message.author.username, message.author.avatarURL)
-        .setFooter("Embed created by: " + message.author.tag)
+        .setAuthor(message.author.tag, message.author.avatarURL)
+        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+        .setTimestamp()
         .setColor(0x2ecc71)
         message.channel.send({embed: embed}); }
       } else {
