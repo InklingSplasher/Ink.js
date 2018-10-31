@@ -402,15 +402,19 @@ client.on("message", async message => {
     } else {
       message.channel.send(":x: Needs a channelname as well as a message!") }
   } else if(args[0] === "game") {
-      client.user.setActivity(args[2], { type: args[1] })
-      const embed = new Discord.RichEmbed()
-      .setDescription("The Playing Status has been changed to " + args[1] + " " + args[2])
-      .setAuthor(message.author.username, message.author.avatarURL)
-      .setFooter("Requested by: " + message.author.tag)
-      .setColor(0x27ae60)
-      message.channel.send({embed: embed})
-      console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
-    } else if(args[0] === "status") {
+      if(args[2]) {
+        client.user.setActivity(args[2], { type: args[1] })
+        const embed = new Discord.RichEmbed()
+        .setDescription("The Playing Status has been changed to " + args[1] + " " + args[2])
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Requested by: " + message.author.tag)
+        .setColor(0x27ae60)
+        message.channel.send({embed: embed})
+        console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
+    } else {
+      message.channel.send(":x: Needs a status as well as a message!")
+    }} else if(args[0] === "status") {
+        if(args[1]) {
         client.user.setStatus(args[1])
         const embed = new Discord.RichEmbed()
         .setDescription("The Bot Status has been changed to " + args[1] + "!")
@@ -420,6 +424,8 @@ client.on("message", async message => {
         message.channel.send({embed: embed})
         console.log("Bot Status has been changed to " + args[1] + "!");
     } else {
+      message.channel.send(":x: Needs a status!")
+    }} else {
       message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`")
     }}
 
