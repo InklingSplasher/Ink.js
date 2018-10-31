@@ -223,7 +223,7 @@ client.on("message", async message => {
       }, 4000);
     }
   } else {
-    message.channel.send(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`');
+    message.reply(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`');
   }
 }
 
