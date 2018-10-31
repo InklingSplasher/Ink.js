@@ -419,10 +419,10 @@ client.on("message", async message => {
       }
     else if(args[0] === "send") {
       if(args[2]) {
-      const channelname = args[1]
-      const text = args.slice(2).join(" ")
-      message.guild.channels.find('name', channelname).send(text)
-      message.channel.send(":white_check_mark:");
+        const channelname = args[1]
+        const text = args.slice(2).join(" ")
+        message.guild.channels.find('name', channelname).send(text)
+        message.channel.send(":white_check_mark:");
     } else {
       message.channel.send(":x: Needs a channelname as well as a message!")
     }
