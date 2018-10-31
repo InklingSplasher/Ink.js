@@ -53,21 +53,7 @@ client.on("message", async message => {
   var channel = msg.channel;
   var chan = message.channel;
   var send = message.channel.send;
-
-  function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
-
-
-function setRandomColor() {
-  $("#colorpad").css("background-color", getRandomColor());
-}
+  const randomColor = "#"+((1<<24)*Math.random()|0).toString(16)
 
   if(command === "help") {
     const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY')
@@ -157,13 +143,13 @@ function setRandomColor() {
 
   if(command === "poll") {
     const poll = args.join(" ")
-    const random = "#"+((1<<24)*Math.random()|0).toString(16)
     message.delete().catch(O_o=>{})
     const embed = new Discord.RichEmbed()
     .setTitle("Suggestion:")
     .setDescription(poll)
-    .setAuthor(message.author.tag, message.author.avatarURL)
-    .setColor(random)
+    .setFooter(message.author.tag, message.author.avatarURL)
+    .setColor(randomColor)
+    .setTimestamp()
     const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {embed: embed})
     m.react('507144037451431949')
     m.react('507144068111925258')
