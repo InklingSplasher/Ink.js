@@ -387,30 +387,6 @@ client.on("message", async message => {
     }, 1000);
   }
 
-  if(command === "setgame") {
-    if(message.author.id !== botconfig.owner) return;
-      client.user.setActivity(args[1], { type: args[0] })
-      const embed = new Discord.RichEmbed()
-      .setDescription("The Playing Status has been changed to " + args[0] + " " + args[1])
-      .setAuthor(message.author.username, message.author.avatarURL)
-      .setFooter("Requested by: " + message.author.tag)
-      .setColor(0x27ae60)
-      message.channel.send({embed: embed})
-      console.log("Bot Activity has been changed to " + args[0] + " " + args[1]);
-  }
-
-  if(command === "setstatus") {
-    if(message.author.id !== botconfig.owner) return;
-      client.user.setStatus(args[0])
-      const embed = new Discord.RichEmbed()
-      .setDescription("The Bot Status has been changed to " + args[0] + "!")
-      .setAuthor(message.author.username, message.author.avatarURL)
-      .setFooter("Requested by: " + message.author.tag)
-      .setColor(0x27ae60)
-      message.channel.send({embed: embed})
-      console.log("Bot Status has been changed to " + args[0] + "!");
-    }
-
   if(command === "debug") {
     if(message.author.id !== botconfig.owner) return;
       if(args[0] === "roles") {
@@ -424,11 +400,27 @@ client.on("message", async message => {
         message.guild.channels.find('name', channelname).send(text)
         message.channel.send(":white_check_mark:");
     } else {
-      message.channel.send(":x: Needs a channelname as well as a message!")
-    }
-      }
-    else {
-      message.reply("Use one of the following sub-commands: `send`, `roles`")
+      message.channel.send(":x: Needs a channelname as well as a message!") }
+  } else if(args[0] === "game") {
+      client.user.setActivity(args[2], { type: args[1] })
+      const embed = new Discord.RichEmbed()
+      .setDescription("The Playing Status has been changed to " + args[1] + " " + args[2])
+      .setAuthor(message.author.username, message.author.avatarURL)
+      .setFooter("Requested by: " + message.author.tag)
+      .setColor(0x27ae60)
+      message.channel.send({embed: embed})
+      console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
+    } else if(args[0] === "status") {
+        client.user.setStatus(args[1])
+        const embed = new Discord.RichEmbed()
+        .setDescription("The Bot Status has been changed to " + args[1] + "!")
+        .setAuthor(message.author.username, message.author.avatarURL)
+        .setFooter("Requested by: " + message.author.tag)
+        .setColor(0x27ae60)
+        message.channel.send({embed: embed})
+        console.log("Bot Status has been changed to " + args[1] + "!");
+    } else {
+      message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`")
     }}
 
 });
