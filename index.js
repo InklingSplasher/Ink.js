@@ -419,7 +419,7 @@ client.on("message", async message => {
       }
       else if(args[0] === "send") {
         const channelname = args[1]
-        const text = args.slice(1).join(" ")
+        const text = args.slice(2).join(" ")
         message.guild.channels.find('name', channelname).send(text);
       }
     }
