@@ -427,7 +427,7 @@ client.on("message", async message => {
   if(command === "debug") {
     if(message.author.id !== botconfig.owner) return;
       if(args[0] === "roles") {
-        const roles = message.guild.roles.map(r => r.id+': '+r.name)
+        const roles = message.guild.roles.map(r => r.id+': '+r.name+'\n')
         message.channel.send("```\n" + roles + "```");
       }
     }
