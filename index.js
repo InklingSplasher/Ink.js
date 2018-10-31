@@ -206,7 +206,7 @@ client.on("message", async message => {
   }
 
   if(command === "purge") {
-    if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
+    if(message.member.roles.find("name", "root") || message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
       if(args[0]) {
         message.delete()
         message.channel.bulkDelete(args[0])
@@ -223,7 +223,7 @@ client.on("message", async message => {
       }, 4000);
     }
   } else {
-    message.reply(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`');
+    message.reply(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`, `root`');
   }
 }
 
