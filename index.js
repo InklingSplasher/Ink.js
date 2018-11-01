@@ -425,7 +425,7 @@ client.on("message", async message => {
         console.log("Bot Status has been changed to " + args[1] + "!");
     } else {
       message.channel.send(":x: Needs a status!")
-    }} else if(args[0] === "forcepurge"]) {
+    }} else if(args[0] === "forcepurge") {
       if(args[0]) {
         message.delete()
         message.channel.bulkDelete(args[0])
