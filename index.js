@@ -425,7 +425,7 @@ client.on("message", async message => {
         console.log("Bot Status has been changed to " + args[1] + "!");
     } else {
       message.channel.send(":x: Needs a status!")
-    }} else if(args[0] === "forcepurge") {
+    }} else if(args[0] === "fpurge") {
       if(args[1]) {
         message.delete()
         message.channel.bulkDelete(args[1])
@@ -442,7 +442,7 @@ client.on("message", async message => {
       }, 4000);
     }}
       else {
-      message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `forcepurge`")
+      message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `fpurge`")
     }}
 
 });
