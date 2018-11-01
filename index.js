@@ -440,7 +440,6 @@ client.on("message", async message => {
       setTimeout(function(){
         m.delete()
       }, 4000);
-    }
     }}
       else {
       message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `forcepurge`")
