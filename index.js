@@ -426,9 +426,9 @@ client.on("message", async message => {
     } else {
       message.channel.send(":x: Needs a status!")
     }} else if(args[0] === "forcepurge") {
-      if(args[0]) {
+      if(args[1]) {
         message.delete()
-        message.channel.bulkDelete(args[0])
+        message.channel.bulkDelete(args[1])
         const m = await message.channel.send(":white_check_mark:")
         setTimeout(function(){
         m.delete()
