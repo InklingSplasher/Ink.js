@@ -425,8 +425,25 @@ client.on("message", async message => {
         console.log("Bot Status has been changed to " + args[1] + "!");
     } else {
       message.channel.send(":x: Needs a status!")
-    }} else {
-      message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`")
+    }} else if(args[0] === "forcepurge"]) {
+      if(args[0]) {
+        message.delete()
+        message.channel.bulkDelete(args[0])
+        const m = await message.channel.send(":white_check_mark:")
+        setTimeout(function(){
+        m.delete()
+      }, 4000);
+    } else {
+      message.delete()
+      message.channel.bulkDelete('10')
+      const m = await message.channel.send(":white_check_mark:")
+      setTimeout(function(){
+        m.delete()
+      }, 4000);
+    }
+    }}
+      else {
+      message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `forcepurge`")
     }}
 
 });
