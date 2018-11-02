@@ -208,7 +208,10 @@ client.on("message", async message => {
   if(command === "purge") {
     if(message.member.roles.find("name", "root") || message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
       if(args[0]) {
-        var amount = args[0] + 1;
+        var rawamount = args.map(function (x) {
+          return amount = parseInt(x, 10);
+        });
+        var amount = amount + 1;
         message.channel.bulkDelete(amount)
         const m = await message.channel.send(":white_check_mark:")
         setTimeout(function(){
@@ -216,7 +219,7 @@ client.on("message", async message => {
       }, 4000);
     } else {
       message.delete()
-      message.channel.bulkDelete('10')
+      message.channel.bulkDelete('11')
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
         m.delete()
