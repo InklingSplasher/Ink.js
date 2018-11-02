@@ -208,8 +208,8 @@ client.on("message", async message => {
   if(command === "purge") {
     if(message.member.roles.find("name", "root") || message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
       if(args[0]) {
-        message.delete()
-        message.channel.bulkDelete(args[0])
+        var amount = args[0] + 1;
+        message.channel.bulkDelete(amount)
         const m = await message.channel.send(":white_check_mark:")
         setTimeout(function(){
         m.delete()
