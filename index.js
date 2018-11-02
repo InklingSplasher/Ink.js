@@ -440,7 +440,6 @@ client.on("message", async message => {
         m.delete()
       }, 4000);
     } else {
-      message.delete()
       message.channel.bulkDelete('11')
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
