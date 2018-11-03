@@ -143,7 +143,7 @@ client.on("message", async message => {
         message.channel.send({embed: embed}); }
       } else {
     message.channel.send("You didn\'t specifiy a text!");
-  }}
+  }};
 
   if(command === "poll") {
     const poll = args.join(" ")
