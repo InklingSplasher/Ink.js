@@ -149,7 +149,7 @@ client.on("message", async message => {
     const poll = args.join(" ")
     message.delete().catch(O_o=>{})
     const embed = new Discord.RichEmbed()
-    .setTitle("Suggestion:")
+    .setTitle("Poll:")
     .setDescription(poll)
     .setFooter(message.author.tag, message.author.avatarURL)
     .setColor(randomColor)
