@@ -109,7 +109,7 @@ client.on("message", async message => {
         .setAuthor(message.author.tag, message.author.avatarURL)
         .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
         .setTimestamp()
-        .setColor(0x2ecc71)
+        .setColor(randomColor)
         message.channel.send('@here', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "everyone") {
         if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
@@ -119,7 +119,7 @@ client.on("message", async message => {
         .setAuthor(message.author.tag, message.author.avatarURL)
         .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
         .setTimestamp()
-        .setColor(0x2ecc71)
+        .setColor(randomColor)
         message.channel.send('@everyone', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "role") {
         if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
@@ -129,7 +129,7 @@ client.on("message", async message => {
         .setAuthor(message.author.tag, message.author.avatarURL)
         .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
         .setTimestamp()
-        .setColor(0x2ecc71)
+        .setColor(randomColor)
         message.channel.send('<@&' + args[1] + '>', {embed: embed});
       } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
     } else {
@@ -139,7 +139,7 @@ client.on("message", async message => {
         .setAuthor(message.author.tag, message.author.avatarURL)
         .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
         .setTimestamp()
-        .setColor(0x2ecc71)
+        .setColor(randomColor)
         message.channel.send({embed: embed}); }
       } else {
     message.channel.send("You didn\'t specifiy a text!");
