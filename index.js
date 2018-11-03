@@ -212,14 +212,14 @@ client.on("message", async message => {
           return amount = parseInt(x, 10);
         });
         var amount = amount + 1;
-        message.channel.bulkDelete(amount)
+        message.channel.bulkDelete(amount, true)
         const m = await message.channel.send(":white_check_mark:")
         setTimeout(function(){
         m.delete()
       }, 4000);
     } else {
       message.delete()
-      message.channel.bulkDelete('11')
+      message.channel.bulkDelete('11', true)
       const m = await message.channel.send(":white_check_mark:")
       setTimeout(function(){
         m.delete()
