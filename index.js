@@ -102,7 +102,7 @@ client.on("message", async message => {
     message.delete().catch(O_o=>{})
     if(args[0]) {
       if(args[0] == "here") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id !== botconfig.owner) {
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -112,7 +112,7 @@ client.on("message", async message => {
         .setColor(randomColor)
         message.channel.send('@here', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "everyone") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id !== botconfig.owner) {
         const sayMessage = args.slice(1).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
@@ -122,7 +122,7 @@ client.on("message", async message => {
         .setColor(randomColor)
         message.channel.send('@everyone', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
       else if(args[0] == "role") {
-        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root")) {
+        if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id !== botconfig.owner) {
         const sayMessage = args.slice(2).join(" ")
         const embed = new Discord.RichEmbed()
         .setDescription(sayMessage)
