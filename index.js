@@ -162,6 +162,7 @@ client.on("message", async message => {
   }
 
   if(command === "stats") {
+    var count = Array.from(client.users);
     const embed = new Discord.RichEmbed()
     .setTitle("General Info & Stats")
     .setDescription("Here, you can find general info as well as some stats about me!")
@@ -171,6 +172,7 @@ client.on("message", async message => {
     .addField("Source:", "[View on GitHub](https://github.com/InklingSplasher/Ink.js)", true)
     .addField("Prefix:", botconfig.prefix, true)
     .addField("Currently serving:", client.guilds.size + " guilds!", true)
+    .addField("Total Users:", count.length, true)
     .setAuthor(client.user.tag, client.user.avatarURL)
     .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
     .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
