@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "author": "Jan Klotz",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "colors": "^1.1.2",
     "discord.js": "^11.4.2",
