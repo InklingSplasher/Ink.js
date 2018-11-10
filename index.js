@@ -2,11 +2,8 @@
 const botconfig = require("./config.json");
 const package = require("./package.json");
 const Discord = require("discord.js");
-const opus = require("node-opus");
 const moment = require("moment");
 const tz = require("moment-timezone");
-const ytdl = require('ytdl-core');
-const ffmpeg = require('ffmpeg');
 const client = new Discord.Client();
 
 // What happens when the bot is started
