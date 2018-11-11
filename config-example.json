@@ -2,5 +2,6 @@
   "token": "The bot token",
   "prefix": "!",
   "owner": "Your Discord-ID",
-  "ownertag": "Your Discord-Tag"
+  "ownertag": "Your Discord-Tag",
+  "autorestart": "true/false"
 }

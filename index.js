@@ -4,7 +4,8 @@ const package = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
 const tz = require("moment-timezone");
-const client = new Discord.Client();
+// noinspection JSCheckFunctionSignatures
+const client = new Discord.Client({autoReconnect:botconfig.autorestart});
 
 // What happens when the bot is started
 client.on("ready", async () => {
@@ -141,7 +142,7 @@ client.on("message", async message => {
                     .setColor(randomColor);
                 message.channel.send({embed: embed}); }
         } else {
-            message.channel.send("You didn\'t specifiy a text!");
+            message.channel.send("You didn\'t specify a text!");
         }
     }
     if(command === "poll") {
