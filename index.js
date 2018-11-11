@@ -45,22 +45,22 @@ client.on("message", async message => {
     console.log(invoke, args); // Logging all commands.
 
     // Variables
-    let author = message.author; // The person who sent the message.
-    let msg = message.content.toUpperCase(); // Takes a message and makes it all upper-case.
-    let cont = message.content; // Raw message content
-    let prefix = botconfig.prefix; // The prefix of the bot (stands before every command).
-    let channel = msg.channel;
-    let chan = message.channel;
-    let send = message.channel.send;
+    // let author = message.author; // The person who sent the message.
+    // let msg = message.content.toUpperCase(); // Takes a message and makes it all upper-case.
+    // let cont = message.content; // Raw message content
+    // let prefix = botconfig.prefix; // The prefix of the bot (stands before every command).
+    // let channel = msg.channel;
+    // let chan = message.channel;
+    // let send = message.channel.send;
     const randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
 
     if(command === "help") {
-        const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
         const embed = new Discord.RichEmbed()
             .setTitle("Help Pages")
             .setDescription("All commands for this bot in a fancy list made of an embed! If you have any questions feel free to ask us in our Discord-Server InkCurity.")
             .setColor(0x1ab7ea)
             .setThumbnail(client.user.avatarURL)
+            .setTimestamp()
             .setFooter("This bot has been developed by Ink#0001", 'https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif')
             .addField("General Commands", "```md\n" + "1. help: Shows this help page!\n2. invite: Shows the link to invite this bot as well as the link for the official server!\n3. stats: Displays general info about me such as my current version.\n4. ping: Displays the current latency to the Discord API and my client." + "```", true)
             .addField("Moderation / Info", "```md\n" + "1. userinfo: Displays general information about a user in the server.\n2. serverinfo: Displays general information about the server.\n3. purge: Deletes a specific number of messages (or 10 if no argument is given)." + "```", true)
