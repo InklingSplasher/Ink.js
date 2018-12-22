@@ -257,7 +257,49 @@ client.on("message", async message => {
                 }, 4000);
             }
         } else {
-            message.reply('<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MANAGE_MESSAGES`');
+            message.reply('<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MANAGE_MESSAGES`!');
+        }
+    }
+
+    if(command === "kick") {
+      if(message.member.hasPermission('KICK_MEMBERS')) {
+        const user = message.mentions.users.first();
+          if(user) {
+            const member = message.guild.member(user);
+            if (member) {
+              if(member.kickable === true) {
+                  const reason = args[1];
+                  member.kick(reason)
+                  message.react('526078701830406173')
+              } else {
+                  message.reply("I don't have permissions to kick that user.")
+              }
+          }} else {
+              message.reply("No user argument was entered!")
+       }
+        } else {
+          message.reply('<:NoShield:507144068111925258> **No access!** You are missing the following permission: `KICK_MEMBERS`!')
+        }
+    }
+
+    if(command === "ban") {
+        if(message.member.hasPermission('BAN_MEMBERS')) {
+            const user = message.mentions.users.first();
+            if(user) {
+                const member = message.guild.member(user);
+                if (member) {
+                    if(member.bannable === true) {
+                        const reason = args[1];
+                        member.ban(reason)
+                        message.react('526078701830406173')
+                    } else {
+                        message.reply("I don't have permissions to kick that user.")
+                    }
+                }} else {
+                message.reply("No user argument was entered!")
+            }
+        } else {
+            message.reply('<:NoShield:507144068111925258> **No access!** You are missing the following permission: `BAN_MEMBERS`!')
         }
     }
 
