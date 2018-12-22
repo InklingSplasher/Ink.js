@@ -293,7 +293,7 @@ client.on("message", async message => {
                         member.ban(reason)
                         message.react('526078701830406173')
                     } else {
-                        message.reply("I don't have permissions to kick that user.")
+                        message.reply("I don't have permissions to ban that user.")
                     }
                 }} else {
                 message.reply("No user argument was entered!")
