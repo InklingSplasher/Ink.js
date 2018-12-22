@@ -82,83 +82,105 @@ client.on("message", async message => {
     }
 
     if(command === "say") {
-        if(args[0] == "bypass") { // For bot owner, to send a message without seeing that say was used.
-            if(message.author.id !== botconfig.owner) return;
-            const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
-            message.delete().catch(O_o=>{}); // Deletes the message of the sender.
-            message.channel.send(sayMessage); // Sends the given message after the say command.
-        } else if(args[0]) {
-            const sayMessage = args.join(" ");
-            message.delete().catch(O_o=>{});
-            message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")); // Sends the given message with the author after the say command.
-        }
-        else {
-            message.delete().catch(O_o=>{});
-            message.channel.send("You didn\'t specifiy a text!");
-        }
+      if(message.member.hasPermission('MANAGE_MESSAGES')) {
+          if (args[0] == "bypass") { // For bot owner, to send a message without seeing that say was used.
+              if (message.author.id !== botconfig.owner) return;
+              const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
+              message.delete().catch(O_o => {
+              }); // Deletes the message of the sender.
+              message.channel.send(sayMessage); // Sends the given message after the say command.
+          } else if (args[0]) {
+              const sayMessage = args.join(" ");
+              message.delete().catch(O_o => {
+              });
+              message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")); // Sends the given message with the author after the say command.
+          }
+          else {
+              message.delete().catch(O_o => {
+              });
+              message.channel.send("You didn\'t specifiy a text!");
+          }
+      } else {
+          message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`!")
+      }
     }
 
     if(command === "sayembed") {
-        message.delete().catch(O_o=>{});
-        if(args[0]) {
-            if(args[0] == "here") {
-                if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
-                    const sayMessage = args.slice(1).join(" ");
+        if(message.member.hasPermissions('MANAGE_MESSAGES' && 'EMBED_LINKS')) {
+            message.delete().catch(O_o => {
+            });
+            if (args[0]) {
+                if (args[0] == "here") {
+                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                        const sayMessage = args.slice(1).join(" ");
+                        const embed = new Discord.RichEmbed()
+                            .setDescription(sayMessage)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+                            .setTimestamp()
+                            .setColor(randomColor);
+                        message.channel.send('@here', {embed: embed});
+                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                }
+                else if (args[0] == "everyone") {
+                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                        const sayMessage = args.slice(1).join(" ");
+                        const embed = new Discord.RichEmbed()
+                            .setDescription(sayMessage)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+                            .setTimestamp()
+                            .setColor(randomColor);
+                        message.channel.send('@everyone', {embed: embed});
+                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                }
+                else if (args[0] == "role") {
+                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                        const sayMessage = args.slice(2).join(" ");
+                        const embed = new Discord.RichEmbed()
+                            .setDescription(sayMessage)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
+                            .setTimestamp()
+                            .setColor(randomColor);
+                        message.channel.send('<@&' + args[1] + '>', {embed: embed});
+                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                } else {
+                    const sayMessage = args.join(" ");
                     const embed = new Discord.RichEmbed()
                         .setDescription(sayMessage)
                         .setAuthor(message.author.tag, message.author.avatarURL)
                         .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
                         .setTimestamp()
                         .setColor(randomColor);
-                    message.channel.send('@here', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
-            else if(args[0] == "everyone") {
-                if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
-                    const sayMessage = args.slice(1).join(" ");
-                    const embed = new Discord.RichEmbed()
-                        .setDescription(sayMessage)
-                        .setAuthor(message.author.tag, message.author.avatarURL)
-                        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
-                        .setTimestamp()
-                        .setColor(randomColor);
-                    message.channel.send('@everyone', {embed: embed}); } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`"); }
-            else if(args[0] == "role") {
-                if(message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
-                    const sayMessage = args.slice(2).join(" ");
-                    const embed = new Discord.RichEmbed()
-                        .setDescription(sayMessage)
-                        .setAuthor(message.author.tag, message.author.avatarURL)
-                        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
-                        .setTimestamp()
-                        .setColor(randomColor);
-                    message.channel.send('<@&' + args[1] + '>', {embed: embed});
-                } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                    message.channel.send({embed: embed});
+                }
             } else {
-                const sayMessage = args.join(" ");
-                const embed = new Discord.RichEmbed()
-                    .setDescription(sayMessage)
-                    .setAuthor(message.author.tag, message.author.avatarURL)
-                    .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
-                    .setTimestamp()
-                    .setColor(randomColor);
-                message.channel.send({embed: embed}); }
+                message.channel.send("You didn\'t specify a text!");
+            }
         } else {
-            message.channel.send("You didn\'t specify a text!");
+            message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES` & `EMBED_LINKS`!")
         }
     }
     if(command === "poll") {
-        const poll = args.join(" ");
-        message.delete().catch(O_o=>{});
-        const embed = new Discord.RichEmbed()
-            .setTitle("Poll:")
-            .setDescription(poll)
-            .setFooter(message.author.tag, message.author.avatarURL)
-            .setColor(randomColor)
-            .setTimestamp();
-        const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {embed: embed});
-        m.react('507144037451431949');
-        m.react('507144068111925258');
-        m.react('507144087057465374');
-        return;
+      if(message.member.hasPermission('MANAGE_MESSAGES')) {
+          const poll = args.join(" ");
+          message.delete().catch(O_o => {
+          });
+          const embed = new Discord.RichEmbed()
+              .setTitle("Poll:")
+              .setDescription(poll)
+              .setFooter(message.author.tag, message.author.avatarURL)
+              .setColor(randomColor)
+              .setTimestamp();
+          const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {embed: embed});
+          m.react('507144037451431949');
+          m.react('507144068111925258');
+          m.react('507144087057465374');
+          return;
+      } else {
+          message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`!")
+      }
     }
 
     if(command === "stats") {
@@ -209,7 +231,7 @@ client.on("message", async message => {
     }
 
     if(command === "purge") {
-        if(message.member.roles.find("name", "root") || message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "Moderator") || message.member.roles.find("name", "Mod")) {
+        if(message.member.hasPermission('MANAGE_MESSAGES')) {
             if(args[0]) {
                 var rawamount = args.map(function (x) {
                     return amount = parseInt(x, 10);
@@ -229,7 +251,7 @@ client.on("message", async message => {
                 }, 4000);
             }
         } else {
-            message.reply(':no_entry: **No permissions!** You need one of the following roles: `Mod`, `Moderator`, `Admin`, `Administrator`, `root`');
+            message.reply('<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`');
         }
     }
 
