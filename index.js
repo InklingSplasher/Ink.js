@@ -101,17 +101,17 @@ client.on("message", async message => {
               message.channel.send("You didn\'t specifiy a text!");
           }
       } else {
-          message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`!")
+          message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission `MANAGE_MESSAGES`!")
       }
     }
 
     if(command === "sayembed") {
         if(message.member.hasPermissions('MANAGE_MESSAGES' && 'EMBED_LINKS')) {
-            message.delete().catch(O_o => {
-            });
             if (args[0]) {
                 if (args[0] == "here") {
-                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                        message.delete().catch(O_o => {
+                        });
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
@@ -120,10 +120,12 @@ client.on("message", async message => {
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@here', {embed: embed});
-                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                    } else return message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MENTION_EVERYONE`!");
                 }
                 else if (args[0] == "everyone") {
-                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                        message.delete().catch(O_o => {
+                        });
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
@@ -132,10 +134,12 @@ client.on("message", async message => {
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@everyone', {embed: embed});
-                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                    } else return message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MENTION_EVERYONE`!");
                 }
                 else if (args[0] == "role") {
-                    if (message.member.roles.find("name", "Admin") || message.member.roles.find("name", "Administrator") || message.member.roles.find("name", "root") || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                        message.delete().catch(O_o => {
+                        });
                         const sayMessage = args.slice(2).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
@@ -144,8 +148,10 @@ client.on("message", async message => {
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('<@&' + args[1] + '>', {embed: embed});
-                    } else return message.reply(":no_entry: **No permissions!** You need one of the following roles: `Admin`, `Administrator`, `root`");
+                    } else return message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MENTION_EVERYONE`!");
                 } else {
+                    message.delete().catch(O_o => {
+                    });
                     const sayMessage = args.join(" ");
                     const embed = new Discord.RichEmbed()
                         .setDescription(sayMessage)
@@ -159,7 +165,7 @@ client.on("message", async message => {
                 message.channel.send("You didn\'t specify a text!");
             }
         } else {
-            message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES` & `EMBED_LINKS`!")
+            message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permissions: `MANAGE_MESSAGES` & `EMBED_LINKS`!")
         }
     }
     if(command === "poll") {
@@ -179,7 +185,7 @@ client.on("message", async message => {
           m.react('507144087057465374');
           return;
       } else {
-          message.reply("<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`!")
+          message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MANAGE_MESSAGES`!")
       }
     }
 
@@ -251,7 +257,7 @@ client.on("message", async message => {
                 }, 4000);
             }
         } else {
-            message.reply('<:NoShield:507144068111925258> **No access!** You need the permission `MANAGE_MESSAGES`');
+            message.reply('<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MANAGE_MESSAGES`');
         }
     }
 
