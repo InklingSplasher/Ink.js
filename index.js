@@ -489,7 +489,14 @@ client.on("message", async message => {
                 console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
             } else {
                 message.channel.send(":x: Needs a status as well as a message!")
-            }} else if(args[0] === "status") {
+            }
+        } else if (args[0] === "dm") {
+            const user = message.mentions.users.first();
+            const content = args.slice(2).join(" ");
+            if (user && content) {
+                user.sendMessage(content)
+            } else { message.channel.send("Invalid arguments! Mention + Content is required.")
+        }} else if(args[0] === "status") {
             if(args[1]) {
                 client.user.setStatus(args[1]);
                 const embed = new Discord.RichEmbed()
@@ -520,7 +527,7 @@ client.on("message", async message => {
                 }, 4000);
             }}
         else {
-            message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `fpurge`")
+            message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `fpurge`, `dm`")
         }}
 
 });
