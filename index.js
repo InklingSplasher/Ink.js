@@ -495,6 +495,7 @@ client.on("message", async message => {
             const content = args.slice(2).join(" ");
             if (user && content) {
                 user.sendMessage(content)
+                message.react('526078701830406173')
             } else { message.channel.send("Invalid arguments! Mention + Content is required.")
         }} else if(args[0] === "status") {
             if(args[1]) {
