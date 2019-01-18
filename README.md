@@ -21,7 +21,10 @@ Please download the latest version of [npm here](https://nodejs.org/en/download/
 ### How-To
 Just fill out the config-example.json with your credentials and rename it to config.json. You can create an application here: https://discordapp.com/developers/applications/.
 You find your ID by enabling Developer Mode in Discord under User Settings -> Appearance -> Developer Mode, then just right click your profile and click on 'Copy ID'.  
-Then, go into your console and while being in the Ink.js folder, use the `npm i` command to install the dependencies and after you filled out the config.json file, use the `npm start` command.
+Then, go into your Powershell (shift and rightclick on the folder) and while being in the Ink.js folder, use the `npm i` command to install the dependencies.
+
+After you filled out the config.json file, use the `npm start` command.
+Make sure to leave the Powershell window open at all time!
 
 ## Contributing
 You want to help me making my code better, or even add new things to it? Awesome, I'll really appreciate it!
