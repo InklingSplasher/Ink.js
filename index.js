@@ -171,6 +171,7 @@ client.on("message", async message => {
     if(command === "poll") {
       if(message.member.hasPermission('MANAGE_MESSAGES')) {
           const poll = args.join(" ");
+          if(poll) {
           message.delete().catch(O_o => {
           });
           const embed = new Discord.RichEmbed()
@@ -185,6 +186,8 @@ client.on("message", async message => {
           m.react('507144087057465374');
           return;
       } else {
+        message.reply("Please provide a poll to vote for!")
+      } } else {
           message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MANAGE_MESSAGES`!")
       }
     }
