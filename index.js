@@ -486,7 +486,8 @@ client.on("message", async message => {
       if(args[0] === "average") {
         if(args[1]) {
         sum = sum(args.slice(1))
-        average = sum/args.slice(1).length
+        average1 = sum/args.slice(1).length
+        average = Math.round(average1 * 100) / 100
         message.reply("The average is: " + average)
       } else {
         message.reply("Enter at least one number!")
