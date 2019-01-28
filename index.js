@@ -43,6 +43,22 @@ client.on("message", async message => {
     };
 
     let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
+
+    function sum(input){
+
+ if (toString.call(input) !== "[object Array]")
+    return false;
+
+            var total =  0;
+            for(var i=0;i<input.length;i++)
+              {
+                if(isNaN(input[i])){
+                continue;
+                 }
+                  total += Number(input[i]);
+               }
+             return total;
+            }
     console.log(invoke, args); // Logging all commands.
 
     // Variables
@@ -466,6 +482,25 @@ client.on("message", async message => {
         }, 1000);
     }
 
+    if(command === "math") {
+      if(args[0] === "average") {
+        if(args[1]) {
+        sum = sum(args.slice(1))
+        average = sum/args.slice(1).length
+        message.reply("The average is: " + average)
+      } else {
+        message.reply("Enter at least one number!")
+      }} else if(args[0] === "sum") {
+        if(args[1]) {
+        sum = sum(args.slice(1))
+        message.reply("The sum is: " + sum)
+      } else {
+        message.reply("Enter at least one number!")
+      }} else {
+        message.reply("Use one of the following sub-commands: `average`, `sum`")
+      }
+    }
+
     if(command === "debug") {
         if(message.author.id !== botconfig.owner) return;
         if(args[0] === "roles") {
@@ -535,12 +570,12 @@ client.on("message", async message => {
         }}
 
 // Catching errors instead of dieing :^)
-process.on('uncaughtException', (err) => {
+client.on('uncaughtException', (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
     console.error('Uncaught Exception: ', errorMsg);
 });
 
-process.on('unhandledRejection', err => {
+client.on('unhandledRejection', err => {
     console.error('Uncaught Promise Error: ', err);
 });
 
