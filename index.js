@@ -534,6 +534,16 @@ client.on("message", async message => {
             message.reply("Use one of the following sub-commands: `send`, `roles`, `status`, `game`, `fpurge`, `dm`")
         }}
 
+// Catching errors instead of dieing :^)
+process.on('uncaughtException', (err) => {
+    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+    console.error('Uncaught Exception: ', errorMsg);
+});
+
+process.on('unhandledRejection', err => {
+    console.error('Uncaught Promise Error: ', err);
+});
+
 });
 
 client.login(botconfig.token);
