@@ -439,6 +439,7 @@ client.on("message", async message => {
                     .addField("Result:", "```xl\n" + clean(evaled) + "```");
                 message.channel.send({embed: embed});
             } catch (err) {
+				Sentry.captureException("Eval Exeption:" + err);
                 const code = args.join(" ");
                 const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
                 const embed = new Discord.RichEmbed()
