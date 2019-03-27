@@ -27,7 +27,11 @@ client.on("guildDelete", guild => {
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
-Sentry.init({ dsn: botconfig.sentryDSN});
+// Release has to be edited manually!!!
+Sentry.init({ 
+  dsn: botconfig.sentryDSN,
+  release: "inkjs@0.6.1"
+});
 
 
 // Command rules
