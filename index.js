@@ -30,7 +30,7 @@ client.on("guildDelete", guild => {
 // Release has to be edited manually!!!
 Sentry.init({ 
   dsn: botconfig.sentryDSN,
-  release: "inkjs@0.6.1"
+  release: "inkjs@0.7.1"
 });
 
 
