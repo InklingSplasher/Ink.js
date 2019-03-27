@@ -1,5 +1,6 @@
 {
   "token": "The bot token",
+  "sentryDSN": "Insert Public Sentry DNS here",
   "prefix": "!",
   "owner": "Your Discord-ID",
   "ownertag": "Your Discord-Tag",

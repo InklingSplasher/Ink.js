@@ -3,6 +3,7 @@ const botconfig = require("./config.json");
 const package = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
+const Sentry = require('@sentry/node');
 const tz = require("moment-timezone");
 // noinspection JSCheckFunctionSignatures
 const client = new Discord.Client({autoReconnect:botconfig.autorestart});
@@ -26,7 +27,7 @@ client.on("guildDelete", guild => {
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
-client.on('error', console.error);
+Sentry.init({ dsn: botconfig.sentryDSN});
 
 
 // Command rules
@@ -576,10 +577,12 @@ client.on("message", async message => {
 client.on('uncaughtException', (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
     console.error('Uncaught Exception: ', errorMsg);
+    Sentry.captureException("Uncaught Exception:" + errorMsg);
 });
 
 client.on('unhandledRejection', err => {
     console.error('Uncaught Promise Error: ', err);
+    Sentry.captureException("Uncaught Promise Error:" + err);
 });
 
 });
