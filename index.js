@@ -1,6 +1,6 @@
 // Setting the config & calling the package
 const botconfig = require("./config.json");
-const package = require("./package.json");
+const packageInfo = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
 const Sentry = require('@sentry/node');
@@ -30,7 +30,7 @@ client.on("guildDelete", guild => {
 // Release has to be edited manually!!!
 Sentry.init({ 
   dsn: botconfig.sentryDSN,
-  release: "inkjs@0.7.1"
+  release: "inkjs@0.7.2"
 });
 
 
@@ -106,7 +106,7 @@ client.on("message", async message => {
 
     if(command === "say") {
       if(message.member.hasPermission('MANAGE_MESSAGES')) {
-          if (args[0] == "bypass") { // For bot owner, to send a message without seeing that say was used.
+          if (args[0] === "bypass") { // For bot owner, to send a message without seeing that say was used.
               if (message.author.id !== botconfig.owner) return;
               const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
               message.delete().catch(O_o => {
@@ -131,7 +131,7 @@ client.on("message", async message => {
     if(command === "sayembed") {
         if(message.member.hasPermissions('MANAGE_MESSAGES' && 'EMBED_LINKS')) {
             if (args[0]) {
-                if (args[0] == "here") {
+                if (args[0] === "here") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
                         message.delete().catch(O_o => {
                         });
@@ -145,7 +145,7 @@ client.on("message", async message => {
                         message.channel.send('@here', {embed: embed}).catch(err => Sentry.captureException(err));
                     } else return message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MENTION_EVERYONE`!").catch(err => Sentry.captureException(err));
                 }
-                else if (args[0] == "everyone") {
+                else if (args[0] === "everyone") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
                         message.delete().catch(O_o => {
                         });
@@ -159,7 +159,7 @@ client.on("message", async message => {
                         message.channel.send('@everyone', {embed: embed}).catch(err => Sentry.captureException(err));
                     } else return message.reply("<:NoShield:507144068111925258> **No access!** You are missing the following permission: `MENTION_EVERYONE`!").catch(err => Sentry.captureException(err));
                 }
-                else if (args[0] == "role") {
+                else if (args[0] === "role") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
                         message.delete().catch(O_o => {
                         });
@@ -222,7 +222,7 @@ client.on("message", async message => {
             .setDescription("Here, you can find general info as well as some stats about me!")
             .setColor(0x9b59b6)
             .addField("Owner:", "<@!" + botconfig.owner + "> " + "(" + botconfig.ownertag + ")", true)
-            .addField("Version:", package.version, true)
+            .addField("Version:", packageInfo.version, true)
             .addField("Source:", "[View on GitHub](https://github.com/InklingSplasher/Ink.js)", true)
             .addField("Prefix:", prefix, true)
             .addField("Total Users:", count.length, true)
