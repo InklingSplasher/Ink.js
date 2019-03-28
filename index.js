@@ -36,7 +36,7 @@ Sentry.init({
 
 // Command rules
 client.on("message", async message => {
-    if(message.author.bot) return; // Checks if command author is the bot iself.
+    if(message.author.bot) return; // Checks if command author is the bot itself.
     if(message.channel.type === "dm") return; // Checks if the command is used in DMs.
     if(message.content.indexOf(botconfig.prefix) !== 0) return;
 
