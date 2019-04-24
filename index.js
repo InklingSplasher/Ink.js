@@ -78,7 +78,7 @@ client.on("message", async message => {
     // let send = message.channel.send;
     const randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
 
-    if(command === "help") {
+    if(command === "help" || command === "commands") {
         const embed = new Discord.RichEmbed()
             .setTitle("Help Pages")
             .setDescription("All commands for this bot in a fancy list made of an embed! If you have any questions feel free to ask us in our Discord-Server InkCurity.")
@@ -93,7 +93,7 @@ client.on("message", async message => {
         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "ping") {
+    if(command === "ping" || command === "hello") {
         const m = await message.channel.send("Ping? <a:Loading:506206198320857099>");
         const embed = new Discord.RichEmbed()
             .setTitle("Pong! :ping_pong:")
@@ -128,7 +128,7 @@ client.on("message", async message => {
       }
     }
 
-    if(command === "sayembed") {
+    if(command === "sayembed" || command === "embed") {
         if(message.member.hasPermissions('MANAGE_MESSAGES' && 'EMBED_LINKS')) {
             if (args[0]) {
                 if (args[0] === "here") {
@@ -244,7 +244,7 @@ client.on("message", async message => {
         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "stealavatar") {
+    if(command === "stealavatar" || command === "avatar") {
         const user = message.mentions.users.first();
         if(user) {
             const embed = new Discord.RichEmbed()
@@ -262,7 +262,7 @@ client.on("message", async message => {
         }
     }
 
-    if(command === "purge") {
+    if(command === "purge" || command === "clean") {
         if(message.member.hasPermission('MANAGE_MESSAGES')) {
             if(args[0]) {
                 var rawamount = args.map(function (x) {
@@ -329,7 +329,7 @@ client.on("message", async message => {
         }
     }
 
-    if(command === "userinfo") {
+    if(command === "userinfo" || command === "user" || command === "whois") {
         const user = message.mentions.users.first();
         if(user) {
             const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
@@ -403,7 +403,7 @@ client.on("message", async message => {
         }
     }
 
-    if(command === "serverinfo") {
+    if(command === "serverinfo" || command === "server" || command === "guildinfo") {
         let guild = message.guild;
         const created = new moment(guild.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
@@ -489,7 +489,7 @@ client.on("message", async message => {
     }
 
     if(command === "math") {
-      if(args[0] === "average") {
+      if(args[0] === "average") { // Average Subcommand
         if(args[1]) {
         sum = sum(args.slice(1));
         average1 = sum/args.slice(1).length;
@@ -497,7 +497,7 @@ client.on("message", async message => {
         message.reply("The average is: " + average).catch(err => Sentry.captureException(err));
       } else {
         message.reply("Enter at least one number!").catch(err => Sentry.captureException(err));
-      }} else if(args[0] === "sum") {
+      }} else if(args[0] === "sum") { // Sum Subcommand
         if(args[1]) {
         sum = sum(args.slice(1));
         message.reply("The sum is: " + sum).catch(err => Sentry.captureException(err));
