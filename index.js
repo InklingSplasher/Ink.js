@@ -13,6 +13,7 @@ const client = new Discord.Client({
 // What happens when the bot is started
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
+    console.log(`\nSettings:\n\nPrefix: ` + botconfig.prefix + `\nOwner ID / Tag: ` + botconfig.owner + " / " + botconfig.ownertag + "\nSentryDSN: " + botconfig.sentryDSN + "\nAutorestart: " + botconfig.autorestart + "\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!");
     client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
         type: 'PLAYING'
     }).catch(err => Sentry.captureException(err));
