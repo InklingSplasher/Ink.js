@@ -138,7 +138,7 @@ client.on("message", async message => {
     }
 
     if(command === "sayembed" || command === "embed") {
-        if(message.member.hasPermissions('EMBED_LINKS')) {
+        if(message.member.hasPermission('EMBED_LINKS')) {
             if (args[0]) {
                 if (args[0] === "here") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
@@ -154,7 +154,7 @@ client.on("message", async message => {
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
-                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
+                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
                     message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
@@ -173,7 +173,7 @@ client.on("message", async message => {
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
-                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
+                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
@@ -192,38 +192,42 @@ client.on("message", async message => {
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
-                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
+                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
                     }}
                 else if(args[0] === "custom") {
-                    if(message.author.id !== botconfig.owner) return;
+                    if (message.member.hasPermission('MANAGE_MESSAGES' & 'MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                    if (args[3]) {
                     message.delete().catch(O_o => {
                     });
-                    if(args[3]) {
-                        const color = args[3];
+                        const color = args[1];
+                        const description = args.slice(3).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setTimestamp()
-                            .setTitle(args[1])
-                            .setDescription(args[2])
+                            .setTitle(args[2])
+                            .setDescription(description)
                             .setColor(color);
                         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                    } else {
-                        const color = "34363C";
-                        const embed = new Discord.RichEmbed()
+                } else {
+                        const embed = new Discord.RichEmbed() // Typical form error
+                            .setTitle("Error while executing!")
+                            .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                            .addField("Usage", "`" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
                             .setAuthor(message.author.username, message.author.avatarURL)
-                            .setTimestamp()
-                            .setTitle(args[1])
-                            .setDescription(args[2])
-                            .setColor(color);
+                            .setColor(0xe74c3c);
                         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
                     }
-
-
-                }
-                    else {
+                    } else {
+                        const embed = new Discord.RichEmbed() // Typical perm error
+                            .setTitle("Permission error!")
+                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES` & `MENTION_EVERYONE`")
+                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setColor(0xe74c3c);
+                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                    }} else {
                     message.delete().catch(O_o => {
                     });
                     const sayMessage = args.join(" ");
@@ -238,7 +242,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "sayembed <content>`\n**OR**\n " + "`" + botconfig.prefix + "sayembed role <roleID> <content>`\n**OR**\n `" + botconfig.prefix + "sayembed here <content>`\n**OR**\n `" + botconfig.prefix + "sayembed everyone <content>`")
+                    .addField("Usage", "`" + botconfig.prefix + "sayembed <content>`\n**OR**\n " + "`" + botconfig.prefix + "sayembed role <roleID> <content>`\n**OR**\n `" + botconfig.prefix + "sayembed here <content>`\n**OR**\n `" + botconfig.prefix + "sayembed everyone <content>`\n**OR**\n `" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
