@@ -196,7 +196,34 @@ client.on("message", async message => {
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                    }} else {
+                    }}
+                else if(args[0] === "custom") {
+                    if(message.author.id !== botconfig.owner) return;
+                    message.delete().catch(O_o => {
+                    });
+                    if(args[3]) {
+                        const color = args[3];
+                        const embed = new Discord.RichEmbed()
+                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setTimestamp()
+                            .setTitle(args[1])
+                            .setDescription(args[2])
+                            .setColor(color);
+                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                    } else {
+                        const color = "34363C";
+                        const embed = new Discord.RichEmbed()
+                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setTimestamp()
+                            .setTitle(args[1])
+                            .setDescription(args[2])
+                            .setColor(color);
+                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                    }
+
+
+                }
+                    else {
                     message.delete().catch(O_o => {
                     });
                     const sayMessage = args.join(" ");
