@@ -6,39 +6,47 @@ const moment = require("moment");
 const Sentry = require('@sentry/node');
 const tz = require("moment-timezone");
 // noinspection JSCheckFunctionSignatures
-const client = new Discord.Client({autoReconnect:botconfig.autorestart});
+const client = new Discord.Client({
+    autoReconnect: botconfig.autorestart
+});
 
 // What happens when the bot is started
-client.on("ready", async () => {
+client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' }).catch(err => Sentry.captureException(err));
+    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+        type: 'PLAYING'
+    }).catch(err => Sentry.captureException(err));
     client.user.setStatus('online').catch(err => Sentry.captureException(err));
 });
 
 client.on("guildCreate", guild => {
     // This event triggers when the bot joins a guild.
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' }).catch(err => Sentry.captureException(err));
+    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+        type: 'PLAYING'
+    }).catch(err => Sentry.captureException(err));
     console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 });
 
 client.on("guildDelete", guild => {
     // this event triggers when the bot is removed from a guild.
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, { type: 'PLAYING' }).catch(err => Sentry.captureException(err));
+    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+        type: 'PLAYING'
+    }).catch(err => Sentry.captureException(err));
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
 // Release has to be edited manually!!!
-Sentry.init({ 
-  dsn: botconfig.sentryDSN,
-  release: "inkjs@0.8.2b"
+Sentry.init({
+    dsn: botconfig.sentryDSN,
+    release: "inkjs@0.8.2b"
 });
 
 
 // Command rules
 client.on("message", async message => {
-    if(message.author.bot) return; // Checks if command author is the bot itself.
-    if(message.channel.type === "dm") return; // Checks if the command is used in DMs.
-    if(message.content.indexOf(botconfig.prefix) !== 0) return;
+    if (message.author.bot) return; // Checks if command author is the bot itself.
+    if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
+    if (message.content.indexOf(botconfig.prefix) !== 0) return;
 
     const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
@@ -51,21 +59,20 @@ client.on("message", async message => {
 
     let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
 
-    function sum(input){
+    function sum(input) {
 
- if (toString.call(input) !== "[object Array]")
-    return false;
+        if (toString.call(input) !== "[object Array]")
+            return false;
 
-            var total =  0;
-            for(var i=0;i<input.length;i++)
-              {
-                if(isNaN(input[i])){
+        var total = 0;
+        for (var i = 0; i < input.length; i++) {
+            if (isNaN(input[i])) {
                 continue;
-                 }
-                  total += Number(input[i]);
-               }
-             return total;
             }
+            total += Number(input[i]);
+        }
+        return total;
+    }
     console.log(invoke, args); // Logging all commands.
 
     // Variables
@@ -76,9 +83,9 @@ client.on("message", async message => {
     // let channel = msg.channel;
     // let chan = message.channel;
     // let send = message.channel.send;
-    const randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+    const randomColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
-    if(command === "help" || command === "commands") {
+    if (command === "help" || command === "commands") {
         const embed = new Discord.RichEmbed()
             .setTitle("Help Pages")
             .setDescription("All commands for this bot in a fancy list made of an embed! If you have any questions feel free to ask us in our Discord-Server InkCurity.")
@@ -90,10 +97,12 @@ client.on("message", async message => {
             .addField("Moderation / Info", "```md\n" + "1. userinfo: Displays general information about a user in the server.\n2. serverinfo: Displays general information about the server.\n3. purge: Deletes a specific number of messages (or 10 if no argument is given).\n4. kick: Kicks a specific member with the given reason.\n5. ban: Bans a specific member with the given reason." + "```", true)
             .addField("Miscellaneous", "```md\n" + "1. say: Makes me say stuff and deletes your message.\n2. sayembed: Makes me say stuff, deletes your message and puts your text into a sexy embed!\n3. stealavatar: Steals the avatar URL of the provided user by mention.\n4. poll: Make a poll with the bot!" + "```", true)
             .addField("Bot-Owner", "```md\n" + "1. eval: Evaluates JavaScript.\n2. shutdown: Shuts the bot down.\n3. debug: Some secret, useful commands for the owner." + "```", true);
-        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+        message.channel.send({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "ping" || command === "hello") {
+    if (command === "ping" || command === "hello") {
         const m = await message.channel.send("Ping? <a:Loading:506206198320857099>");
         const embed = new Discord.RichEmbed()
             .setTitle("Pong! :ping_pong:")
@@ -101,142 +110,161 @@ client.on("message", async message => {
             .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
             .setTimestamp()
             .setColor(0xd35400);
-        m.edit({embed: embed}).catch(err => Sentry.captureException(err));
+        m.edit({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "say") {
-      if(message.member.hasPermission('MANAGE_MESSAGES')) {
-          if (args[0] === "bypass") { // For bot owner, to send a message without seeing that say was used.
-              if (message.author.id !== botconfig.owner) message.reply("Not a bot owner!").catch(err => Sentry.captureException(err));
-              const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
-              message.delete().catch(O_o => {
-              }); // Deletes the message of the sender.
-              message.channel.send(sayMessage).catch(err => Sentry.captureException(err)); // Sends the given message after the say command.
-          } else if (args[0]) {
-              const sayMessage = args.join(" ");
-              message.delete().catch(O_o => {
-              });
-              message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(err => Sentry.captureException(err)); // Sends the given message with the author after the say command.
-          }
-          else {
-              const embed = new Discord.RichEmbed() // Typical form error
-                  .setTitle("Error while executing!")
-                  .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                  .addField("Usage", "`" + botconfig.prefix + "say <content>`\n**OR**\n " + "`" + botconfig.prefix + "say bypass <content>`")
-                  .setAuthor(message.author.username, message.author.avatarURL)
-                  .setColor(0xe74c3c);
-              message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-          }
-      } else {
-          const embed = new Discord.RichEmbed() // Typical perm error
-              .setTitle("Permission error!")
-              .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
-              .setAuthor(message.author.username, message.author.avatarURL)
-              .setColor(0xe74c3c);
-          message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      }
+    if (command === "say") {
+        if (message.member.hasPermission('MANAGE_MESSAGES')) {
+            if (args[0] === "bypass") { // For bot owner, to send a message without seeing that say was used.
+                if (message.author.id !== botconfig.owner) message.reply("Not a bot owner!").catch(err => Sentry.captureException(err));
+                const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
+                message.delete().catch(O_o => {}); // Deletes the message of the sender.
+                message.channel.send(sayMessage).catch(err => Sentry.captureException(err)); // Sends the given message after the say command.
+            } else if (args[0]) {
+                const sayMessage = args.join(" ");
+                message.delete().catch(O_o => {});
+                message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(err => Sentry.captureException(err)); // Sends the given message with the author after the say command.
+            } else {
+                const embed = new Discord.RichEmbed() // Typical form error
+                    .setTitle("Error while executing!")
+                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                    .addField("Usage", "`" + botconfig.prefix + "say <content>`\n**OR**\n " + "`" + botconfig.prefix + "say bypass <content>`")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else {
+            const embed = new Discord.RichEmbed() // Typical perm error
+                .setTitle("Permission error!")
+                .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
+                .setAuthor(message.author.username, message.author.avatarURL)
+                .setColor(0xe74c3c);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
     }
 
-    if(command === "sayembed" || command === "embed") {
-        if(message.member.hasPermission('EMBED_LINKS')) {
+    if (command === "sayembed" || command === "embed") {
+        if (message.member.hasPermission('EMBED_LINKS')) {
             if (args[0]) {
                 if (args[0] === "here") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
-                        message.delete().catch(O_o => {
-                        });
+                        message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
                             .setColor(randomColor);
-                        message.channel.send('@here', {embed: embed}).catch(err => Sentry.captureException(err));
+                        message.channel.send('@here', {
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
-                    message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                }}
-                else if (args[0] === "everyone") {
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
+                    }
+                } else if (args[0] === "everyone") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
-                        message.delete().catch(O_o => {
-                        });
+                        message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
                             .setColor(randomColor);
-                        message.channel.send('@everyone', {embed: embed}).catch(err => Sentry.captureException(err));
+                        message.channel.send('@everyone', {
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                    }}
-                else if (args[0] === "role") {
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
+                    }
+                } else if (args[0] === "role") {
                     if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
-                        message.delete().catch(O_o => {
-                        });
+                        message.delete().catch(O_o => {});
                         const sayMessage = args.slice(2).join(" ");
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
                             .setColor(randomColor);
-                        message.channel.send('<@&' + args[1] + '>', {embed: embed}).catch(err => Sentry.captureException(err));
+                        message.channel.send('<@&' + args[1] + '>', {
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                    }}
-                else if(args[0] === "custom") {
-                    if (message.member.hasPermission('MANAGE_MESSAGES' & 'MENTION_EVERYONE') || message.author.id === botconfig.owner) {
-                    if (args[3]) {
-                    message.delete().catch(O_o => {
-                    });
-                        const color = args[1];
-                        const description = args.slice(3).join(" ");
-                        const embed = new Discord.RichEmbed()
-                            .setAuthor(message.author.username, message.author.avatarURL)
-                            .setTimestamp()
-                            .setTitle(args[2])
-                            .setDescription(description)
-                            .setColor(color);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                } else {
-                        const embed = new Discord.RichEmbed() // Typical form error
-                            .setTitle("Error while executing!")
-                            .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                            .addField("Usage", "`" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
-                            .setAuthor(message.author.username, message.author.avatarURL)
-                            .setColor(0xe74c3c);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
                     }
+                } else if (args[0] === "custom") {
+                    if (message.member.hasPermission('MANAGE_MESSAGES' & 'MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                        if (args[3]) {
+                            message.delete().catch(O_o => {});
+                            const color = args[1];
+                            const description = args.slice(3).join(" ");
+                            const embed = new Discord.RichEmbed()
+                                .setAuthor(message.author.username, message.author.avatarURL)
+                                .setTimestamp()
+                                .setTitle(args[2])
+                                .setDescription(description)
+                                .setColor(color);
+                            message.channel.send({
+                                embed: embed
+                            }).catch(err => Sentry.captureException(err));
+                        } else {
+                            const embed = new Discord.RichEmbed() // Typical form error
+                                .setTitle("Error while executing!")
+                                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                                .addField("Usage", "`" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
+                                .setAuthor(message.author.username, message.author.avatarURL)
+                                .setColor(0xe74c3c);
+                            message.channel.send({
+                                embed: embed
+                            }).catch(err => Sentry.captureException(err));
+                        }
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES` & `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-                    }} else {
-                    message.delete().catch(O_o => {
-                    });
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
+                    }
+                } else {
+                    message.delete().catch(O_o => {});
                     const sayMessage = args.join(" ");
                     const embed = new Discord.RichEmbed()
                         .setDescription(sayMessage)
                         .setAuthor(message.author.tag, message.author.avatarURL)
                         .setTimestamp()
                         .setColor(randomColor);
-                    message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                    message.channel.send({
+                        embed: embed
+                    }).catch(err => Sentry.captureException(err));
                 }
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
@@ -245,7 +273,9 @@ client.on("message", async message => {
                     .addField("Usage", "`" + botconfig.prefix + "sayembed <content>`\n**OR**\n " + "`" + botconfig.prefix + "sayembed role <roleID> <content>`\n**OR**\n `" + botconfig.prefix + "sayembed here <content>`\n**OR**\n `" + botconfig.prefix + "sayembed everyone <content>`\n**OR**\n `" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical perm error
@@ -253,45 +283,53 @@ client.on("message", async message => {
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
-    if(command === "poll") {
-      if(message.member.hasPermission('MANAGE_MESSAGES')) {
-          const poll = args.join(" ");
-          if(poll) {
-          message.delete().catch(O_o => {
-          });
-          const embed = new Discord.RichEmbed()
-              .setTitle("Poll:")
-              .setDescription(poll)
-              .setFooter(message.author.tag, message.author.avatarURL)
-              .setColor(randomColor)
-              .setTimestamp();
-          const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {embed: embed}).catch(err => Sentry.captureException(err));
-          m.react('507144037451431949').catch(err => Sentry.captureException(err));
-          m.react('507144068111925258').catch(err => Sentry.captureException(err));
-          m.react('507144087057465374').catch(err => Sentry.captureException(err));
-          return;
-      } else {
-              const embed = new Discord.RichEmbed() // Typical form error
-                  .setTitle("Error while executing!")
-                  .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                  .addField("Usage", "`" + botconfig.prefix + "poll <content>`")
-                  .setAuthor(message.author.username, message.author.avatarURL)
-                  .setColor(0xe74c3c);
-              message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      } } else {
-          const embed = new Discord.RichEmbed() // Typical perm error
-              .setTitle("Permission error!")
-              .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-              .setAuthor(message.author.username, message.author.avatarURL)
-              .setColor(0xe74c3c);
-          message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      }
+    if (command === "poll") {
+        if (message.member.hasPermission('MANAGE_MESSAGES')) {
+            const poll = args.join(" ");
+            if (poll) {
+                message.delete().catch(O_o => {});
+                const embed = new Discord.RichEmbed()
+                    .setTitle("Poll:")
+                    .setDescription(poll)
+                    .setFooter(message.author.tag, message.author.avatarURL)
+                    .setColor(randomColor)
+                    .setTimestamp();
+                const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+                m.react('507144037451431949').catch(err => Sentry.captureException(err));
+                m.react('507144068111925258').catch(err => Sentry.captureException(err));
+                m.react('507144087057465374').catch(err => Sentry.captureException(err));
+                return;
+            } else {
+                const embed = new Discord.RichEmbed() // Typical form error
+                    .setTitle("Error while executing!")
+                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                    .addField("Usage", "`" + botconfig.prefix + "poll <content>`")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else {
+            const embed = new Discord.RichEmbed() // Typical perm error
+                .setTitle("Permission error!")
+                .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
+                .setAuthor(message.author.username, message.author.avatarURL)
+                .setColor(0xe74c3c);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
     }
 
-    if(command === "stats") {
+    if (command === "stats") {
         let count = Array.from(client.users);
         const embed = new Discord.RichEmbed()
             .setTitle("General Info & Stats")
@@ -306,10 +344,12 @@ client.on("message", async message => {
             .setAuthor(client.user.tag, client.user.avatarURL)
             .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
-        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+        message.channel.send({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "invite") {
+    if (command === "invite") {
         const botID = client.user.id;
         const embed = new Discord.RichEmbed()
             .setTitle("Invite me, " + client.user.username + "!")
@@ -317,12 +357,14 @@ client.on("message", async message => {
             .addField("Anything Else?", "Yes, sadly, you can\'t invite me quite yet, because the bot is currently set to \'private\' and can only be invited by my owner Ink#0001.")
             .addField("Requesting Support?", "Feel free to ask us at our official [Discord-Server](http://inkc.me/dis)!")
             .setColor(0xe67e22);
-        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+        message.channel.send({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "stealavatar" || command === "avatar") {
+    if (command === "stealavatar" || command === "avatar") {
         const user = message.mentions.users.first();
-        if(user) {
+        if (user) {
             const embed = new Discord.RichEmbed()
                 .setTitle("Avatar of " + user.tag)
                 .setDescription("View it [here](" + user.avatarURL + ")!")
@@ -331,36 +373,39 @@ client.on("message", async message => {
                 .setColor(0x34495e)
                 .setAuthor(user.username, user.avatarURL)
                 .setFooter("Requested by: " + message.author.tag);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-        }
-        else {
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        } else {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Error while executing!")
                 .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                 .addField("Usage", "`" + botconfig.prefix + "stealavatar <mention>`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
-    if(command === "purge" || command === "clean") {
-        if(message.member.hasPermission('MANAGE_MESSAGES')) {
-            if(args[0]) {
-                var rawamount = args.map(function (x) {
+    if (command === "purge" || command === "clean") {
+        if (message.member.hasPermission('MANAGE_MESSAGES')) {
+            if (args[0]) {
+                var rawamount = args.map(function(x) {
                     return amount = parseInt(x, 10);
                 });
                 var amount = amount + 1;
                 message.channel.bulkDelete(amount, true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function(){
+                setTimeout(function() {
                     m.delete()
                 }, 4000);
             } else {
                 message.delete();
                 message.channel.bulkDelete('11', true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function(){
+                setTimeout(function() {
                     m.delete()
                 }, 4000);
             }
@@ -370,54 +415,63 @@ client.on("message", async message => {
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
-    if(command === "kick") {
-      if(message.member.hasPermission('KICK_MEMBERS')) {
-        const user = message.mentions.users.first();
-          if(user) {
-            const member = message.guild.member(user);
-            if (member) {
-              if(member.kickable === true) {
-                  const reason = args[1];
-                  member.kick(reason).catch(err => Sentry.captureException(err));
-                  message.react('526078701830406173').catch(err => Sentry.captureException(err));
-              } else {
-                  const embed = new Discord.RichEmbed() // Bot perm error
-                      .setTitle("Permission error!")
-                      .setDescription("I don't have the permission to kick this user! <:NoShield:500245155266166784>")
-                      .setAuthor(message.author.username, message.author.avatarURL)
-                      .setColor(0xe74c3c);
-                  message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-              }
-          }} else {
-              const embed = new Discord.RichEmbed() // Typical form error
-                  .setTitle("Error while executing!")
-                  .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                  .addField("Usage", "`" + botconfig.prefix + "kick <mention> [reason]`")
-                  .setAuthor(message.author.username, message.author.avatarURL)
-                  .setColor(0xe74c3c);
-              message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-       }
-        } else {
-          const embed = new Discord.RichEmbed() // Typical perm error
-              .setTitle("Permission error!")
-              .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-              .setAuthor(message.author.username, message.author.avatarURL)
-              .setColor(0xe74c3c);
-          message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-        }
-    }
-
-    if(command === "ban") {
-        if(message.member.hasPermission('BAN_MEMBERS')) {
+    if (command === "kick") {
+        if (message.member.hasPermission('KICK_MEMBERS')) {
             const user = message.mentions.users.first();
-            if(user) {
+            if (user) {
                 const member = message.guild.member(user);
                 if (member) {
-                    if(member.bannable === true) {
+                    if (member.kickable === true) {
+                        const reason = args[1];
+                        member.kick(reason).catch(err => Sentry.captureException(err));
+                        message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                    } else {
+                        const embed = new Discord.RichEmbed() // Bot perm error
+                            .setTitle("Permission error!")
+                            .setDescription("I don't have the permission to kick this user! <:NoShield:500245155266166784>")
+                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setColor(0xe74c3c);
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
+                    }
+                }
+            } else {
+                const embed = new Discord.RichEmbed() // Typical form error
+                    .setTitle("Error while executing!")
+                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                    .addField("Usage", "`" + botconfig.prefix + "kick <mention> [reason]`")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else {
+            const embed = new Discord.RichEmbed() // Typical perm error
+                .setTitle("Permission error!")
+                .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
+                .setAuthor(message.author.username, message.author.avatarURL)
+                .setColor(0xe74c3c);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
+    }
+
+    if (command === "ban") {
+        if (message.member.hasPermission('BAN_MEMBERS')) {
+            const user = message.mentions.users.first();
+            if (user) {
+                const member = message.guild.member(user);
+                if (member) {
+                    if (member.bannable === true) {
                         const reason = args[1];
                         member.ban(reason).catch(err => Sentry.captureException(err));
                         message.react('526078701830406173').catch(err => Sentry.captureException(err));
@@ -427,16 +481,21 @@ client.on("message", async message => {
                             .setDescription("I don't have the permission to ban this user! <:NoShield:500245155266166784>")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
-                        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                        message.channel.send({
+                            embed: embed
+                        }).catch(err => Sentry.captureException(err));
                     }
-                }} else {
+                }
+            } else {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + botconfig.prefix + "ban <mention> [reason]`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical perm error
@@ -444,16 +503,18 @@ client.on("message", async message => {
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
-    if(command === "userinfo" || command === "user" || command === "whois") {
+    if (command === "userinfo" || command === "user" || command === "whois") {
         const user = message.mentions.users.first();
-        if(user) {
+        if (user) {
             const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
             const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-            if(user.presence.game != null) {
+            if (user.presence.game != null) {
                 const embed = new Discord.RichEmbed()
                     .setTitle("User Information")
                     .setDescription("of <@!" + user.id + ">")
@@ -467,7 +528,9 @@ client.on("message", async message => {
                     .setAuthor(user.tag, user.avatarURL)
                     .setFooter("Message sent on: " + timestamp)
                     .setThumbnail(user.avatarURL);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             } else {
                 const embed = new Discord.RichEmbed()
                     .setTitle("User Information")
@@ -482,13 +545,15 @@ client.on("message", async message => {
                     .setAuthor(user.tag, user.avatarURL)
                     .setFooter("Message sent on: " + timestamp)
                     .setThumbnail(user.avatarURL);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
 
         } else {
             const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
             const joindate = new moment(message.author.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-            if(message.author.game != null) {
+            if (message.author.game != null) {
                 const embed = new Discord.RichEmbed()
                     .setTitle("User Information")
                     .setDescription("of <@!" + message.author.id + ">")
@@ -502,7 +567,9 @@ client.on("message", async message => {
                     .setAuthor(message.author.tag, message.author.avatarURL)
                     .setFooter("Message sent on: " + timestamp)
                     .setThumbnail(message.author.avatarURL);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             } else {
                 const embed = new Discord.RichEmbed()
                     .setTitle("User Information")
@@ -517,12 +584,14 @@ client.on("message", async message => {
                     .setAuthor(message.author.tag, message.author.avatarURL)
                     .setFooter("Message sent on: " + timestamp)
                     .setThumbnail(message.author.avatarURL);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
         }
     }
 
-    if(command === "serverinfo" || command === "server" || command === "guildinfo") {
+    if (command === "serverinfo" || command === "server" || command === "guildinfo") {
         let guild = message.guild;
         const created = new moment(guild.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
@@ -538,12 +607,14 @@ client.on("message", async message => {
             .setFooter("Message sent on: " + timestamp)
             .setColor(0x1abc9c)
             .setThumbnail(guild.iconURL);
-        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+        message.channel.send({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "eval") {
-        if(message.author.id !== botconfig.owner) return;
-        if(args[0]) {
+    if (command === "eval") {
+        if (message.author.id !== botconfig.owner) return;
+        if (args[0]) {
             try {
                 const code = args.join(" ");
                 let evaled = eval(code);
@@ -559,7 +630,9 @@ client.on("message", async message => {
                     .setFooter("Message sent on: " + timestamp)
                     .addField("Code Entered:", "```xl\n" + code + "```")
                     .addField("Result:", "```xl\n" + clean(evaled) + "```");
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             } catch (err) {
                 const code = args.join(" ");
                 const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
@@ -571,7 +644,9 @@ client.on("message", async message => {
                     .setFooter("Message sent on: " + timestamp)
                     .addField("Code Entered:", "```xl\n" + code + "```")
                     .addField("Result:", "```xl\n" + clean(err) + "```");
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
@@ -580,12 +655,14 @@ client.on("message", async message => {
                 .addField("Usage", "`" + botconfig.prefix + "eval <content>`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
-    if(command === "evalconsole") {
-        if(message.author.id !== botconfig.owner) return;
+    if (command === "evalconsole") {
+        if (message.author.id !== botconfig.owner) return;
         try {
             const code = args.join(" ");
             let evaled = eval(code);
@@ -600,65 +677,74 @@ client.on("message", async message => {
         }
     }
 
-    if(command === "shutdown") {
-        if(message.author.id !== botconfig.owner) return;
+    if (command === "shutdown") {
+        if (message.author.id !== botconfig.owner) return;
         const embed = new Discord.RichEmbed()
             .setDescription("**Shutting down..** :sleeping:")
             .setAuthor(message.author.username, message.author.avatarURL)
             .setFooter("Requested by: " + message.author.tag)
             .setColor(0xc0392b);
-        message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-        setTimeout(function(){ // This is how to make a timeout of 1000ms :)
+        message.channel.send({
+            embed: embed
+        }).catch(err => Sentry.captureException(err));
+        setTimeout(function() { // This is how to make a timeout of 1000ms :)
             client.destroy();
         }, 1000).catch(err => Sentry.captureException(err));
     }
 
-    if(command === "math") {
-      if(args[0] === "average") { // Average Subcommand
-        if(args[1]) {
-        sum = sum(args.slice(1));
-        average1 = sum/args.slice(1).length;
-        average = Math.round(average1 * 100) / 100;
-        message.reply("The average is: " + average).catch(err => Sentry.captureException(err));
-      } else {
+    if (command === "math") {
+        if (args[0] === "average") { // Average Subcommand
+            if (args[1]) {
+                sum = sum(args.slice(1));
+                average1 = sum / args.slice(1).length;
+                average = Math.round(average1 * 100) / 100;
+                message.reply("The average is: " + average).catch(err => Sentry.captureException(err));
+            } else {
+                const embed = new Discord.RichEmbed() // Typical form error
+                    .setTitle("Error while executing!")
+                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                    .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else if (args[0] === "sum") { // Sum Subcommand
+            if (args[1]) {
+                sum = sum(args.slice(1));
+                message.reply("The sum is: " + sum).catch(err => Sentry.captureException(err));
+            } else {
+                const embed = new Discord.RichEmbed() // Typical form error
+                    .setTitle("Error while executing!")
+                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                    .addField("Usage", "`" + botconfig.prefix + "math sum <number/numbers>`")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Error while executing!")
                 .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`")
+                .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`\n**OR**\n `" + botconfig.prefix + "math sum <number/numbers>`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      }} else if(args[0] === "sum") { // Sum Subcommand
-        if(args[1]) {
-        sum = sum(args.slice(1));
-        message.reply("The sum is: " + sum).catch(err => Sentry.captureException(err));
-      } else {
-            const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "math sum <number/numbers>`")
-                .setAuthor(message.author.username, message.author.avatarURL)
-                .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      }} else {
-          const embed = new Discord.RichEmbed() // Typical form error
-              .setTitle("Error while executing!")
-              .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-              .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`\n**OR**\n `" + botconfig.prefix + "math sum <number/numbers>`")
-              .setAuthor(message.author.username, message.author.avatarURL)
-              .setColor(0xe74c3c);
-          message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-      }
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
     }
 
-    if(command === "debug") {
-        if(message.author.id !== botconfig.owner) return;
-        if(args[0] === "roles") {
-            const roles = message.guild.roles.map(r => "\n"+r.id+': '+r.name);
+    if (command === "debug") {
+        if (message.author.id !== botconfig.owner) return;
+        if (args[0] === "roles") {
+            const roles = message.guild.roles.map(r => "\n" + r.id + ': ' + r.name);
             message.channel.send("```\n" + roles + "```").catch(err => Sentry.captureException(err));
-        }
-        else if(args[0] === "send") {
-            if(args[2]) {
+        } else if (args[0] === "send") {
+            if (args[2]) {
                 const channelname = args[1];
                 const text = args.slice(2).join(" ");
                 message.guild.channels.find('name', channelname).send(text);
@@ -670,16 +756,23 @@ client.on("message", async message => {
                     .addField("Usage", "`" + botconfig.prefix + "debug send <channel> <content>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-            }} else if(args[0] === "game") {
-            if(args[2]) {
-                client.user.setActivity(args[2], { type: args[1] }).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else if (args[0] === "game") {
+            if (args[2]) {
+                client.user.setActivity(args[2], {
+                    type: args[1]
+                }).catch(err => Sentry.captureException(err));
                 const embed = new Discord.RichEmbed()
                     .setDescription("The Playing Status has been changed to " + args[1] + " " + args[2])
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setFooter("Requested by: " + message.author.tag)
                     .setColor(0x27ae60);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
                 console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
@@ -688,7 +781,9 @@ client.on("message", async message => {
                     .addField("Usage", "`" + botconfig.prefix + "debug game <type> <content>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "dm") {
             const user = message.mentions.users.first();
@@ -703,16 +798,21 @@ client.on("message", async message => {
                     .addField("Usage", "`" + botconfig.prefix + "debug dm <mention> <content>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-        }} else if(args[0] === "status") {
-            if(args[1]) {
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else if (args[0] === "status") {
+            if (args[1]) {
                 client.user.setStatus(args[1]).catch(err => Sentry.captureException(err));
                 const embed = new Discord.RichEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setFooter("Requested by: " + message.author.tag)
                     .setColor(0x27ae60);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
                 console.log("Bot Status has been changed to " + args[1] + "!");
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
@@ -721,46 +821,52 @@ client.on("message", async message => {
                     .addField("Usage", "`" + botconfig.prefix + "debug status <content>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
-                message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-            }} else if(args[0] === "fpurge") {
-            if(args[1]) {
-                var rawamount = args.map(function (x) {
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else if (args[0] === "fpurge") {
+            if (args[1]) {
+                var rawamount = args.map(function(x) {
                     return amount = parseInt(x, 10);
                 });
                 var amount = amount + 1;
                 message.channel.bulkDelete(amount).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function(){
+                setTimeout(function() {
                     m.delete()
                 }, 4000);
             } else {
                 message.channel.bulkDelete('11').catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function(){
+                setTimeout(function() {
                     m.delete()
                 }, 4000);
-            }}
-        else {
+            }
+        } else {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Error while executing!")
                 .setDescription("Choose one of the sub-commands! <:NoShield:500245155266166784>")
                 .addField("Subcomamnds", "`send`, `roles`, `status`, `game`, `fpurge`, `dm`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
-            message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
-        }}
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
+    }
 
-// Catching errors instead of dieing :^)
-client.on('uncaughtException', (err) => {
-    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
-    console.error('Uncaught Exception: ', errorMsg);
-    Sentry.captureException(err);
-});
+    // Catching errors instead of dieing :^)
+    client.on('uncaughtException', (err) => {
+        const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+        console.error('Uncaught Exception: ', errorMsg);
+        Sentry.captureException(err);
+    });
 
-client.on('unhandledRejection', err => {
-    console.error('Uncaught Promise Error: ', err);
-    Sentry.captureException(err);
-});
+    client.on('unhandledRejection', err => {
+        console.error('Uncaught Promise Error: ', err);
+        Sentry.captureException(err);
+    });
 
 });
 
