@@ -148,7 +148,6 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
-                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@here', {embed: embed}).catch(err => Sentry.captureException(err));
@@ -168,7 +167,6 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
-                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@everyone', {embed: embed}).catch(err => Sentry.captureException(err));
@@ -188,7 +186,6 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
-                            .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('<@&' + args[1] + '>', {embed: embed}).catch(err => Sentry.captureException(err));
@@ -206,7 +203,6 @@ client.on("message", async message => {
                     const embed = new Discord.RichEmbed()
                         .setDescription(sayMessage)
                         .setAuthor(message.author.tag, message.author.avatarURL)
-                        .setFooter("Presented by Discord.JS", 'https://inkcurity.net/files/javascript-logo.png')
                         .setTimestamp()
                         .setColor(randomColor);
                     message.channel.send({embed: embed}).catch(err => Sentry.captureException(err));
