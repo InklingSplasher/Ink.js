@@ -69,18 +69,18 @@ client.on("message", async message => {
 
     let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
 
-Sentry.init({
-    dsn: botconfig.sentryDSN,
-    release: `inkjs@'${packageInfo.version}'`,
-    tags: {
-        service: 'discord'
-    },
-    user: {
-        name: message.author.tag,
-        id: message.author.id,
-        guild: message.guild.id
-    }
-});
+    Sentry.init({
+        dsn: botconfig.sentryDSN,
+        release: `inkjs@${packageInfo.version}`,
+        tags: {
+            service: 'discord'
+        },
+        user: {
+            name: message.author.tag,
+            id: message.author.id,
+            guild: message.guild.id
+        }
+    });
 
     function sum(input) {
 
