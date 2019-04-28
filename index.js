@@ -4,7 +4,7 @@ const botconfig = require("./config.json");
 const packageInfo = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
-// const tz = require("moment-timezone");
+const tz = require("moment-timezone");
 // noinspection JSCheckFunctionSignatures
 const client = new Discord.Client({
     autoReconnect: botconfig.autorestart
