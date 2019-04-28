@@ -610,6 +610,7 @@ client.on("message", async message => {
                     message.channel.send("I don't have the permissions to send messages into this channel!")
                 });
                 role.setMentionable(false).catch(err => Sentry.captureException(err));
+				message.react('526078701830406173').catch(err => Sentry.captureException(err));
             } else {
                 const embed = new Discord.RichEmbed() // Typical perm error
                     .setTitle("Permission error!")
