@@ -1,10 +1,10 @@
 // Setting the config & calling the package
+const Sentry = require('@sentry/node');
 const botconfig = require("./config.json");
 const packageInfo = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
-const Sentry = require('@sentry/node');
-const tz = require("moment-timezone");
+// const tz = require("moment-timezone");
 // noinspection JSCheckFunctionSignatures
 const client = new Discord.Client({
     autoReconnect: botconfig.autorestart
@@ -36,12 +36,21 @@ client.on("guildDelete", guild => {
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
-// Release has to be edited manually!!!
-Sentry.init({
-    dsn: botconfig.sentryDSN,
-    release: "inkjs@0.8.2b"
+// Catching errors instead of dieing :^)
+client.on('uncaughtException', (err) => {
+    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+    console.error('Uncaught Exception: ', errorMsg);
+    Sentry.captureException(err);
 });
 
+client.on('unhandledRejection', err => {
+    console.error('Uncaught Promise Error: ', err);
+    Sentry.captureException(err);
+});
+
+client.on('error', err => {
+    Sentry.captureException(err);
+});
 
 // Command rules
 client.on("message", async message => {
@@ -59,6 +68,19 @@ client.on("message", async message => {
     };
 
     let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
+
+Sentry.init({
+    dsn: botconfig.sentryDSN,
+    release: `inkjs@'${packageInfo.version}'`,
+    tags: {
+        service: 'discord'
+    },
+    user: {
+        name: message.author.tag,
+        id: message.author.id,
+        guild: message.guild.id
+    }
+});
 
     function sum(input) {
 
@@ -104,7 +126,7 @@ client.on("message", async message => {
     }
 
     if (command === "ping" || command === "hello") {
-        const m = await message.channel.send("Ping? <a:Loading:506206198320857099>");
+        const m = await message.channel.send("Ping? ");
         const embed = new Discord.RichEmbed()
             .setTitle("Pong! :ping_pong:")
             .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms`, true)
@@ -131,7 +153,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "say <content>`\n**OR**\n " + "`" + botconfig.prefix + "say bypass <content>`")
+                    .addField("Usage", "`" + botconfig.prefix + "say `\n**OR**\n " + "`" + botconfig.prefix + "say bypass `")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -238,7 +260,7 @@ client.on("message", async message => {
                             const embed = new Discord.RichEmbed() // Typical form error
                                 .setTitle("Error while executing!")
                                 .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                                .addField("Usage", "`" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
+                                .addField("Usage", "`" + botconfig.prefix + "sayembed custom   <description>`")
                                 .setAuthor(message.author.username, message.author.avatarURL)
                                 .setColor(0xe74c3c);
                             message.channel.send({
@@ -856,18 +878,6 @@ client.on("message", async message => {
             }).catch(err => Sentry.captureException(err));
         }
     }
-
-    // Catching errors instead of dieing :^)
-    client.on('uncaughtException', (err) => {
-        const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
-        console.error('Uncaught Exception: ', errorMsg);
-        Sentry.captureException(err);
-    });
-
-    client.on('unhandledRejection', err => {
-        console.error('Uncaught Promise Error: ', err);
-        Sentry.captureException(err);
-    });
 
 });
 
