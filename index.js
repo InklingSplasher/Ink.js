@@ -532,6 +532,71 @@ client.on("message", async message => {
         }
     }
 
+    if (command === "role") {
+        const user = message.mentions.users.first();
+        const role = message.guild.roles.find(r => r.name == args[2]);
+
+        if (args[0] === "add") {
+            if (message.member.hasPermission('MANAGE_ROLES') && message.member.highestRole.position > role.position) {
+                if (user) {
+                    const member = message.guild.member(user);
+                    member.addRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    const embed = new Discord.RichEmbed()
+                        .setTitle("Successful!")
+                        .setDescription(`Role **${role.name}** has been added to the member **${member}** successfully!`)
+                        .setColor(0x27ae60)
+                        .setTimestamp();
+                    message.channel.send({
+                        embed: embed
+                    }).catch(err => Sentry.captureException(err));
+                }
+            } else {
+                const embed = new Discord.RichEmbed() // Typical perm error
+                    .setTitle("Permission error!")
+                    .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to assign.")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else if (args[0] === "remove" || args[0] === "rem") {
+            if (message.member.hasPermission('MANAGE_ROLES') && message.member.highestRole.position > role.position) {
+                if (user) {
+                    const member = message.guild.member(user);
+                    member.removeRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    const embed = new Discord.RichEmbed()
+                        .setTitle("Successful!")
+                        .setDescription(`Role **${role.name}** has been removed from the member **${member}** successfully!`)
+                        .setColor(0x27ae60)
+                        .setTimestamp();
+                    message.channel.send({
+                        embed: embed
+                    }).catch(err => Sentry.captureException(err));
+                }
+            } else {
+                const embed = new Discord.RichEmbed() // Typical perm error
+                    .setTitle("Permission error!")
+                    .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to remove.")
+                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setColor(0xe74c3c);
+                message.channel.send({
+                    embed: embed
+                }).catch(err => Sentry.captureException(err));
+            }
+        } else {
+            const embed = new Discord.RichEmbed() // Typical form error
+                .setTitle("Error while executing!")
+                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
+                .addField("Usage", "`" + botconfig.prefix + "role add <mention> <rolename>`\n**OR**\n`" + botconfig.prefix + "role remove <mention> <rolename>`")
+                .setAuthor(message.author.username, message.author.avatarURL)
+                .setColor(0xe74c3c);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
+        }
+    }
+
     if (command === "userinfo" || command === "user" || command === "whois") {
         const user = message.mentions.users.first();
         if (user) {
