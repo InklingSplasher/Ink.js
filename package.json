@@ -1,6 +1,6 @@
 {
   "name": "ink",
-  "version": "0.9.1a",
+  "version": "0.9.1b",
   "description": "My very first Discord-Bot developed in JavaScript",
   "main": "index.js",
   "scripts": {
