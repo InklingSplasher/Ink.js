@@ -97,7 +97,7 @@ client.on("message", async message => {
         }
         return total;
     }
-    console.log(invoke, args); // Logging all commands.
+    console.log(message.author.tag, "(" +  message.author.id + "): " + invoke, args); // Logging all commands.
 
     // Variables
     // let author = message.author; // The person who sent the message.
