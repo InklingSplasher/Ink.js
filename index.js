@@ -5,6 +5,7 @@ const packageInfo = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
 const tz = require("moment-timezone");
+const fs = require("fs");
 // noinspection JSCheckFunctionSignatures
 const client = new Discord.Client({
     autoReconnect: botconfig.autorestart
@@ -49,7 +50,7 @@ client.on('unhandledRejection', err => {
 });
 
 client.on('error', err => {
-    console.log('Uncaught Promise Error: ', err);
+    console.log('Error: ', err);
     Sentry.captureException(err);
 });
 
@@ -70,19 +71,6 @@ client.on("message", async message => {
 
     let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
 
-    Sentry.init({
-        dsn: botconfig.sentryDSN,
-        release: `inkjs@${packageInfo.version}`,
-        tags: {
-            service: 'discord'
-        },
-        user: {
-            name: message.author.tag,
-            id: message.author.id,
-            guild: message.guild.id
-        }
-    });
-
     function sum(input) {
 
         if (toString.call(input) !== "[object Array]")
@@ -98,6 +86,19 @@ client.on("message", async message => {
         return total;
     }
     console.log(message.author.tag, "(" +  message.author.id + "): " + invoke, args); // Logging all commands.
+
+    Sentry.init({
+        dsn: botconfig.sentryDSN,
+        release: `inkjs@${packageInfo.version}`,
+        tags: {
+            service: 'discord'
+        },
+        user: {
+            name: message.author.tag,
+            id: message.author.id,
+            guild: message.guild.id
+        }
+    });
 
     // Variables
     // let author = message.author; // The person who sent the message.
@@ -801,6 +802,20 @@ client.on("message", async message => {
         } catch (err) {
             console.log("ERROR " + clean(err));
         }
+    }
+
+    if (command === "blacklist") {
+       if (message.author.id !== botconfig.owner) return;
+        var fileName = './blacklist.json';
+        var file = require(fileName);
+
+        file.key = "testing";
+
+        fs.writeFile(fileName, JSON.stringify(file), function (err) {
+            if (err) return console.log(err);
+            console.log(JSON.stringify(file));
+            console.log('writing to ' + fileName);
+        });
     }
 
     if (command === "shutdown") {
