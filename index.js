@@ -39,16 +39,17 @@ client.on("guildDelete", guild => {
 // Catching errors instead of dieing :^)
 client.on('uncaughtException', (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
-    console.error('Uncaught Exception: ', errorMsg);
+    console.log('Uncaught Exception: ', errorMsg);
     Sentry.captureException(err);
 });
 
 client.on('unhandledRejection', err => {
-    console.error('Uncaught Promise Error: ', err);
+    console.log('Uncaught Promise Error: ', err);
     Sentry.captureException(err);
 });
 
 client.on('error', err => {
+    console.log('Uncaught Promise Error: ', err);
     Sentry.captureException(err);
 });
 
