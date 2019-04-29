@@ -327,8 +327,8 @@ client.on("message", async message => {
                     embed: embed
                 }).catch(err => Sentry.captureException(err));
                 m.react('507144037451431949').catch(err => Sentry.captureException(err));
-                m.react('507144087057465374').catch(err => Sentry.captureException(err));
 				m.react('507144068111925258').catch(err => Sentry.captureException(err));
+				m.react('507144087057465374').catch(err => Sentry.captureException(err));
                 return;
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
