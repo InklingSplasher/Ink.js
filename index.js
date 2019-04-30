@@ -59,7 +59,7 @@ client.on("message", async message => {
     if (message.author.bot) return; // Checks if command author is the bot itself.
     if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
     if (message.content.indexOf(botconfig.prefix) !== 0) return; // Only accepts commands starting with the right prefix
-    if (isIDInBlacklist(message.author.id))return message.channel.send("You are blacklisted!").catch(err => Sentry.captureException(err)); // Checks if the user is blacklisted
+    if (isIDInBlacklist(message.author.id)) return message.channel.send("You are blacklisted!").catch(err => Sentry.captureException(err)); // Checks if the user is blacklisted
 
     const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
@@ -90,7 +90,7 @@ client.on("message", async message => {
     function removeFromBlacklist(id) {
         const blacklistFile = './blacklist.json';
 
-        fs.readFile(blacklistFile, function (err, data) {
+        fs.readFile(blacklistFile, function(err, data) {
             var contentToJSON = JSON.parse(data);
             var idIndex = contentToJSON.indexOf(id);
 
@@ -118,7 +118,7 @@ client.on("message", async message => {
         return contentToJSON.includes(id);
     }
 
-    console.log(message.author.tag, "(" +  message.author.id + "): " + invoke, args); // Logging all commands.
+    console.log(message.author.tag, "(" + message.author.id + "): " + invoke, args); // Logging all commands.
 
     Sentry.init({
         dsn: botconfig.sentryDSN,
@@ -362,8 +362,8 @@ client.on("message", async message => {
                     embed: embed
                 }).catch(err => Sentry.captureException(err));
                 m.react('507144037451431949').catch(err => Sentry.captureException(err));
-				m.react('507144068111925258').catch(err => Sentry.captureException(err));
-				m.react('507144087057465374').catch(err => Sentry.captureException(err));
+                m.react('507144068111925258').catch(err => Sentry.captureException(err));
+                m.react('507144087057465374').catch(err => Sentry.captureException(err));
                 return;
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
@@ -646,7 +646,7 @@ client.on("message", async message => {
                     message.channel.send("I don't have the permissions to send messages into this channel!").catch(err => Sentry.captureException(err));
                 });
                 role.setMentionable(false).catch(err => Sentry.captureException(err));
-				message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                message.react('526078701830406173').catch(err => Sentry.captureException(err));
             } else {
                 const embed = new Discord.RichEmbed() // Typical perm error
                     .setTitle("Permission error!")
@@ -823,25 +823,25 @@ client.on("message", async message => {
     }
 
     if (command === "blacklist" || "bl") {
-       if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== botconfig.owner) return;
         const user = args[1];
-         if(args[0] === "add") {
-             var blacklistDirectory = './blacklist.json';
+        if (args[0] === "add") {
+            var blacklistDirectory = './blacklist.json';
 
-             fs.readFile(blacklistDirectory, function (err, data) {
-                 var contentToJSON = JSON.parse(data);
+            fs.readFile(blacklistDirectory, function(err, data) {
+                var contentToJSON = JSON.parse(data);
 
-                 contentToJSON.push(user);
+                contentToJSON.push(user);
 
-                 fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(err) {
-                     if (err) return console.log(err);
-                 });
-         message.channel.send(`Successfully blacklisted user **${user}**!`).catch(err => Sentry.captureException(err));
-             });
-        } else if(args[0] === "remove") {
-             removeFromBlacklist(args[1]);
-             message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
-         }
+                fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(err) {
+                    if (err) return console.log(err);
+                });
+                message.channel.send(`Successfully blacklisted user **${user}**!`).catch(err => Sentry.captureException(err));
+            });
+        } else if (args[0] === "remove") {
+            removeFromBlacklist(args[1]);
+            message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
+        }
     }
 
     if (command === "shutdown") {
