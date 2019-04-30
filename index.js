@@ -365,7 +365,7 @@ client.on("message", async message => {
             .addField("Source:", "[View on GitHub](https://github.com/InklingSplasher/Ink.js)", true)
             .addField("Prefix:", prefix, true)
             .addField("Total Users:", count.length, true)
-            .addField("Currently serving:", client.guilds.size + " guilds!", true)
+            .addField("General Stats:", client.guilds.size + " Guilds\n" + client.users.size + " Users", true)
             .setAuthor(client.user.tag, client.user.avatarURL)
             .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
@@ -606,10 +606,10 @@ client.on("message", async message => {
                 const role = message.guild.roles.find(r => r.name === args[1]);
                 const text = `[<@&${role.id}>] Notification!`;
                 role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(err => {
-                    message.channel.send("I don't have permissions to edit this role!")
+                    message.channel.send("I don't have permissions to edit this role!").catch(err => Sentry.captureException(err));
                 });
                 message.guild.channels.find('name', channel).send(text).catch(err => {
-                    message.channel.send("I don't have the permissions to send messages into this channel!")
+                    message.channel.send("I don't have the permissions to send messages into this channel!").catch(err => Sentry.captureException(err));
                 });
                 role.setMentionable(false).catch(err => Sentry.captureException(err));
 				message.react('526078701830406173').catch(err => Sentry.captureException(err));
