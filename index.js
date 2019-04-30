@@ -59,7 +59,7 @@ client.on("message", async message => {
     if (message.author.bot) return; // Checks if command author is the bot itself.
     if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
     if (message.content.indexOf(botconfig.prefix) !== 0) return; // Only accepts commands starting with the right prefix
-    if (isIDInBlacklist(message.author.id)) return; // Checks if the user is blacklisted
+    if (isIDInBlacklist(message.author.id))return message.channel.send("You are blacklisted!").catch(err => Sentry.captureException(err)); // Checks if the user is blacklisted
 
     const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
@@ -106,21 +106,16 @@ client.on("message", async message => {
         //  Get the blacklist file.
         const blacklistFile = './blacklist.json';
 
-        var value = false;
+        //  Here we open and read the JSON file's contents synchronously.
+        var data = fs.readFileSync(blacklistFile, 'utf-8');
 
-        //  Here we open and read the JSON file's contents.
-        fs.readFile(blacklistFile, function (err, data) {
-            //  We are reading the blacklist file as a string, but in order
-            //  to do stuff to it, we need to parse it into a JSON object
-            //  first.
-            var contentToJSON = JSON.parse(data);
+        //  We are reading the blacklist file as a string, but in order
+        //  to do stuff to it, we need to parse it into a JSON object
+        //  first.
+        var contentToJSON = JSON.parse(data);
 
-            //  Determines if the given ID is inside the list.
-            //  Make sure that IT IS A STRING.
-            value = (contentToJSON.includes(id));
-        });
-
-        return value;
+        //  Returns if the given ID is inside or not.
+        return contentToJSON.includes(id);
     }
 
     console.log(message.author.tag, "(" +  message.author.id + "): " + invoke, args); // Logging all commands.
