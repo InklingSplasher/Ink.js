@@ -58,7 +58,8 @@ client.on('error', err => {
 client.on("message", async message => {
     if (message.author.bot) return; // Checks if command author is the bot itself.
     if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
-    if (message.content.indexOf(botconfig.prefix) !== 0) return;
+    if (message.content.indexOf(botconfig.prefix) !== 0) return; // Only accepts commands starting with the right prefix
+    if (isIDInBlacklist(message.author.id)) return; // Checks if the user is blacklisted
 
     const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
@@ -85,6 +86,43 @@ client.on("message", async message => {
         }
         return total;
     }
+
+    function removeFromBlacklist(id) {
+        const blacklistFile = './blacklist.json';
+
+        fs.readFile(blacklistFile, function (err, data) {
+            var contentToJSON = JSON.parse(data);
+            var idIndex = contentToJSON.indexOf(id);
+
+            contentToJSON.splice(idIndex, 1);
+
+            fs.writeFile(blacklistFile, JSON.stringify(contentToJSON), function(err) {
+                if (err) return console.log(err);
+            });
+        });
+    }
+
+    function isIDInBlacklist(id) {
+        //  Get the blacklist file.
+        const blacklistFile = './blacklist.json';
+
+        var value = false;
+
+        //  Here we open and read the JSON file's contents.
+        fs.readFile(blacklistFile, function (err, data) {
+            //  We are reading the blacklist file as a string, but in order
+            //  to do stuff to it, we need to parse it into a JSON object
+            //  first.
+            var contentToJSON = JSON.parse(data);
+
+            //  Determines if the given ID is inside the list.
+            //  Make sure that IT IS A STRING.
+            value = (contentToJSON.includes(id));
+        });
+
+        return value;
+    }
+
     console.log(message.author.tag, "(" +  message.author.id + "): " + invoke, args); // Logging all commands.
 
     Sentry.init({
@@ -788,7 +826,7 @@ client.on("message", async message => {
         }
     }
 
-    if (command === "blacklist") {
+    if (command === "blacklist" || "bl") {
        if (message.author.id !== botconfig.owner) return;
         const user = args[1];
          if(args[0] === "add") {
@@ -802,8 +840,12 @@ client.on("message", async message => {
                  fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(err) {
                      if (err) return console.log(err);
                  });
+         message.channel.send(`Successfully blacklisted user **${user}**!`).catch(err => Sentry.captureException(err));
              });
-        }
+        } else if(args[0] === "remove") {
+             removeFromBlacklist(args[1]);
+             message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
+         }
     }
 
     if (command === "shutdown") {
