@@ -992,7 +992,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Error while executing!")
                 .setDescription("Choose one of the sub-commands! <:NoShield:500245155266166784>")
-                .addField("Subcomamnds", "`send`, `roles`, `status`, `game`, `fpurge`, `dm`")
+                .addField("Subcommands", "`send`, `roles`, `status`, `game`, `fpurge`, `dm`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
