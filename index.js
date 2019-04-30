@@ -637,84 +637,68 @@ client.on("message", async message => {
     }
 
     if (command === "userinfo" || command === "user" || command === "whois") {
-        const user = message.mentions.users.first();
-        if (user) {
-            const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-            const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-            if (user.presence.game != null) {
-                const embed = new Discord.RichEmbed()
-                    .setTitle("User Information")
-                    .setDescription("of <@!" + user.id + ">")
-                    .addField("Username:", user.username, true)
-                    .addField("Discriminator:", user.discriminator, true)
-                    .addField("ID:", "`" + user.id + "`", true)
-                    .addField("Status:", user.presence.status, true)
-                    .addField("Playing:", user.presence.game.name, true)
-                    .addField("Joined Discord:", joindate, true)
-                    .setColor(0x1abc9c)
-                    .setAuthor(user.tag, user.avatarURL)
-                    .setFooter("Message sent on: " + timestamp)
-                    .setThumbnail(user.avatarURL);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
-            } else {
-                const embed = new Discord.RichEmbed()
-                    .setTitle("User Information")
-                    .setDescription("of <@!" + user.id + ">")
-                    .addField("Username:", user.username, true)
-                    .addField("Discriminator:", user.discriminator, true)
-                    .addField("ID:", "`" + user.id + "`", true)
-                    .addField("Status:", user.presence.status, true)
-                    .addField("Playing:", "Nothing!", true)
-                    .addField("Joined Discord:", joindate, true)
-                    .setColor(0x1abc9c)
-                    .setAuthor(user.tag, user.avatarURL)
-                    .setFooter("Message sent on: " + timestamp)
-                    .setThumbnail(user.avatarURL);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
+        const user = message.mentions.users.first() || message.author;
+        var emote = null;
+        switch (user.presence.status) {
+            case 'online':
+            {
+                emote = '<:online:572804498850971648>';
+                break;
             }
-
+            case 'offline':
+            {
+                emote = '<:offline:572804497655726106>';
+                break;
+            }
+            case 'idle':
+            {
+                emote = '<:idle:572804498469421066>';
+                break;
+            }
+            case 'dnd':
+            {
+                emote = '<:dnd:572804497928093696>';
+                break;
+            }
+            default:
+                console.log('Error');
+        }
+        const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+        const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
+        if (user.presence.game !== null) {
+            const embed = new Discord.RichEmbed()
+                .setTitle("User Information")
+                .setDescription("of <@!" + user.id + "> " + emote)
+                .addField("Username:", user.username, true)
+                .addField("Discriminator:", user.discriminator, true)
+                .addField("ID:", "`" + user.id + "`", true)
+                .addField("Status:", user.presence.status, true)
+                .addField("Playing:", user.presence.game.name, true)
+                .addField("Joined Discord:", joindate, true)
+                .setColor(0x1abc9c)
+                .setAuthor(user.tag, user.avatarURL)
+                .setFooter("Message sent on: " + timestamp)
+                .setThumbnail(user.avatarURL);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         } else {
-            const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-            const joindate = new moment(message.author.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-            if (message.author.game != null) {
-                const embed = new Discord.RichEmbed()
-                    .setTitle("User Information")
-                    .setDescription("of <@!" + message.author.id + ">")
-                    .addField("Username:", message.author.username, true)
-                    .addField("Discriminator:", message.author.discriminator, true)
-                    .addField("ID:", "`" + message.author.id + "`", true)
-                    .addField("Status:", message.author.presence.status, true)
-                    .addField("Playing:", message.author.presence.game.name, true)
-                    .addField("Joined Discord:", joindate, true)
-                    .setColor(0x1abc9c)
-                    .setAuthor(message.author.tag, message.author.avatarURL)
-                    .setFooter("Message sent on: " + timestamp)
-                    .setThumbnail(message.author.avatarURL);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
-            } else {
-                const embed = new Discord.RichEmbed()
-                    .setTitle("User Information")
-                    .setDescription("of <@!" + message.author.id + ">")
-                    .addField("Username:", message.author.username, true)
-                    .addField("Discriminator:", message.author.discriminator, true)
-                    .addField("ID:", "`" + message.author.id + "`", true)
-                    .addField("Status:", message.author.presence.status, true)
-                    .addField("Playing:", "Nothing!", true)
-                    .addField("Joined Discord:", joindate, true)
-                    .setColor(0x1abc9c)
-                    .setAuthor(message.author.tag, message.author.avatarURL)
-                    .setFooter("Message sent on: " + timestamp)
-                    .setThumbnail(message.author.avatarURL);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
-            }
+            const embed = new Discord.RichEmbed()
+                .setTitle("User Information")
+                .setDescription("of <@!" + user.id + "> " + emote)
+                .addField("Username:", user.username, true)
+                .addField("Discriminator:", user.discriminator, true)
+                .addField("ID:", "`" + user.id + "`", true)
+                .addField("Status:", user.presence.status, true)
+                .addField("Playing:", "Nothing!", true)
+                .addField("Joined Discord:", joindate, true)
+                .setColor(0x1abc9c)
+                .setAuthor(user.tag, user.avatarURL)
+                .setFooter("Message sent on: " + timestamp)
+                .setThumbnail(user.avatarURL);
+            message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
