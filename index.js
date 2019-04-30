@@ -806,16 +806,20 @@ client.on("message", async message => {
 
     if (command === "blacklist") {
        if (message.author.id !== botconfig.owner) return;
-        var fileName = './blacklist.json';
-        var file = require(fileName);
+        const user = args[1];
+         if(args[0] === "add") {
+             var blacklistDirectory = './blacklist.json';
 
-        file.key = "testing";
+             fs.readFile(blacklistDirectory, function (err, data) {
+                 var contentToJSON = JSON.parse(data);
 
-        fs.writeFile(fileName, JSON.stringify(file), function (err) {
-            if (err) return console.log(err);
-            console.log(JSON.stringify(file));
-            console.log('writing to ' + fileName);
-        });
+                 contentToJSON.push(user);
+
+                 fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(err) {
+                     if (err) return console.log(err);
+                 });
+             });
+        }
     }
 
     if (command === "shutdown") {
