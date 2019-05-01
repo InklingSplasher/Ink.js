@@ -14,7 +14,7 @@ const client = new Discord.Client({
 // What happens when the bot is started
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
-    console.log(`\nSettings:\n\nPrefix: ` + botconfig.prefix + `\nOwner ID / Tag: ` + botconfig.owner + " / " + botconfig.ownertag + "\nSentryDSN: " + botconfig.sentryDSN + "\nAutorestart: " + botconfig.autorestart + "\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!");
+    console.log(`\nSettings:\n\nPrefix: ${botconfig.prefix}\nOwner ID / Tag: ${botconfig.owner} / ${botconfig.ownertag}\nSentryDSN: ${botconfig.sentryDSN}\nAutorestart: ${botconfig.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
     client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
         type: 'PLAYING'
     }).catch(err => Sentry.captureException(err));
@@ -118,7 +118,7 @@ client.on("message", async message => {
         return contentToJSON.includes(id);
     }
 
-    console.log(message.author.tag, "(" + message.author.id + "): " + invoke, args); // Logging all commands.
+    console.log(message.author.tag, `(${message.author.id})`, invoke, args); // Logging all commands.
 
     Sentry.init({
         dsn: botconfig.sentryDSN,
@@ -187,9 +187,8 @@ client.on("message", async message => {
                 message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(err => Sentry.captureException(err)); // Sends the given message with the author after the say command.
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "say `\n**OR**\n " + "`" + botconfig.prefix + "say bypass `")
+                    .setTitle("Command: say")
+                    .addField("Usage", "`" + botconfig.prefix + "say <message>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -212,7 +211,7 @@ client.on("message", async message => {
         if (message.member.hasPermission('EMBED_LINKS')) {
             if (args[0]) {
                 if (args[0] === "here") {
-                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
@@ -234,7 +233,7 @@ client.on("message", async message => {
                         }).catch(err => Sentry.captureException(err));
                     }
                 } else if (args[0] === "everyone") {
-                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.RichEmbed()
@@ -256,7 +255,7 @@ client.on("message", async message => {
                         }).catch(err => Sentry.captureException(err));
                     }
                 } else if (args[0] === "role") {
-                    if (message.member.hasPermission('MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(2).join(" ");
                         const embed = new Discord.RichEmbed()
@@ -278,7 +277,7 @@ client.on("message", async message => {
                         }).catch(err => Sentry.captureException(err));
                     }
                 } else if (args[0] === "custom") {
-                    if (message.member.hasPermission('MANAGE_MESSAGES' & 'MENTION_EVERYONE') || message.author.id === botconfig.owner) {
+                    if (message.member.hasPermission('MENTION_EVERYONE')) {
                         if (args[3]) {
                             message.delete().catch(O_o => {});
                             const color = args[1];
@@ -293,20 +292,12 @@ client.on("message", async message => {
                                 embed: embed
                             }).catch(err => Sentry.captureException(err));
                         } else {
-                            const embed = new Discord.RichEmbed() // Typical form error
-                                .setTitle("Error while executing!")
-                                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                                .addField("Usage", "`" + botconfig.prefix + "sayembed custom   <description>`")
-                                .setAuthor(message.author.username, message.author.avatarURL)
-                                .setColor(0xe74c3c);
-                            message.channel.send({
-                                embed: embed
-                            }).catch(err => Sentry.captureException(err));
+                            message.channel.send("Invalid arguments!").catch(err => Sentry.captureException(err));
                         }
                     } else {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
-                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES` & `MENTION_EVERYONE`")
+                            .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.username, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({
@@ -327,9 +318,10 @@ client.on("message", async message => {
                 }
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "sayembed <content>`\n**OR**\n " + "`" + botconfig.prefix + "sayembed role <roleID> <content>`\n**OR**\n `" + botconfig.prefix + "sayembed here <content>`\n**OR**\n `" + botconfig.prefix + "sayembed everyone <content>`\n**OR**\n `" + botconfig.prefix + "sayembed custom <embedcolor> <title> <description>`")
+                    .setTitle("Command: embed")
+                    .setDescription("Creates an embed, and if wanted, pings a specific role. \nThe embed author is the command issuer.")
+                    .addField("Usage", "```md\n" + botconfig.prefix + "embed [everyone/here] <message>\n" + botconfig.prefix + "embed role <roleID> <message>\n" + botconfig.prefix + "embed custom <color> <title> <desc>```", true)
+                    .addField("Permissions required:", "`EMBED_LINKS`\n`MENTION_EVERYONE`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -367,9 +359,10 @@ client.on("message", async message => {
                 return;
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "poll <content>`")
+                    .setTitle("Command: poll")
+                    .setDescription("Creates a poll for people to vote on.")
+                    .addField("Usage", "```md\n" + botconfig.prefix + "poll <question>```", true)
+                    .addField("Permissions required:", "`MANAGE_MESSAGES`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -437,9 +430,10 @@ client.on("message", async message => {
             }).catch(err => Sentry.captureException(err));
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "stealavatar <mention>`")
+                .setTitle("Command: avatar")
+                .setDescription("Steals an avatar from a mentioned user.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "avatar <mention>```", true)
+                .addField("Permissions required:", "NONE", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -471,7 +465,7 @@ client.on("message", async message => {
         } else {
             const embed = new Discord.RichEmbed() // Typical perm error
                 .setTitle("Permission error!")
-                .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
+                .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -503,9 +497,10 @@ client.on("message", async message => {
                 }
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "kick <mention> [reason]`")
+                    .setTitle("Command: kick")
+                    .setDescription("Kicks a specified user from the guild.")
+                    .addField("Usage", "```md\n" + botconfig.prefix + "kick <mention> [reason]```", true)
+                    .addField("Permissions required:", "`KICK_MEMBERS`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -547,9 +542,10 @@ client.on("message", async message => {
                 }
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "ban <mention> [reason]`")
+                    .setTitle("Command: ban")
+                    .setDescription("Bans a specified user from the guild.")
+                    .addField("Usage", "```md\n" + botconfig.prefix + "ban <mention> [reason]```", true)
+                    .addField("Permissions required:", "`BAN_MEMBERS`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -622,9 +618,10 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "role add <mention> <rolename>`\n**OR**\n`" + botconfig.prefix + "role remove <mention> <rolename>`")
+                .setTitle("Command: role")
+                .setDescription("Add or remove people to specified roles.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "role add <mention> <rolename>\n" + botconfig.prefix + "role remove <mention> <rolename>```", true)
+                .addField("Permissions required:", "`MANAGE_ROLES`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -659,9 +656,10 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "notify <channelname> <rolename>`")
+                .setTitle("Command: notify")
+                .setDescription("Sends a message containing a ping with the specified role into a specified channel.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "notify <channelname> <rolename>```", true)
+                .addField("Permissions required:", "`MENTION_EVERYONE`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -795,9 +793,10 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "eval <content>`")
+                .setTitle("Command: eval")
+                .setDescription("Evaluates JavaScript.\n**USE WITH EXTREME CAUTION!**")
+                .addField("Usage", "```md\n" + botconfig.prefix + "eval <code>```", true)
+                .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -822,7 +821,7 @@ client.on("message", async message => {
         }
     }
 
-    if (command === "blacklist" || "bl") {
+    if (command === "blacklist" || command === "bl") {
         if (message.author.id !== botconfig.owner) return;
         const user = args[1];
         if (args[0] === "add") {
@@ -841,6 +840,17 @@ client.on("message", async message => {
         } else if (args[0] === "remove") {
             removeFromBlacklist(args[1]);
             message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
+        } else {
+            const embed = new Discord.RichEmbed() // Typical form error
+                .setTitle("Command: blacklist")
+                .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "blacklist add <mention>\n" + botconfig.prefix + "blacklist remove <mention>```", true)
+                .addField("Permissions required:", "`BOT_OWNER`", true)
+                .setAuthor(message.author.username, message.author.avatarURL)
+                .setColor(0xe74c3c);
+             message.channel.send({
+                embed: embed
+            }).catch(err => Sentry.captureException(err));
         }
     }
 
@@ -894,9 +904,10 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`\n**OR**\n `" + botconfig.prefix + "math sum <number/numbers>`")
+                .setTitle("Command: math")
+                .setDescription("Calculates with numbers.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "math sum <number1> [number2...]\n" + botconfig.prefix + "math average <number1> [number2...]```", true)
+                .addField("Permissions required:", "NONE", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
@@ -917,15 +928,7 @@ client.on("message", async message => {
                 message.guild.channels.find('name', channelname).send(text);
                 message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "debug send <channel> <content>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
-                    .setColor(0xe74c3c);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "game") {
             if (args[2]) {
@@ -942,15 +945,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
                 console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "debug game <type> <content>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
-                    .setColor(0xe74c3c);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "dm") {
             const user = message.mentions.users.first();
@@ -959,15 +954,7 @@ client.on("message", async message => {
                 user.sendMessage(content).catch(err => Sentry.captureException(err));
                 message.react('526078701830406173').catch(err => Sentry.captureException(err));
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "debug dm <mention> <content>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
-                    .setColor(0xe74c3c);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "status") {
             if (args[1]) {
@@ -982,39 +969,15 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
                 console.log("Bot Status has been changed to " + args[1] + "!");
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
-                    .setTitle("Error while executing!")
-                    .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "debug status <content>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
-                    .setColor(0xe74c3c);
-                message.channel.send({
-                    embed: embed
-                }).catch(err => Sentry.captureException(err));
-            }
-        } else if (args[0] === "fpurge") {
-            if (args[1]) {
-                var rawamount = args.map(function(x) {
-                    return amount = parseInt(x, 10);
-                });
-                var amount = amount + 1;
-                message.channel.bulkDelete(amount).catch(err => Sentry.captureException(err));
-                const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function() {
-                    m.delete()
-                }, 4000);
-            } else {
-                message.channel.bulkDelete('11').catch(err => Sentry.captureException(err));
-                const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
-                setTimeout(function() {
-                    m.delete()
-                }, 4000);
+                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else {
             const embed = new Discord.RichEmbed() // Typical form error
-                .setTitle("Error while executing!")
-                .setDescription("Choose one of the sub-commands! <:NoShield:500245155266166784>")
-                .addField("Subcommands", "`send`, `roles`, `status`, `game`, `fpurge`, `dm`")
+                .setTitle("Command: debug")
+                .setDescription("Some secret commands for the bot owner...")
+                .addField("Sub-commands;", "`roles`: Displays all roles and role-IDs of the guild.\n`send`: Sends a message to a channel.\n`status`: Changes the bot's status.\n`game`: Changes the bot's playing status.\n`dm`: Sends a private message to a mentioned user.")
+                .addField("Usage", "```md\n" + botconfig.prefix + "debug <sub-command> <args>```", true)
+                .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
             message.channel.send({
