@@ -951,7 +951,7 @@ client.on("message", async message => {
             const user = message.mentions.users.first();
             const content = args.slice(2).join(" ");
             if (user && content) {
-                user.sendMessage(content).catch(err => Sentry.captureException(err));
+                user.send(content).catch(err => Sentry.captureException(err));
                 message.react('526078701830406173').catch(err => Sentry.captureException(err));
             } else {
                 message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
