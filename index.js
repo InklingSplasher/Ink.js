@@ -226,7 +226,7 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -248,7 +248,7 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -270,7 +270,7 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -283,7 +283,7 @@ client.on("message", async message => {
                             const color = args[1];
                             const description = args.slice(3).join(" ");
                             const embed = new Discord.RichEmbed()
-                                .setAuthor(message.author.username, message.author.avatarURL)
+                                .setAuthor(message.author.tag, message.author.avatarURL)
                                 .setTimestamp()
                                 .setTitle(args[2])
                                 .setDescription(description)
@@ -298,7 +298,7 @@ client.on("message", async message => {
                         const embed = new Discord.RichEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL)
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed

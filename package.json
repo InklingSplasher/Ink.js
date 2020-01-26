@@ -10,7 +10,7 @@
   "author": "Jan Klotz",
   "license": "MIT",
   "dependencies": {
-    "@sentry/node": "^4.6.5",
+    "@sentry/node": "^5.11.1",
     "colors": "^1.1.2",
     "discord.js": "^11.4.2",
     "fs": "0.0.1-security",
