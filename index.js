@@ -452,14 +452,14 @@ client.on("message", async message => {
                 message.channel.bulkDelete(amount, true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
                 setTimeout(function() {
-                    m.delete()
+                    m.delete().catch(err => Sentry.captureException(err));
                 }, 4000);
             } else {
-                message.delete();
+                message.delete().catch(err => Sentry.captureException(err));
                 message.channel.bulkDelete('11', true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
                 setTimeout(function() {
-                    m.delete()
+                    m.delete().catch(err => Sentry.captureException(err));
                 }, 4000);
             }
         } else {
