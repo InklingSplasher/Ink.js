@@ -452,14 +452,14 @@ client.on("message", async message => {
                 message.channel.bulkDelete(amount, true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
                 setTimeout(function() {
-                    m.delete().catch(err => Sentry.captureException(err));
+                    m.delete();
                 }, 4000);
             } else {
                 message.delete().catch(err => Sentry.captureException(err));
                 message.channel.bulkDelete('11', true).catch(err => Sentry.captureException(err));
                 const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
                 setTimeout(function() {
-                    m.delete().catch(err => Sentry.captureException(err));
+                    m.delete();
                 }, 4000);
             }
         } else {
@@ -866,7 +866,7 @@ client.on("message", async message => {
         }).catch(err => Sentry.captureException(err));
         setTimeout(function() { // This is how to make a timeout of 1000ms :)
             client.destroy();
-        }, 1000).catch(err => Sentry.captureException(err));
+        }, 1000);
     }
 
     if (command === "math") {
