@@ -932,18 +932,19 @@ client.on("message", async message => {
             }
         } else if (args[0] === "game") {
             if (args[2]) {
-                client.user.setActivity(args[2], {
+                const activity = args.slice(2).join(" ");
+                client.user.setActivity(activity, {
                     type: args[1]
                 }).catch(err => Sentry.captureException(err));
                 const embed = new Discord.RichEmbed()
-                    .setDescription("The Playing Status has been changed to " + args[1] + " " + args[2])
+                    .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setFooter("Requested by: " + message.author.tag)
                     .setColor(0x27ae60);
                 message.channel.send({
                     embed: embed
                 }).catch(err => Sentry.captureException(err));
-                console.log("Bot Activity has been changed to " + args[1] + " " + args[2]);
+                console.log("Bot Activity has been changed to " + args[1] + " " + activity);
             } else {
                 message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
