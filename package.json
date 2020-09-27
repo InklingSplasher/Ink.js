@@ -1,6 +1,6 @@
 {
   "name": "ink",
-  "version": "0.9.8d",
+  "version": "1.0.0a",
   "description": "My very first Discord-Bot developed in NodeJS",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "Jan Klotz",
   "license": "MIT",
   "dependencies": {
-    "@sentry/node": "^5.11.1",
+    "@sentry/node": "^5.24.2",
     "colors": "^1.1.2",
     "discord.js": "^12.3.1",
     "fs": "0.0.1-security",

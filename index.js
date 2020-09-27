@@ -11,47 +11,49 @@ const client = new Discord.Client({
     autoReconnect: config.autorestart
 });
 
+Sentry.init({ dsn: config.sentryDSN });
+
 // What happens when the bot is started
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
     console.log(`\nSettings:\n\nPrefix: ${config.prefix}\nOwner ID / Tag: ${config.owner} / ${config.ownertag}\nSentryDSN: ${config.sentryDSN}\nAutorestart: ${config.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
-    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, {
         type: 'PLAYING'
-    }).catch(err => Sentry.captureException(err));
-    client.user.setStatus('online').catch(err => Sentry.captureException(err));
+    }).catch(e => Sentry.captureException(e));
+    client.user.setStatus('online').catch(e => Sentry.captureException(e));
 });
 
 client.on("guildCreate", guild => {
     // This event triggers when the bot joins a guild.
-    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, {
         type: 'PLAYING'
-    }).catch(err => Sentry.captureException(err));
+    }).catch(e => Sentry.captureException(e));
     console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 });
 
 client.on("guildDelete", guild => {
     // this event triggers when the bot is removed from a guild.
-    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, {
         type: 'PLAYING'
-    }).catch(err => Sentry.captureException(err));
+    }).catch(e => Sentry.captureException(e));
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
-// Catching errors instead of dieing :^)
-client.on('uncaughtException', (err) => {
-    const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
-    console.log('Uncaught Exception: ', errorMsg);
-    Sentry.captureException(err);
+// Catching eors instead of dying :^)
+client.on('uncaughtException', (e) => {
+    const eorMsg = e.stack.replace(new RegExp(`${__dirname}/`, 'g'), './');
+    console.log('Uncaught Exception: ', eorMsg);
+    Sentry.captureException(e);
 });
 
-client.on('unhandledRejection', err => {
-    console.log('Uncaught Promise Error: ', err);
-    Sentry.captureException(err);
+client.on('unhandledRejection', e => {
+    console.log('Uncaught Promise Error: ', e);
+    Sentry.captureException(e);
 });
 
-client.on('error', err => {
-    console.log('Error: ', err);
-    Sentry.captureException(err);
+client.on('eor', e => {
+    console.log('Error: ', e);
+    Sentry.captureException(e);
 });
 
 // Command rules
@@ -59,7 +61,7 @@ client.on("message", async message => {
     if (message.author.bot) return; // Checks if command author is the bot itself.
     if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
     if (message.content.indexOf(config.prefix) !== 0) return; // Only accepts commands starting with the right prefix
-    if (isIDInBlacklist(message.author.id)) return message.channel.send("You are blacklisted!").catch(err => Sentry.captureException(err)); // Checks if the user is blacklisted
+    if (isIDInBlacklist(message.author.id)) return message.channel.send("You are blacklisted!").catch( e => Sentry.captureException(e)); // Checks if the user is blacklisted
 
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
@@ -90,14 +92,14 @@ client.on("message", async message => {
     function removeFromBlacklist(id) {
         const blacklistFile = './blacklist.json';
 
-        fs.readFile(blacklistFile, function(err, data) {
+        fs.readFile(blacklistFile, function(e, data) {
             var contentToJSON = JSON.parse(data);
             var idIndex = contentToJSON.indexOf(id);
 
             contentToJSON.splice(idIndex, 1);
 
-            fs.writeFile(blacklistFile, JSON.stringify(contentToJSON), function(err) {
-                if (err) return console.log(err);
+            fs.writeFile(blacklistFile, JSON.stringify(contentToJSON), function(e) {
+                if (e) return console.log(e);
             });
         });
     }
@@ -158,7 +160,7 @@ client.on("message", async message => {
             .addField("Bot-Owner", "```md\n" + "1. eval: Evaluates JavaScript.\n2. evalconsole: Evaluates JavaScript and prints it into the console.\n3. shutdown: Shuts the bot down.\n4. debug: Some secret, useful commands for the owner.\n5. blacklist: Add or remove people from the bot blacklist." + "```", true);
         message.channel.send({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "ping" || command === "hello") {
@@ -171,39 +173,39 @@ client.on("message", async message => {
             .setColor(0xd35400);
         m.edit({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "say") {
         if (message.member.hasPermission('MANAGE_MESSAGES')) {
             if (args[0] === "bypass") { // For bot owner, to send a message without seeing that say was used.
-                if (message.author.id !== config.owner) message.reply("Not a bot owner!").catch(err => Sentry.captureException(err));
+                if (message.author.id !== config.owner) message.reply("Not a bot owner!").catch(e => Sentry.captureException(e));
                 const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
                 message.delete().catch(O_o => {}); // Deletes the message of the sender.
-                message.channel.send(sayMessage).catch(err => Sentry.captureException(err)); // Sends the given message after the say command.
+                message.channel.send(sayMessage).catch(e => Sentry.captureException(e)); // Sends the given message after the say command.
             } else if (args[0]) {
                 const sayMessage = args.join(" ");
                 message.delete().catch(O_o => {});
-                message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(err => Sentry.captureException(err)); // Sends the given message with the author after the say command.
+                message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(e => Sentry.captureException(e)); // Sends the given message with the author after the say command.
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Command: say")
                     .addField("Usage", "`" + config.prefix + "say <message>`")
                     .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -221,16 +223,16 @@ client.on("message", async message => {
                             .setColor(randomColor);
                         message.channel.send('@here', {
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     } else {
-                        const embed = new Discord.MessageEmbed() // Typical perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Typical perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 } else if (args[0] === "everyone") {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
@@ -243,16 +245,16 @@ client.on("message", async message => {
                             .setColor(randomColor);
                         message.channel.send('@everyone', {
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     } else {
-                        const embed = new Discord.MessageEmbed() // Typical perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Typical perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 } else if (args[0] === "role") {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
@@ -265,16 +267,16 @@ client.on("message", async message => {
                             .setColor(randomColor);
                         message.channel.send('<@&' + args[1] + '>', {
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     } else {
-                        const embed = new Discord.MessageEmbed() // Typical perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Typical perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 } else if (args[0] === "custom") {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
@@ -290,19 +292,19 @@ client.on("message", async message => {
                                 .setColor(color);
                             message.channel.send({
                                 embed: embed
-                            }).catch(err => Sentry.captureException(err));
+                            }).catch(e => Sentry.captureException(e));
                         } else {
-                            message.channel.send("Invalid arguments!").catch(err => Sentry.captureException(err));
+                            message.channel.send("Invalid arguments!").catch(e => Sentry.captureException(e));
                         }
                     } else {
-                        const embed = new Discord.MessageEmbed() // Typical perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Typical perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 } else {
                     message.delete().catch(O_o => {});
@@ -314,10 +316,10 @@ client.on("message", async message => {
                         .setColor(randomColor);
                     message.channel.send({
                         embed: embed
-                    }).catch(err => Sentry.captureException(err));
+                    }).catch(e => Sentry.captureException(e));
                 }
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Command: embed")
                     .setDescription("Creates an embed, and if wanted, pings a specific role. \nThe embed author is the command issuer.")
                     .addField("Usage", "```md\n" + config.prefix + "embed [everyone/here] <message>\n" + config.prefix + "embed role <roleID> <message>\n" + config.prefix + "embed custom <color> <title> <desc>```", true)
@@ -326,17 +328,17 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
     if (command === "poll") {
@@ -352,13 +354,13 @@ client.on("message", async message => {
                     .setTimestamp();
                 const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
-                m.react('507144037451431949').catch(err => Sentry.captureException(err));
-                m.react('507144068111925258').catch(err => Sentry.captureException(err));
-                m.react('507144087057465374').catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
+                m.react('507144037451431949').catch(e => Sentry.captureException(e));
+                m.react('507144068111925258').catch(e => Sentry.captureException(e));
+                m.react('507144087057465374').catch(e => Sentry.captureException(e));
                 return;
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Command: poll")
                     .setDescription("Creates a poll for people to vote on.")
                     .addField("Usage", "```md\n" + config.prefix + "poll <question>```", true)
@@ -367,17 +369,17 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -398,7 +400,7 @@ client.on("message", async message => {
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
         message.channel.send({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "invite") {
@@ -411,7 +413,7 @@ client.on("message", async message => {
             .setColor(0xe67e22);
         message.channel.send({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "stealavatar" || command === "avatar") {
@@ -427,9 +429,9 @@ client.on("message", async message => {
                 .setFooter("Requested by: " + message.author.tag);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: avatar")
                 .setDescription("Steals an avatar from a mentioned user.")
                 .addField("Usage", "```md\n" + config.prefix + "avatar <mention>```", true)
@@ -438,7 +440,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -449,28 +451,28 @@ client.on("message", async message => {
                     return amount = parseInt(x, 10);
                 });
                 var amount = amount + 1;
-                message.channel.bulkDelete(amount, true).catch(err => Sentry.captureException(err));
-                const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
+                message.channel.bulkDelete(amount, true).catch(e => Sentry.captureException(e));
+                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
                 setTimeout(function() {
                     m.delete();
                 }, 4000);
             } else {
-                message.delete().catch(err => Sentry.captureException(err));
-                message.channel.bulkDelete('11', true).catch(err => Sentry.captureException(err));
-                const m = await message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
+                message.delete().catch(e => Sentry.captureException(e));
+                message.channel.bulkDelete('11', true).catch(e => Sentry.captureException(e));
+                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
                 setTimeout(function() {
                     m.delete();
                 }, 4000);
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -482,21 +484,21 @@ client.on("message", async message => {
                 if (member) {
                     if (member.kickable === true) {
                         const reason = args[1];
-                        member.kick(reason).catch(err => Sentry.captureException(err));
-                        message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                        member.kick(reason).catch(e => Sentry.captureException(e));
+                        message.react('526078701830406173').catch(e => Sentry.captureException(e));
                     } else {
-                        const embed = new Discord.MessageEmbed() // Bot perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Bot perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("I don't have the permission to kick this user! <:NoShield:500245155266166784>")
                             .setAuthor(message.author.username, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 }
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Command: kick")
                     .setDescription("Kicks a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "kick <mention> [reason]```", true)
@@ -505,17 +507,17 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -527,21 +529,21 @@ client.on("message", async message => {
                 if (member) {
                     if (member.bannable === true) {
                         const reason = args[1];
-                        member.ban(reason).catch(err => Sentry.captureException(err));
-                        message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                        member.ban(reason).catch(e => Sentry.captureException(e));
+                        message.react('526078701830406173').catch(e => Sentry.captureException(e));
                     } else {
-                        const embed = new Discord.MessageEmbed() // Bot perm error
-                            .setTitle("Permission error!")
+                        const embed = new Discord.MessageEmbed() // Bot perm eor
+                            .setTitle("Permission eor!")
                             .setDescription("I don't have the permission to ban this user! <:NoShield:500245155266166784>")
                             .setAuthor(message.author.username, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
-                        }).catch(err => Sentry.captureException(err));
+                        }).catch(e => Sentry.captureException(e));
                     }
                 }
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Command: ban")
                     .setDescription("Bans a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "ban <mention> [reason]```", true)
@@ -550,17 +552,17 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical perm error
-                .setTitle("Permission error!")
+            const embed = new Discord.MessageEmbed() // Typical perm eor
+                .setTitle("Permission eor!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -572,7 +574,7 @@ client.on("message", async message => {
             if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
                 if (user) {
                     const member = message.guild.member(user);
-                    member.roles.add(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    member.roles.add(role.id, `Role Change by ${message.author.tag}`).catch(e => Sentry.captureException(e));
                     const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been added to the member **${member}** successfully!`)
@@ -580,23 +582,23 @@ client.on("message", async message => {
                         .setTimestamp();
                     message.channel.send({
                         embed: embed
-                    }).catch(err => Sentry.captureException(err));
+                    }).catch(e => Sentry.captureException(e));
                 }
             } else {
-                const embed = new Discord.MessageEmbed() // Typical perm error
-                    .setTitle("Permission error!")
+                const embed = new Discord.MessageEmbed() // Typical perm eor
+                    .setTitle("Permission eor!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to assign.")
                     .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "remove" || args[0] === "rem") {
             if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
                 if (user) {
                     const member = message.guild.member(user);
-                    member.roles.remove(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    member.roles.remove(role.id, `Role Change by ${message.author.tag}`).catch(e => Sentry.captureException(e));
                     const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been removed from the member **${member}** successfully!`)
@@ -604,20 +606,20 @@ client.on("message", async message => {
                         .setTimestamp();
                     message.channel.send({
                         embed: embed
-                    }).catch(err => Sentry.captureException(err));
+                    }).catch(e => Sentry.captureException(e));
                 }
             } else {
-                const embed = new Discord.MessageEmbed() // Typical perm error
-                    .setTitle("Permission error!")
+                const embed = new Discord.MessageEmbed() // Typical perm eor
+                    .setTitle("Permission eor!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to remove.")
                     .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: role")
                 .setDescription("Add or remove people to specified roles.")
                 .addField("Usage", "```md\n" + config.prefix + "role add <mention> <rolename>\n" + config.prefix + "role remove <mention> <rolename>```", true)
@@ -626,7 +628,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -636,26 +638,26 @@ client.on("message", async message => {
                 const channel1 = args[0];
                 const role = message.guild.roles.cache.find(r => r.name === args[1]);
                 const text = `[<@&${role.id}>] Notification!`;
-                role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(err => {
-                    message.channel.send("I don't have permissions to edit this role!").catch(err => Sentry.captureException(err));
+                role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(e => {
+                    message.channel.send("I don't have permissions to edit this role!").catch(e => Sentry.captureException(e));
                 });
-                message.guild.channels.cache.find(channel => channel.name === channel1).send(text).catch(err => {
-                    message.channel.send("I don't have the permissions to send messages into this channel!").catch(err => Sentry.captureException(err));
+                message.guild.channels.cache.find(channel => channel.name === channel1).send(text).catch(e => {
+                    message.channel.send("I don't have the permissions to send messages into this channel!").catch(e => Sentry.captureException(e));
                 });
-                role.setMentionable(false).catch(err => Sentry.captureException(err));
-                message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                role.setMentionable(false).catch(e => Sentry.captureException(e));
+                message.react('526078701830406173').catch(e => Sentry.captureException(e));
             } else {
-                const embed = new Discord.MessageEmbed() // Typical perm error
-                    .setTitle("Permission error!")
+                const embed = new Discord.MessageEmbed() // Typical perm eor
+                    .setTitle("Permission eor!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                     .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: notify")
                 .setDescription("Sends a message containing a ping with the specified role into a specified channel.")
                 .addField("Usage", "```md\n" + config.prefix + "notify <channelname> <rolename>```", true)
@@ -664,7 +666,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -713,7 +715,7 @@ client.on("message", async message => {
                 .setThumbnail(user.avatarURL());
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         } else {
             const embed = new Discord.MessageEmbed()
                 .setTitle("User Information")
@@ -730,7 +732,7 @@ client.on("message", async message => {
                 .setThumbnail(user.avatarURL());
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -752,7 +754,7 @@ client.on("message", async message => {
             .setThumbnail(guild.iconURL());
         message.channel.send({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "eval") {
@@ -775,8 +777,8 @@ client.on("message", async message => {
                     .addField("Result:", "```xl\n" + clean(evaled) + "```");
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
-            } catch (err) {
+                }).catch(e => Sentry.captureException(e));
+            } catch (e) {
                 const code = args.join(" ");
                 const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
                 const embed = new Discord.MessageEmbed()
@@ -786,13 +788,13 @@ client.on("message", async message => {
                     .setAuthor(message.author.tag, message.author.avatarURL())
                     .setFooter("Message sent on: " + timestamp)
                     .addField("Code Entered:", "```xl\n" + code + "```")
-                    .addField("Result:", "```xl\n" + clean(err) + "```");
+                    .addField("Result:", "```xl\n" + clean(e) + "```");
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: eval")
                 .setDescription("Evaluates JavaScript.\n**USE WITH EXTREME CAUTION!**")
                 .addField("Usage", "```md\n" + config.prefix + "eval <code>```", true)
@@ -801,7 +803,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -814,10 +816,10 @@ client.on("message", async message => {
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
 
-            message.channel.send("Sent to my console!").catch(err => Sentry.captureException(err));
+            message.channel.send("Sent to my console!").catch(e => Sentry.captureException(e));
             console.log(clean(evaled));
-        } catch (err) {
-            console.log("ERROR " + clean(err));
+        } catch (e) {
+            console.log("ERROR " + clean(e));
         }
     }
 
@@ -827,21 +829,21 @@ client.on("message", async message => {
         if (args[0] === "add") {
             var blacklistDirectory = './blacklist.json';
 
-            fs.readFile(blacklistDirectory, function(err, data) {
+            fs.readFile(blacklistDirectory, function(e, data) {
                 var contentToJSON = JSON.parse(data);
 
                 contentToJSON.push(user);
 
-                fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(err) {
-                    if (err) return console.log(err);
+                fs.writeFile(blacklistDirectory, JSON.stringify(contentToJSON), function(e) {
+                    if (e) return console.log(e);
                 });
-                message.channel.send(`Successfully blacklisted user **${user}**!`).catch(err => Sentry.captureException(err));
+                message.channel.send(`Successfully blacklisted user **${user}**!`).catch(e => Sentry.captureException(e));
             });
         } else if (args[0] === "remove") {
             removeFromBlacklist(args[1]);
-            message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
+            message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(e => Sentry.captureException(e));
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: blacklist")
                 .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
                 .addField("Usage", "```md\n" + config.prefix + "blacklist add <mention>\n" + config.prefix + "blacklist remove <mention>```", true)
@@ -850,7 +852,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
              message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -863,7 +865,7 @@ client.on("message", async message => {
             .setColor(0xc0392b);
         message.channel.send({
             embed: embed
-        }).catch(err => Sentry.captureException(err));
+        }).catch(e => Sentry.captureException(e));
         setTimeout(function() { // This is how to make a timeout of 1000ms :)
             client.destroy();
         }, 1000);
@@ -875,9 +877,9 @@ client.on("message", async message => {
                 sum = sum(args.slice(1));
                 average1 = sum / args.slice(1).length;
                 average = Math.round(average1 * 100) / 100;
-                message.reply("The average is: " + average).catch(err => Sentry.captureException(err));
+                message.reply("The average is: " + average).catch(e => Sentry.captureException(e));
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math average <number/numbers>`")
@@ -885,14 +887,14 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "sum") { // Sum Subcommand
             if (args[1]) {
                 sum = sum(args.slice(1));
-                message.reply("The sum is: " + sum).catch(err => Sentry.captureException(err));
+                message.reply("The sum is: " + sum).catch(e => Sentry.captureException(e));
             } else {
-                const embed = new Discord.MessageEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form eor
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math sum <number/numbers>`")
@@ -900,10 +902,10 @@ client.on("message", async message => {
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: math")
                 .setDescription("Calculates with numbers.")
                 .addField("Usage", "```md\n" + config.prefix + "math sum <number1> [number2...]\n" + config.prefix + "math average <number1> [number2...]```", true)
@@ -912,7 +914,7 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
@@ -920,21 +922,21 @@ client.on("message", async message => {
         if (message.author.id !== config.owner) return;
         if (args[0] === "roles") {
             const roles = message.guild.roles.cache.map(r => "\n" + r.id + ': ' + r.name);
-            message.channel.send("```\n" + roles + "```").catch(err => Sentry.captureException(err));
+            message.channel.send("```\n" + roles + "```").catch(e => Sentry.captureException(e));
         } else if (args[0] === "send") {
             if (args[2]) {
                 const channel1 = args[1];
                 const text = args.slice(2).join(" ");
                 message.guild.channels.cache.find(channel => channel.name === channel1).send(text)
-                message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
+                message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
             } else {
-                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "game") {
             if (args[2]) {
                 const type = args[1].toUpperCase();
                 const activity = args.slice(2).join(" ");
-                client.user.setActivity(activity, { type: type }).catch(err => Sentry.captureException(err));
+                client.user.setActivity(activity, { type: type }).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
                     .setAuthor(message.author.username, message.author.avatarURL())
@@ -942,23 +944,23 @@ client.on("message", async message => {
                     .setColor(0x27ae60);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
                 console.log("Bot Activity has been changed to " + type + " " + activity);
             } else {
-                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "dm") {
             const user = message.mentions.users.first();
             const content = args.slice(2).join(" ");
             if (user && content) {
-                user.send(content).catch(err => Sentry.captureException(err));
-                message.react('526078701830406173').catch(err => Sentry.captureException(err));
+                user.send(content).catch(e => Sentry.captureException(e));
+                message.react('526078701830406173').catch(e => Sentry.captureException(e));
             } else {
-                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "status") {
             if (args[1]) {
-                client.user.setStatus(args[1]).catch(err => Sentry.captureException(err));
+                client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
                     .setAuthor(message.author.username, message.author.avatarURL())
@@ -966,13 +968,13 @@ client.on("message", async message => {
                     .setColor(0x27ae60);
                 message.channel.send({
                     embed: embed
-                }).catch(err => Sentry.captureException(err));
+                }).catch(e => Sentry.captureException(e));
                 console.log("Bot Status has been changed to " + args[1] + "!");
             } else {
-                message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
+                message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else {
-            const embed = new Discord.MessageEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: debug")
                 .setDescription("Some secret commands for the bot owner...")
                 .addField("Sub-commands;", "`roles`: Displays all roles and role-IDs of the guild.\n`send`: Sends a message to a channel.\n`status`: Changes the bot's status.\n`game`: Changes the bot's playing status.\n`dm`: Sends a private message to a mentioned user.")
@@ -982,10 +984,10 @@ client.on("message", async message => {
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
-            }).catch(err => Sentry.captureException(err));
+            }).catch(e => Sentry.captureException(e));
         }
     }
 
 });
 
-client.login(config.token).catch(err => Sentry.captureException(err));
+client.login(config.token).catch(e => Sentry.captureException(e));
