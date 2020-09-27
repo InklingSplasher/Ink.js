@@ -419,11 +419,11 @@ client.on("message", async message => {
         if (user) {
             const embed = new Discord.MessageEmbed()
                 .setTitle("Avatar of " + user.tag)
-                .setDescription("View it [here](" + user.avatarURL + ")!")
-                .addField("Raw Link", user.avatarURL)
-                .setThumbnail(user.avatarURL)
+                .setDescription("View it [here](" + user.avatarURL() + ")!")
+                .addField("Raw Link", user.avatarURL())
+                .setThumbnail(user.avatarURL())
                 .setColor(0x34495e)
-                .setAuthor(user.username, user.avatarURL)
+                .setAuthor(user.username, user.avatarURL())
                 .setFooter("Requested by: " + message.author.tag);
             message.channel.send({
                 embed: embed
@@ -566,13 +566,13 @@ client.on("message", async message => {
 
     if (command === "role") {
         const user = message.mentions.users.first();
-        const role = message.guild.roles.find(r => r.name === args[2]);
+        const role = message.guild.roles.cache.find(r => r.name === args[2]);
 
         if (args[0] === "add") {
-            if (message.member.hasPermission('MANAGE_ROLES') && message.member.highestRole.position > role.position) {
+            if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
                 if (user) {
                     const member = message.guild.member(user);
-                    member.addRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    member.roles.add(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
                     const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been added to the member **${member}** successfully!`)
@@ -593,10 +593,10 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "remove" || args[0] === "rem") {
-            if (message.member.hasPermission('MANAGE_ROLES') && message.member.highestRole.position > role.position) {
+            if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
                 if (user) {
                     const member = message.guild.member(user);
-                    member.removeRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
+                    member.roles.remove(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
                     const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been removed from the member **${member}** successfully!`)
@@ -633,13 +633,13 @@ client.on("message", async message => {
     if (command === "notify" || command === "tempmention") {
         if (args[1]) {
             if (message.member.hasPermission('MENTION_EVERYONE')) {
-                const channel = args[0];
-                const role = message.guild.roles.find(r => r.name === args[1]);
+                const channel1 = args[0];
+                const role = message.guild.roles.cache.find(r => r.name === args[1]);
                 const text = `[<@&${role.id}>] Notification!`;
                 role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(err => {
                     message.channel.send("I don't have permissions to edit this role!").catch(err => Sentry.captureException(err));
                 });
-                message.guild.channels.find('name', channel).send(text).catch(err => {
+                message.guild.channels.cache.find(channel => channel.name === channel1).send(text).catch(err => {
                     message.channel.send("I don't have the permissions to send messages into this channel!").catch(err => Sentry.captureException(err));
                 });
                 role.setMentionable(false).catch(err => Sentry.captureException(err));
@@ -705,12 +705,12 @@ client.on("message", async message => {
                 .addField("Discriminator:", user.discriminator, true)
                 .addField("ID:", "`" + user.id + "`", true)
                 .addField("Status:", user.presence.status, true)
-                .addField("Playing:", user.presence.game.name, true)
+                .addField("Playing:", user.presence.activities, true)
                 .addField("Joined Discord:", joindate, true)
                 .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL)
+                .setAuthor(user.tag, user.avatarURL())
                 .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL);
+                .setThumbnail(user.avatarURL());
             message.channel.send({
                 embed: embed
             }).catch(err => Sentry.captureException(err));
@@ -725,9 +725,9 @@ client.on("message", async message => {
                 .addField("Playing:", "Nothing!", true)
                 .addField("Joined Discord:", joindate, true)
                 .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL)
+                .setAuthor(user.tag, user.avatarURL())
                 .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL);
+                .setThumbnail(user.avatarURL());
             message.channel.send({
                 embed: embed
             }).catch(err => Sentry.captureException(err));
@@ -749,7 +749,7 @@ client.on("message", async message => {
             .addField("Verification Level:", guild.verificationLevel, true)
             .setFooter("Message sent on: " + timestamp)
             .setColor(0x1abc9c)
-            .setThumbnail(guild.iconURL);
+            .setThumbnail(guild.iconURL());
         message.channel.send({
             embed: embed
         }).catch(err => Sentry.captureException(err));
@@ -919,23 +919,22 @@ client.on("message", async message => {
     if (command === "debug") {
         if (message.author.id !== config.owner) return;
         if (args[0] === "roles") {
-            const roles = message.guild.roles.map(r => "\n" + r.id + ': ' + r.name);
+            const roles = message.guild.roles.cache.map(r => "\n" + r.id + ': ' + r.name);
             message.channel.send("```\n" + roles + "```").catch(err => Sentry.captureException(err));
         } else if (args[0] === "send") {
             if (args[2]) {
-                const channelname = args[1];
+                const channel1 = args[1];
                 const text = args.slice(2).join(" ");
-                message.guild.channels.find('name', channelname).send(text);
+                message.guild.channels.cache.find(channel => channel.name === channel1).send(text)
                 message.channel.send(":white_check_mark:").catch(err => Sentry.captureException(err));
             } else {
                 message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else if (args[0] === "game") {
             if (args[2]) {
+                const type = args[1].toUpperCase();
                 const activity = args.slice(2).join(" ");
-                client.user.setActivity(activity, {
-                    type: args[1]
-                }).catch(err => Sentry.captureException(err));
+                client.user.setActivity(activity, { type: type }).catch(err => Sentry.captureException(err));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
                     .setAuthor(message.author.username, message.author.avatarURL())
@@ -944,7 +943,7 @@ client.on("message", async message => {
                 message.channel.send({
                     embed: embed
                 }).catch(err => Sentry.captureException(err));
-                console.log("Bot Activity has been changed to " + args[1] + " " + activity);
+                console.log("Bot Activity has been changed to " + type + " " + activity);
             } else {
                 message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
