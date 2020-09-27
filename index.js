@@ -846,7 +846,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical form eor
                 .setTitle("Command: blacklist")
                 .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
-                .addField("Usage", "```md\n" + config.prefix + "blacklist add <mention>\n" + config.prefix + "blacklist remove <mention>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "blacklist add <ID>\n" + config.prefix + "blacklist remove <ID>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
