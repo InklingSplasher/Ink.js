@@ -1,6 +1,6 @@
 {
   "name": "ink",
-  "version": "0.9.8a",
+  "version": "0.9.8b",
   "description": "My very first Discord-Bot developed in NodeJS",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "dependencies": {
     "@sentry/node": "^5.11.1",
     "colors": "^1.1.2",
-    "discord.js": "^11.4.2",
+    "discord.js": "^12.3.1",
     "fs": "0.0.1-security",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21"

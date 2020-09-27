@@ -144,7 +144,7 @@ client.on("message", async message => {
     const randomColor = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
     if (command === "help" || command === "commands") {
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle("Help Pages")
             .setDescription("All commands for this bot in a fancy list made of an embed! If you have any questions feel free to ask us in our Discord-Server InkCurity.")
             .setColor(0x1ab7ea)
@@ -163,7 +163,7 @@ client.on("message", async message => {
 
     if (command === "ping" || command === "hello") {
         const m = await message.channel.send("Ping? ");
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle("Pong! :ping_pong:")
             .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms`, true)
             .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
@@ -186,7 +186,7 @@ client.on("message", async message => {
                 message.delete().catch(O_o => {});
                 message.channel.send(clean(":information_source: " + sayMessage + " `~" + message.author.tag + "`")).catch(err => Sentry.captureException(err)); // Sends the given message with the author after the say command.
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: say")
                     .addField("Usage", "`" + config.prefix + "say <message>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
@@ -196,7 +196,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -214,7 +214,7 @@ client.on("message", async message => {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
-                        const embed = new Discord.RichEmbed()
+                        const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
@@ -223,7 +223,7 @@ client.on("message", async message => {
                             embed: embed
                         }).catch(err => Sentry.captureException(err));
                     } else {
-                        const embed = new Discord.RichEmbed() // Typical perm error
+                        const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL)
@@ -236,7 +236,7 @@ client.on("message", async message => {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(1).join(" ");
-                        const embed = new Discord.RichEmbed()
+                        const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
@@ -245,7 +245,7 @@ client.on("message", async message => {
                             embed: embed
                         }).catch(err => Sentry.captureException(err));
                     } else {
-                        const embed = new Discord.RichEmbed() // Typical perm error
+                        const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL)
@@ -258,7 +258,7 @@ client.on("message", async message => {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
                         message.delete().catch(O_o => {});
                         const sayMessage = args.slice(2).join(" ");
-                        const embed = new Discord.RichEmbed()
+                        const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
                             .setAuthor(message.author.tag, message.author.avatarURL)
                             .setTimestamp()
@@ -267,7 +267,7 @@ client.on("message", async message => {
                             embed: embed
                         }).catch(err => Sentry.captureException(err));
                     } else {
-                        const embed = new Discord.RichEmbed() // Typical perm error
+                        const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL)
@@ -282,7 +282,7 @@ client.on("message", async message => {
                             message.delete().catch(O_o => {});
                             const color = args[1];
                             const description = args.slice(3).join(" ");
-                            const embed = new Discord.RichEmbed()
+                            const embed = new Discord.MessageEmbed()
                                 .setAuthor(message.author.tag, message.author.avatarURL)
                                 .setTimestamp()
                                 .setTitle(args[2])
@@ -295,7 +295,7 @@ client.on("message", async message => {
                             message.channel.send("Invalid arguments!").catch(err => Sentry.captureException(err));
                         }
                     } else {
-                        const embed = new Discord.RichEmbed() // Typical perm error
+                        const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                             .setAuthor(message.author.tag, message.author.avatarURL)
@@ -307,7 +307,7 @@ client.on("message", async message => {
                 } else {
                     message.delete().catch(O_o => {});
                     const sayMessage = args.join(" ");
-                    const embed = new Discord.RichEmbed()
+                    const embed = new Discord.MessageEmbed()
                         .setDescription(sayMessage)
                         .setAuthor(message.author.tag, message.author.avatarURL)
                         .setTimestamp()
@@ -317,7 +317,7 @@ client.on("message", async message => {
                     }).catch(err => Sentry.captureException(err));
                 }
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: embed")
                     .setDescription("Creates an embed, and if wanted, pings a specific role. \nThe embed author is the command issuer.")
                     .addField("Usage", "```md\n" + config.prefix + "embed [everyone/here] <message>\n" + config.prefix + "embed role <roleID> <message>\n" + config.prefix + "embed custom <color> <title> <desc>```", true)
@@ -329,7 +329,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -344,7 +344,7 @@ client.on("message", async message => {
             const poll = args.join(" ");
             if (poll) {
                 message.delete().catch(O_o => {});
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setTitle("Poll:")
                     .setDescription(poll)
                     .setFooter(message.author.tag, message.author.avatarURL)
@@ -358,7 +358,7 @@ client.on("message", async message => {
                 m.react('507144087057465374').catch(err => Sentry.captureException(err));
                 return;
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: poll")
                     .setDescription("Creates a poll for people to vote on.")
                     .addField("Usage", "```md\n" + config.prefix + "poll <question>```", true)
@@ -370,7 +370,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -383,7 +383,7 @@ client.on("message", async message => {
 
     if (command === "stats") {
         let count = Array.from(client.users);
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle("General Info & Stats")
             .setDescription("Here, you can find general info as well as some stats about me!")
             .setColor(0x9b59b6)
@@ -403,7 +403,7 @@ client.on("message", async message => {
 
     if (command === "invite") {
         const botID = client.user.id;
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle("Invite me, " + client.user.username + "!")
             .setDescription("You can **invite me** using this link: [Click Here](https://discordapp.com/oauth2/authorize?client_id=" + botID + "&scope=bot&permissions=8)")
             .addField("Anything Else?", "Yes, sadly, you can\'t invite me quite yet, because the bot is currently set to \'private\' and can only be invited by my owner Ink#0001.")
@@ -417,7 +417,7 @@ client.on("message", async message => {
     if (command === "stealavatar" || command === "avatar") {
         const user = message.mentions.users.first();
         if (user) {
-            const embed = new Discord.RichEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setTitle("Avatar of " + user.tag)
                 .setDescription("View it [here](" + user.avatarURL + ")!")
                 .addField("Raw Link", user.avatarURL)
@@ -429,7 +429,7 @@ client.on("message", async message => {
                 embed: embed
             }).catch(err => Sentry.captureException(err));
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: avatar")
                 .setDescription("Steals an avatar from a mentioned user.")
                 .addField("Usage", "```md\n" + config.prefix + "avatar <mention>```", true)
@@ -463,7 +463,7 @@ client.on("message", async message => {
                 }, 4000);
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -485,7 +485,7 @@ client.on("message", async message => {
                         member.kick(reason).catch(err => Sentry.captureException(err));
                         message.react('526078701830406173').catch(err => Sentry.captureException(err));
                     } else {
-                        const embed = new Discord.RichEmbed() // Bot perm error
+                        const embed = new Discord.MessageEmbed() // Bot perm error
                             .setTitle("Permission error!")
                             .setDescription("I don't have the permission to kick this user! <:NoShield:500245155266166784>")
                             .setAuthor(message.author.username, message.author.avatarURL)
@@ -496,7 +496,7 @@ client.on("message", async message => {
                     }
                 }
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: kick")
                     .setDescription("Kicks a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "kick <mention> [reason]```", true)
@@ -508,7 +508,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -530,7 +530,7 @@ client.on("message", async message => {
                         member.ban(reason).catch(err => Sentry.captureException(err));
                         message.react('526078701830406173').catch(err => Sentry.captureException(err));
                     } else {
-                        const embed = new Discord.RichEmbed() // Bot perm error
+                        const embed = new Discord.MessageEmbed() // Bot perm error
                             .setTitle("Permission error!")
                             .setDescription("I don't have the permission to ban this user! <:NoShield:500245155266166784>")
                             .setAuthor(message.author.username, message.author.avatarURL)
@@ -541,7 +541,7 @@ client.on("message", async message => {
                     }
                 }
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: ban")
                     .setDescription("Bans a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "ban <mention> [reason]```", true)
@@ -553,7 +553,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical perm error
+            const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
                 .setAuthor(message.author.username, message.author.avatarURL)
@@ -573,7 +573,7 @@ client.on("message", async message => {
                 if (user) {
                     const member = message.guild.member(user);
                     member.addRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
-                    const embed = new Discord.RichEmbed()
+                    const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been added to the member **${member}** successfully!`)
                         .setColor(0x27ae60)
@@ -583,7 +583,7 @@ client.on("message", async message => {
                     }).catch(err => Sentry.captureException(err));
                 }
             } else {
-                const embed = new Discord.RichEmbed() // Typical perm error
+                const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to assign.")
                     .setAuthor(message.author.username, message.author.avatarURL)
@@ -597,7 +597,7 @@ client.on("message", async message => {
                 if (user) {
                     const member = message.guild.member(user);
                     member.removeRole(role.id, `Role Change by ${message.author.tag}`).catch(err => Sentry.captureException(err));
-                    const embed = new Discord.RichEmbed()
+                    const embed = new Discord.MessageEmbed()
                         .setTitle("Successful!")
                         .setDescription(`Role **${role.name}** has been removed from the member **${member}** successfully!`)
                         .setColor(0x27ae60)
@@ -607,7 +607,7 @@ client.on("message", async message => {
                     }).catch(err => Sentry.captureException(err));
                 }
             } else {
-                const embed = new Discord.RichEmbed() // Typical perm error
+                const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to remove.")
                     .setAuthor(message.author.username, message.author.avatarURL)
@@ -617,7 +617,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: role")
                 .setDescription("Add or remove people to specified roles.")
                 .addField("Usage", "```md\n" + config.prefix + "role add <mention> <rolename>\n" + config.prefix + "role remove <mention> <rolename>```", true)
@@ -645,7 +645,7 @@ client.on("message", async message => {
                 role.setMentionable(false).catch(err => Sentry.captureException(err));
                 message.react('526078701830406173').catch(err => Sentry.captureException(err));
             } else {
-                const embed = new Discord.RichEmbed() // Typical perm error
+                const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
                     .setAuthor(message.author.username, message.author.avatarURL)
@@ -655,7 +655,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: notify")
                 .setDescription("Sends a message containing a ping with the specified role into a specified channel.")
                 .addField("Usage", "```md\n" + config.prefix + "notify <channelname> <rolename>```", true)
@@ -698,7 +698,7 @@ client.on("message", async message => {
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
         const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
         if (user.presence.game !== null) {
-            const embed = new Discord.RichEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setTitle("User Information")
                 .setDescription("of <@!" + user.id + "> " + emote)
                 .addField("Username:", user.username, true)
@@ -715,7 +715,7 @@ client.on("message", async message => {
                 embed: embed
             }).catch(err => Sentry.captureException(err));
         } else {
-            const embed = new Discord.RichEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setTitle("User Information")
                 .setDescription("of <@!" + user.id + "> " + emote)
                 .addField("Username:", user.username, true)
@@ -738,7 +738,7 @@ client.on("message", async message => {
         let guild = message.guild;
         const created = new moment(guild.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setTitle("Server Information")
             .setDescription("of " + guild.name + "!")
             .addField("Owner:", "<@!" + guild.owner.id + ">", true)
@@ -765,7 +765,7 @@ client.on("message", async message => {
                 if (typeof evaled !== "string")
                     evaled = require("util").inspect(evaled);
                 const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setTitle("SUCCESS")
                     .setDescription("Successfully evaluated your code!")
                     .setColor(0x00c300)
@@ -779,7 +779,7 @@ client.on("message", async message => {
             } catch (err) {
                 const code = args.join(" ");
                 const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setTitle("ERROR")
                     .setDescription("Error while evaluating your code!")
                     .setColor(0xaf0606)
@@ -792,7 +792,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: eval")
                 .setDescription("Evaluates JavaScript.\n**USE WITH EXTREME CAUTION!**")
                 .addField("Usage", "```md\n" + config.prefix + "eval <code>```", true)
@@ -841,7 +841,7 @@ client.on("message", async message => {
             removeFromBlacklist(args[1]);
             message.channel.send(`Successfully un-blacklisted user **${args[1]}**!`).catch(err => Sentry.captureException(err));
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: blacklist")
                 .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
                 .addField("Usage", "```md\n" + config.prefix + "blacklist add <mention>\n" + config.prefix + "blacklist remove <mention>```", true)
@@ -856,7 +856,7 @@ client.on("message", async message => {
 
     if (command === "shutdown") {
         if (message.author.id !== config.owner) return;
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
             .setDescription("**Shutting down..** :sleeping:")
             .setAuthor(message.author.username, message.author.avatarURL)
             .setFooter("Requested by: " + message.author.tag)
@@ -877,7 +877,7 @@ client.on("message", async message => {
                 average = Math.round(average1 * 100) / 100;
                 message.reply("The average is: " + average).catch(err => Sentry.captureException(err));
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math average <number/numbers>`")
@@ -892,7 +892,7 @@ client.on("message", async message => {
                 sum = sum(args.slice(1));
                 message.reply("The sum is: " + sum).catch(err => Sentry.captureException(err));
             } else {
-                const embed = new Discord.RichEmbed() // Typical form error
+                const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math sum <number/numbers>`")
@@ -903,7 +903,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: math")
                 .setDescription("Calculates with numbers.")
                 .addField("Usage", "```md\n" + config.prefix + "math sum <number1> [number2...]\n" + config.prefix + "math average <number1> [number2...]```", true)
@@ -936,7 +936,7 @@ client.on("message", async message => {
                 client.user.setActivity(activity, {
                     type: args[1]
                 }).catch(err => Sentry.captureException(err));
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setFooter("Requested by: " + message.author.tag)
@@ -960,7 +960,7 @@ client.on("message", async message => {
         } else if (args[0] === "status") {
             if (args[1]) {
                 client.user.setStatus(args[1]).catch(err => Sentry.captureException(err));
-                const embed = new Discord.RichEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setFooter("Requested by: " + message.author.tag)
@@ -973,7 +973,7 @@ client.on("message", async message => {
                 message.channel.send("Invalid arguments provided!").catch(err => Sentry.captureException(err));
             }
         } else {
-            const embed = new Discord.RichEmbed() // Typical form error
+            const embed = new Discord.MessageEmbed() // Typical form error
                 .setTitle("Command: debug")
                 .setDescription("Some secret commands for the bot owner...")
                 .addField("Sub-commands;", "`roles`: Displays all roles and role-IDs of the guild.\n`send`: Sends a message to a channel.\n`status`: Changes the bot's status.\n`game`: Changes the bot's playing status.\n`dm`: Sends a private message to a mentioned user.")
