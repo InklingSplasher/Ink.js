@@ -189,7 +189,7 @@ client.on("message", async message => {
                 const embed = new Discord.MessageEmbed() // Typical form error
                     .setTitle("Command: say")
                     .addField("Usage", "`" + config.prefix + "say <message>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -199,7 +199,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -216,7 +216,7 @@ client.on("message", async message => {
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@here', {
@@ -226,7 +226,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -238,7 +238,7 @@ client.on("message", async message => {
                         const sayMessage = args.slice(1).join(" ");
                         const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('@everyone', {
@@ -248,7 +248,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -260,7 +260,7 @@ client.on("message", async message => {
                         const sayMessage = args.slice(2).join(" ");
                         const embed = new Discord.MessageEmbed()
                             .setDescription(sayMessage)
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setTimestamp()
                             .setColor(randomColor);
                         message.channel.send('<@&' + args[1] + '>', {
@@ -270,7 +270,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -283,7 +283,7 @@ client.on("message", async message => {
                             const color = args[1];
                             const description = args.slice(3).join(" ");
                             const embed = new Discord.MessageEmbed()
-                                .setAuthor(message.author.tag, message.author.avatarURL)
+                                .setAuthor(message.author.tag, message.author.avatarURL())
                                 .setTimestamp()
                                 .setTitle(args[2])
                                 .setDescription(description)
@@ -298,7 +298,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Typical perm error
                             .setTitle("Permission error!")
                             .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                            .setAuthor(message.author.tag, message.author.avatarURL)
+                            .setAuthor(message.author.tag, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -309,7 +309,7 @@ client.on("message", async message => {
                     const sayMessage = args.join(" ");
                     const embed = new Discord.MessageEmbed()
                         .setDescription(sayMessage)
-                        .setAuthor(message.author.tag, message.author.avatarURL)
+                        .setAuthor(message.author.tag, message.author.avatarURL())
                         .setTimestamp()
                         .setColor(randomColor);
                     message.channel.send({
@@ -322,7 +322,7 @@ client.on("message", async message => {
                     .setDescription("Creates an embed, and if wanted, pings a specific role. \nThe embed author is the command issuer.")
                     .addField("Usage", "```md\n" + config.prefix + "embed [everyone/here] <message>\n" + config.prefix + "embed role <roleID> <message>\n" + config.prefix + "embed custom <color> <title> <desc>```", true)
                     .addField("Permissions required:", "`EMBED_LINKS`\n`MENTION_EVERYONE`", true)
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -332,7 +332,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -347,7 +347,7 @@ client.on("message", async message => {
                 const embed = new Discord.MessageEmbed()
                     .setTitle("Poll:")
                     .setDescription(poll)
-                    .setFooter(message.author.tag, message.author.avatarURL)
+                    .setFooter(message.author.tag, message.author.avatarURL())
                     .setColor(randomColor)
                     .setTimestamp();
                 const m = await message.channel.send("[**POLL**]\nReact to **one** of the reactions to vote!", {
@@ -363,7 +363,7 @@ client.on("message", async message => {
                     .setDescription("Creates a poll for people to vote on.")
                     .addField("Usage", "```md\n" + config.prefix + "poll <question>```", true)
                     .addField("Permissions required:", "`MANAGE_MESSAGES`", true)
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -373,7 +373,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -382,7 +382,7 @@ client.on("message", async message => {
     }
 
     if (command === "stats") {
-        let count = Array.from(client.users);
+        let count = Array.from(client.users.cache);
         const embed = new Discord.MessageEmbed()
             .setTitle("General Info & Stats")
             .setDescription("Here, you can find general info as well as some stats about me!")
@@ -391,9 +391,9 @@ client.on("message", async message => {
             .addField("Version:", packageInfo.version, true)
             .addField("Source:", "[View on GitHub](https://github.com/InklingSplasher/Ink.js)", true)
             .addField("Prefix:", prefix, true)
-            .addField("Total Users:", count.length, true)
-            .addField("General Stats:", client.guilds.size + " Guilds\n" + client.users.size + " Users", true)
-            .setAuthor(client.user.tag, client.user.avatarURL)
+            .addField("(Inaccurate) Total Users:", count.length, true)
+            .addField("General Stats:", client.guilds.cache.size + " Guilds\n" + client.users.cache.size + " Users", true)
+            .setAuthor(client.user.tag, client.user.avatar)
             .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
         message.channel.send({
@@ -434,7 +434,7 @@ client.on("message", async message => {
                 .setDescription("Steals an avatar from a mentioned user.")
                 .addField("Usage", "```md\n" + config.prefix + "avatar <mention>```", true)
                 .addField("Permissions required:", "NONE", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -466,7 +466,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -488,7 +488,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Bot perm error
                             .setTitle("Permission error!")
                             .setDescription("I don't have the permission to kick this user! <:NoShield:500245155266166784>")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.username, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -501,7 +501,7 @@ client.on("message", async message => {
                     .setDescription("Kicks a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "kick <mention> [reason]```", true)
                     .addField("Permissions required:", "`KICK_MEMBERS`", true)
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -511,7 +511,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -533,7 +533,7 @@ client.on("message", async message => {
                         const embed = new Discord.MessageEmbed() // Bot perm error
                             .setTitle("Permission error!")
                             .setDescription("I don't have the permission to ban this user! <:NoShield:500245155266166784>")
-                            .setAuthor(message.author.username, message.author.avatarURL)
+                            .setAuthor(message.author.username, message.author.avatarURL())
                             .setColor(0xe74c3c);
                         message.channel.send({
                             embed: embed
@@ -546,7 +546,7 @@ client.on("message", async message => {
                     .setDescription("Bans a specified user from the guild.")
                     .addField("Usage", "```md\n" + config.prefix + "ban <mention> [reason]```", true)
                     .addField("Permissions required:", "`BAN_MEMBERS`", true)
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -556,7 +556,7 @@ client.on("message", async message => {
             const embed = new Discord.MessageEmbed() // Typical perm error
                 .setTitle("Permission error!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `EMBED_LINKS`")
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -586,7 +586,7 @@ client.on("message", async message => {
                 const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to assign.")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -610,7 +610,7 @@ client.on("message", async message => {
                 const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_ROLES` \n\n**OR** Your highest role is not over the role you are trying to remove.")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -622,7 +622,7 @@ client.on("message", async message => {
                 .setDescription("Add or remove people to specified roles.")
                 .addField("Usage", "```md\n" + config.prefix + "role add <mention> <rolename>\n" + config.prefix + "role remove <mention> <rolename>```", true)
                 .addField("Permissions required:", "`MANAGE_ROLES`", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -648,7 +648,7 @@ client.on("message", async message => {
                 const embed = new Discord.MessageEmbed() // Typical perm error
                     .setTitle("Permission error!")
                     .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MENTION_EVERYONE`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -660,7 +660,7 @@ client.on("message", async message => {
                 .setDescription("Sends a message containing a ping with the specified role into a specified channel.")
                 .addField("Usage", "```md\n" + config.prefix + "notify <channelname> <rolename>```", true)
                 .addField("Permissions required:", "`MENTION_EVERYONE`", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -769,7 +769,7 @@ client.on("message", async message => {
                     .setTitle("SUCCESS")
                     .setDescription("Successfully evaluated your code!")
                     .setColor(0x00c300)
-                    .setAuthor(message.author.tag, message.author.avatarURL)
+                    .setAuthor(message.author.tag, message.author.avatarURL())
                     .setFooter("Message sent on: " + timestamp)
                     .addField("Code Entered:", "```xl\n" + code + "```")
                     .addField("Result:", "```xl\n" + clean(evaled) + "```");
@@ -783,7 +783,7 @@ client.on("message", async message => {
                     .setTitle("ERROR")
                     .setDescription("Error while evaluating your code!")
                     .setColor(0xaf0606)
-                    .setAuthor(message.author.tag, message.author.avatarURL)
+                    .setAuthor(message.author.tag, message.author.avatarURL())
                     .setFooter("Message sent on: " + timestamp)
                     .addField("Code Entered:", "```xl\n" + code + "```")
                     .addField("Result:", "```xl\n" + clean(err) + "```");
@@ -797,7 +797,7 @@ client.on("message", async message => {
                 .setDescription("Evaluates JavaScript.\n**USE WITH EXTREME CAUTION!**")
                 .addField("Usage", "```md\n" + config.prefix + "eval <code>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -846,7 +846,7 @@ client.on("message", async message => {
                 .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
                 .addField("Usage", "```md\n" + config.prefix + "blacklist add <mention>\n" + config.prefix + "blacklist remove <mention>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
              message.channel.send({
                 embed: embed
@@ -858,7 +858,7 @@ client.on("message", async message => {
         if (message.author.id !== config.owner) return;
         const embed = new Discord.MessageEmbed()
             .setDescription("**Shutting down..** :sleeping:")
-            .setAuthor(message.author.username, message.author.avatarURL)
+            .setAuthor(message.author.username, message.author.avatarURL())
             .setFooter("Requested by: " + message.author.tag)
             .setColor(0xc0392b);
         message.channel.send({
@@ -881,7 +881,7 @@ client.on("message", async message => {
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math average <number/numbers>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -896,7 +896,7 @@ client.on("message", async message => {
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
                     .addField("Usage", "`" + config.prefix + "math sum <number/numbers>`")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setColor(0xe74c3c);
                 message.channel.send({
                     embed: embed
@@ -908,7 +908,7 @@ client.on("message", async message => {
                 .setDescription("Calculates with numbers.")
                 .addField("Usage", "```md\n" + config.prefix + "math sum <number1> [number2...]\n" + config.prefix + "math average <number1> [number2...]```", true)
                 .addField("Permissions required:", "NONE", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
@@ -938,7 +938,7 @@ client.on("message", async message => {
                 }).catch(err => Sentry.captureException(err));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setFooter("Requested by: " + message.author.tag)
                     .setColor(0x27ae60);
                 message.channel.send({
@@ -962,7 +962,7 @@ client.on("message", async message => {
                 client.user.setStatus(args[1]).catch(err => Sentry.captureException(err));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
-                    .setAuthor(message.author.username, message.author.avatarURL)
+                    .setAuthor(message.author.username, message.author.avatarURL())
                     .setFooter("Requested by: " + message.author.tag)
                     .setColor(0x27ae60);
                 message.channel.send({
@@ -979,7 +979,7 @@ client.on("message", async message => {
                 .addField("Sub-commands;", "`roles`: Displays all roles and role-IDs of the guild.\n`send`: Sends a message to a channel.\n`status`: Changes the bot's status.\n`game`: Changes the bot's playing status.\n`dm`: Sends a private message to a mentioned user.")
                 .addField("Usage", "```md\n" + config.prefix + "debug <sub-command> <args>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
-                .setAuthor(message.author.username, message.author.avatarURL)
+                .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
             message.channel.send({
                 embed: embed
