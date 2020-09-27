@@ -168,7 +168,7 @@ client.on("message", async message => {
         const embed = new Discord.MessageEmbed()
             .setTitle("Pong! :ping_pong:")
             .addField("My Latency:", `${m.createdTimestamp - message.createdTimestamp}ms`, true)
-            .addField("API Latency:", `${Math.round(client.ping)}ms`, true)
+            .addField("API Latency:", `${Math.round(client.ws.ping)}ms`, true)
             .setTimestamp()
             .setColor(0xd35400);
         m.edit({
@@ -699,7 +699,7 @@ client.on("message", async message => {
         }
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
         const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-        if (user.presence.game !== null) {
+        if (user.presence.activities !== null) {
             const embed = new Discord.MessageEmbed()
                 .setTitle("User Information")
                 .setDescription("of <@!" + user.id + "> " + emote)
