@@ -1,6 +1,6 @@
 // Setting the config & calling the package
 const Sentry = require('@sentry/node');
-const botconfig = require("./config.json");
+const config = require("./config.json");
 const packageInfo = require("./package.json");
 const Discord = require("discord.js");
 const moment = require("moment");
@@ -8,14 +8,14 @@ const tz = require("moment-timezone");
 const fs = require("fs");
 // noinspection JSCheckFunctionSignatures
 const client = new Discord.Client({
-    autoReconnect: botconfig.autorestart
+    autoReconnect: config.autorestart
 });
 
 // What happens when the bot is started
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
-    console.log(`\nSettings:\n\nPrefix: ${botconfig.prefix}\nOwner ID / Tag: ${botconfig.owner} / ${botconfig.ownertag}\nSentryDSN: ${botconfig.sentryDSN}\nAutorestart: ${botconfig.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    console.log(`\nSettings:\n\nPrefix: ${config.prefix}\nOwner ID / Tag: ${config.owner} / ${config.ownertag}\nSentryDSN: ${config.sentryDSN}\nAutorestart: ${config.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
         type: 'PLAYING'
     }).catch(err => Sentry.captureException(err));
     client.user.setStatus('online').catch(err => Sentry.captureException(err));
@@ -23,7 +23,7 @@ client.on("ready", async() => {
 
 client.on("guildCreate", guild => {
     // This event triggers when the bot joins a guild.
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
         type: 'PLAYING'
     }).catch(err => Sentry.captureException(err));
     console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
@@ -31,7 +31,7 @@ client.on("guildCreate", guild => {
 
 client.on("guildDelete", guild => {
     // this event triggers when the bot is removed from a guild.
-    client.user.setActivity(botconfig.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
+    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.size} guilds!`, {
         type: 'PLAYING'
     }).catch(err => Sentry.captureException(err));
     console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
@@ -58,10 +58,10 @@ client.on('error', err => {
 client.on("message", async message => {
     if (message.author.bot) return; // Checks if command author is the bot itself.
     if (message.channel.type === "dm") return; // Checks if the command is used in DMs.
-    if (message.content.indexOf(botconfig.prefix) !== 0) return; // Only accepts commands starting with the right prefix
+    if (message.content.indexOf(config.prefix) !== 0) return; // Only accepts commands starting with the right prefix
     if (isIDInBlacklist(message.author.id)) return message.channel.send("You are blacklisted!").catch(err => Sentry.captureException(err)); // Checks if the user is blacklisted
 
-    const args = message.content.slice(botconfig.prefix.length).trim().split(/ +/g);
+    const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     const clean = text => {
         if (typeof(text) === "string")
@@ -70,7 +70,7 @@ client.on("message", async message => {
             return text;
     };
 
-    let invoke = message.content.split(" ")[0].substr(botconfig.prefix.length);
+    let invoke = message.content.split(" ")[0].substr(config.prefix.length);
 
     function sum(input) {
 
@@ -121,7 +121,7 @@ client.on("message", async message => {
     console.log(message.author.tag, `(${message.author.id})`, invoke, args); // Logging all commands.
 
     Sentry.init({
-        dsn: botconfig.sentryDSN,
+        dsn: config.sentryDSN,
         release: `inkjs@${packageInfo.version}`,
         tags: {
             service: 'discord'
@@ -137,7 +137,7 @@ client.on("message", async message => {
     // let author = message.author; // The person who sent the message.
     // let msg = message.content.toUpperCase(); // Takes a message and makes it all upper-case.
     // let cont = message.content; // Raw message content
-    let prefix = botconfig.prefix; // The prefix of the bot (stands before every command).
+    let prefix = config.prefix; // The prefix of the bot (stands before every command).
     // let channel = msg.channel;
     // let chan = message.channel;
     // let send = message.channel.send;
@@ -177,7 +177,7 @@ client.on("message", async message => {
     if (command === "say") {
         if (message.member.hasPermission('MANAGE_MESSAGES')) {
             if (args[0] === "bypass") { // For bot owner, to send a message without seeing that say was used.
-                if (message.author.id !== botconfig.owner) message.reply("Not a bot owner!").catch(err => Sentry.captureException(err));
+                if (message.author.id !== config.owner) message.reply("Not a bot owner!").catch(err => Sentry.captureException(err));
                 const sayMessage = args.slice(1).join(" "); // Reads the message (args) after the say command and puts it into the 'sayMessage' variable.
                 message.delete().catch(O_o => {}); // Deletes the message of the sender.
                 message.channel.send(sayMessage).catch(err => Sentry.captureException(err)); // Sends the given message after the say command.
@@ -188,7 +188,7 @@ client.on("message", async message => {
             } else {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Command: say")
-                    .addField("Usage", "`" + botconfig.prefix + "say <message>`")
+                    .addField("Usage", "`" + config.prefix + "say <message>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -320,7 +320,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Command: embed")
                     .setDescription("Creates an embed, and if wanted, pings a specific role. \nThe embed author is the command issuer.")
-                    .addField("Usage", "```md\n" + botconfig.prefix + "embed [everyone/here] <message>\n" + botconfig.prefix + "embed role <roleID> <message>\n" + botconfig.prefix + "embed custom <color> <title> <desc>```", true)
+                    .addField("Usage", "```md\n" + config.prefix + "embed [everyone/here] <message>\n" + config.prefix + "embed role <roleID> <message>\n" + config.prefix + "embed custom <color> <title> <desc>```", true)
                     .addField("Permissions required:", "`EMBED_LINKS`\n`MENTION_EVERYONE`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
@@ -361,7 +361,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Command: poll")
                     .setDescription("Creates a poll for people to vote on.")
-                    .addField("Usage", "```md\n" + botconfig.prefix + "poll <question>```", true)
+                    .addField("Usage", "```md\n" + config.prefix + "poll <question>```", true)
                     .addField("Permissions required:", "`MANAGE_MESSAGES`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
@@ -387,7 +387,7 @@ client.on("message", async message => {
             .setTitle("General Info & Stats")
             .setDescription("Here, you can find general info as well as some stats about me!")
             .setColor(0x9b59b6)
-            .addField("Owner:", "<@!" + botconfig.owner + "> " + "(" + botconfig.ownertag + ")", true)
+            .addField("Owner:", "<@!" + config.owner + "> " + "(" + config.ownertag + ")", true)
             .addField("Version:", packageInfo.version, true)
             .addField("Source:", "[View on GitHub](https://github.com/InklingSplasher/Ink.js)", true)
             .addField("Prefix:", prefix, true)
@@ -432,7 +432,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: avatar")
                 .setDescription("Steals an avatar from a mentioned user.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "avatar <mention>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "avatar <mention>```", true)
                 .addField("Permissions required:", "NONE", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -499,7 +499,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Command: kick")
                     .setDescription("Kicks a specified user from the guild.")
-                    .addField("Usage", "```md\n" + botconfig.prefix + "kick <mention> [reason]```", true)
+                    .addField("Usage", "```md\n" + config.prefix + "kick <mention> [reason]```", true)
                     .addField("Permissions required:", "`KICK_MEMBERS`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
@@ -544,7 +544,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Command: ban")
                     .setDescription("Bans a specified user from the guild.")
-                    .addField("Usage", "```md\n" + botconfig.prefix + "ban <mention> [reason]```", true)
+                    .addField("Usage", "```md\n" + config.prefix + "ban <mention> [reason]```", true)
                     .addField("Permissions required:", "`BAN_MEMBERS`", true)
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
@@ -620,7 +620,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: role")
                 .setDescription("Add or remove people to specified roles.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "role add <mention> <rolename>\n" + botconfig.prefix + "role remove <mention> <rolename>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "role add <mention> <rolename>\n" + config.prefix + "role remove <mention> <rolename>```", true)
                 .addField("Permissions required:", "`MANAGE_ROLES`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -658,7 +658,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: notify")
                 .setDescription("Sends a message containing a ping with the specified role into a specified channel.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "notify <channelname> <rolename>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "notify <channelname> <rolename>```", true)
                 .addField("Permissions required:", "`MENTION_EVERYONE`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -756,7 +756,7 @@ client.on("message", async message => {
     }
 
     if (command === "eval") {
-        if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== config.owner) return;
         if (args[0]) {
             try {
                 const code = args.join(" ");
@@ -795,7 +795,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: eval")
                 .setDescription("Evaluates JavaScript.\n**USE WITH EXTREME CAUTION!**")
-                .addField("Usage", "```md\n" + botconfig.prefix + "eval <code>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "eval <code>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -806,7 +806,7 @@ client.on("message", async message => {
     }
 
     if (command === "evalconsole") {
-        if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== config.owner) return;
         try {
             const code = args.join(" ");
             let evaled = eval(code);
@@ -822,7 +822,7 @@ client.on("message", async message => {
     }
 
     if (command === "blacklist" || command === "bl") {
-        if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== config.owner) return;
         const user = args[1];
         if (args[0] === "add") {
             var blacklistDirectory = './blacklist.json';
@@ -844,7 +844,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: blacklist")
                 .setDescription("Blocks / unblock people from the bot by blacklisting / un-blacklisting them.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "blacklist add <mention>\n" + botconfig.prefix + "blacklist remove <mention>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "blacklist add <mention>\n" + config.prefix + "blacklist remove <mention>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -855,7 +855,7 @@ client.on("message", async message => {
     }
 
     if (command === "shutdown") {
-        if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== config.owner) return;
         const embed = new Discord.RichEmbed()
             .setDescription("**Shutting down..** :sleeping:")
             .setAuthor(message.author.username, message.author.avatarURL)
@@ -880,7 +880,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "math average <number/numbers>`")
+                    .addField("Usage", "`" + config.prefix + "math average <number/numbers>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -895,7 +895,7 @@ client.on("message", async message => {
                 const embed = new Discord.RichEmbed() // Typical form error
                     .setTitle("Error while executing!")
                     .setDescription("Invalid arguments provided! <:NoShield:500245155266166784>")
-                    .addField("Usage", "`" + botconfig.prefix + "math sum <number/numbers>`")
+                    .addField("Usage", "`" + config.prefix + "math sum <number/numbers>`")
                     .setAuthor(message.author.username, message.author.avatarURL)
                     .setColor(0xe74c3c);
                 message.channel.send({
@@ -906,7 +906,7 @@ client.on("message", async message => {
             const embed = new Discord.RichEmbed() // Typical form error
                 .setTitle("Command: math")
                 .setDescription("Calculates with numbers.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "math sum <number1> [number2...]\n" + botconfig.prefix + "math average <number1> [number2...]```", true)
+                .addField("Usage", "```md\n" + config.prefix + "math sum <number1> [number2...]\n" + config.prefix + "math average <number1> [number2...]```", true)
                 .addField("Permissions required:", "NONE", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -917,7 +917,7 @@ client.on("message", async message => {
     }
 
     if (command === "debug") {
-        if (message.author.id !== botconfig.owner) return;
+        if (message.author.id !== config.owner) return;
         if (args[0] === "roles") {
             const roles = message.guild.roles.map(r => "\n" + r.id + ': ' + r.name);
             message.channel.send("```\n" + roles + "```").catch(err => Sentry.captureException(err));
@@ -977,7 +977,7 @@ client.on("message", async message => {
                 .setTitle("Command: debug")
                 .setDescription("Some secret commands for the bot owner...")
                 .addField("Sub-commands;", "`roles`: Displays all roles and role-IDs of the guild.\n`send`: Sends a message to a channel.\n`status`: Changes the bot's status.\n`game`: Changes the bot's playing status.\n`dm`: Sends a private message to a mentioned user.")
-                .addField("Usage", "```md\n" + botconfig.prefix + "debug <sub-command> <args>```", true)
+                .addField("Usage", "```md\n" + config.prefix + "debug <sub-command> <args>```", true)
                 .addField("Permissions required:", "`BOT_OWNER`", true)
                 .setAuthor(message.author.username, message.author.avatarURL)
                 .setColor(0xe74c3c);
@@ -989,4 +989,4 @@ client.on("message", async message => {
 
 });
 
-client.login(botconfig.token).catch(err => Sentry.captureException(err));
+client.login(config.token).catch(err => Sentry.captureException(err));
