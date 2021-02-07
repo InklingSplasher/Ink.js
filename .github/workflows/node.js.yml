@@ -26,6 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: echo "{'token':'NTkxNTc1MDI3NTIzMjU2MzIw.XQyxLQ.lReDUJ1Z5oEcDJ1UwX_ZlqnBdVg', 'sentryDSN':'https://b284a0fe09bhzt56fsw8ka0ee229bc16@sentry.io/1119071', 'prefix':'!', 'owner':'223058695100170241', 'ownertag':'Ink#0001', 'autorestart':'true'}" >> config.json
+    - run: echo -e "{\"token\":\"NTkxNTc1MDI3NTIzMjU2MzIw.XQyxLQ.lReDUJ1Z5oEcDJ1UwX_ZlqnBdVg\", \"sentryDSN\":\"https://b284a0fe09bhzt56fsw8ka0ee229bc16@sentry.io/1119071\", \"prefix\":\"!\", \"owner\":\"223058695100170241\", \"ownertag\":\"Ink#0001\", \"autorestart\":\"true\"}" >> config.json
     - run: npm run build --if-present
     - run: npm test
