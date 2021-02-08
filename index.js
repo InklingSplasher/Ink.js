@@ -282,7 +282,7 @@ client.on("message", async message => {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
                         if (args[3]) {
                             message.delete().catch(O_o => {});
-                            const color = args[1];
+                            const color = args[1].toUpperCase();
                             const description = args.slice(3).join(" ");
                             const embed = new Discord.MessageEmbed()
                                 .setAuthor(message.author.tag, message.author.avatarURL())
