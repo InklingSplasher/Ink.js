@@ -20,6 +20,10 @@ client.on("ready", async() => {
     console.log(`\nSettings:\n\nPrefix: ${config.prefix}\nOwner ID / Tag: ${config.owner} / ${config.ownertag}\nSentryDSN: ${config.sentryDSN}\nAutorestart: ${config.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
     await client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, { type: "PLAYING" });
     await client.user.setStatus('online').catch(e => Sentry.captureException(e));
+    motd[" "] = {
+        ac: config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`,
+        tp: "PLAYING"
+    }
 });
 
 client.on("guildCreate", guild => {
@@ -948,6 +952,10 @@ client.on("message", async message => {
                 if(type === "PLAYING" || type === "WATCHING" || type === "LISTENING" || type === "STREAMING")
                 {
                     const activity = args.slice(2).join(" ");
+                    motd[" "] = {
+                        ac: activity,
+                        tp: type
+                    }
                     client.user.setActivity(activity, { type: type, url: `https://twitch.tv/${config.twitchName}` }).catch(e => Sentry.captureException(e));
                     const embed = new Discord.MessageEmbed()
                         .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
@@ -975,6 +983,8 @@ client.on("message", async message => {
             }
         } else if (args[0] === "status") {
             if (args[1] === "dnd" || args[1] === "idle" || args[1] === "invisible" || args[1] === "online") {
+                if(motd[" "].tp === "STREAMING") return message.channel.send('The Bot is currently in the "Streaming" mode. I can\'t switch the status!');
+                await client.user.setActivity(motd[" "].ac, { type: motd[" "].tp, url: `https://twitch.tv/${config.twitchName}` }).catch(e => Sentry.captureException(e));
                 await client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
