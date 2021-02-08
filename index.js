@@ -10,6 +10,7 @@ const fs = require("fs");
 const client = new Discord.Client({
     autoReconnect: config.autorestart
 });
+const motd = { };
 
 Sentry.init({ dsn: config.sentryDSN });
 
@@ -17,10 +18,8 @@ Sentry.init({ dsn: config.sentryDSN });
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
     console.log(`\nSettings:\n\nPrefix: ${config.prefix}\nOwner ID / Tag: ${config.owner} / ${config.ownertag}\nSentryDSN: ${config.sentryDSN}\nAutorestart: ${config.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
-    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, {
-        type: 'PLAYING'
-    }).catch(e => Sentry.captureException(e));
-    client.user.setStatus('online').catch(e => Sentry.captureException(e));
+    await client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, { type: "PLAYING" });
+    await client.user.setStatus('online').catch(e => Sentry.captureException(e));
 });
 
 client.on("guildCreate", guild => {
@@ -946,17 +945,22 @@ client.on("message", async message => {
         } else if (args[0] === "game") {
             if (args[2]) {
                 const type = args[1].toUpperCase();
-                const activity = args.slice(2).join(" ");
-                client.user.setActivity(activity, { type: type }).catch(e => Sentry.captureException(e));
-                const embed = new Discord.MessageEmbed()
-                    .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
-                    .setAuthor(message.author.username, message.author.avatarURL())
-                    .setFooter("Requested by: " + message.author.tag)
-                    .setColor(0x27ae60);
-                message.channel.send({
-                    embed: embed
-                }).catch(e => Sentry.captureException(e));
-                console.log("Bot Activity has been changed to " + type + " " + activity);
+                if(type === "PLAYING" || type === "WATCHING" || type === "LISTENING" || type === "STREAMING")
+                {
+                    const activity = args.slice(2).join(" ");
+                    client.user.setActivity(activity, { type: type, url: `https://twitch.tv/${config.twitchName}` }).catch(e => Sentry.captureException(e));
+                    const embed = new Discord.MessageEmbed()
+                        .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
+                        .setAuthor(message.author.username, message.author.avatarURL())
+                        .setFooter("Requested by: " + message.author.tag)
+                        .setColor(0x27ae60);
+                    message.channel.send({
+                        embed: embed
+                    }).catch(e => Sentry.captureException(e));
+                    console.log("Bot Activity has been changed to " + type + " " + activity);
+                } else {
+                    message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
+                }
             } else {
                 message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
@@ -971,7 +975,7 @@ client.on("message", async message => {
             }
         } else if (args[0] === "status") {
             if (args[1] === "dnd" || args[1] === "idle" || args[1] === "invisible" || args[1] === "online") {
-                client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
+                await client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
                     .setAuthor(message.author.username, message.author.avatarURL())

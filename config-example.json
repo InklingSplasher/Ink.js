@@ -4,5 +4,6 @@
   "prefix": "!",
   "owner": "Your Discord-ID",
   "ownertag": "Your Discord-Tag",
+  "twitchName": "Your Twitch Name here",
   "autorestart": "true/false"
 }
