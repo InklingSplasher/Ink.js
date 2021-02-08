@@ -598,7 +598,7 @@ client.on("message", async message => {
 
     if (command === "role") {
         const user = message.mentions.users.first();
-        const role = message.guild.roles.cache.find(r => r.name === args[2]);
+        const role = message.guild.roles.cache.find(r => r.name === args.slice(2).join(" "));
 
         if (args[0] === "add") {
             if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
