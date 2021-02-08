@@ -666,7 +666,7 @@ client.on("message", async message => {
         if (args[1]) {
             if (message.member.hasPermission('MENTION_EVERYONE')) {
                 const channel1 = args[0];
-                const role = message.guild.roles.cache.find(r => r.name === args[1]);
+                const role = message.guild.roles.cache.find(r => r.name === args.slice(1).join(" "));
                 const text = `[<@&${role.id}>] Notification!`;
                 role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(e => {
                     message.channel.send("I don't have permissions to edit this role!").catch(e => Sentry.captureException(e));
