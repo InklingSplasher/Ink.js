@@ -199,7 +199,7 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.MessageEmbed() // Typical perm eor
-                .setTitle("Permission eor!")
+                .setTitle("Permission err!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
@@ -395,7 +395,7 @@ client.on("message", async message => {
             .addField("Prefix:", prefix, true)
             .addField("(Inaccurate) Total Users:", count.length, true)
             .addField("General Stats:", client.guilds.cache.size + " Guilds\n" + client.users.cache.size + " Users", true)
-            .setAuthor(client.user.tag, client.user.avatar)
+            .setAuthor(client.user.tag, client.user.avatarURL())
             .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
         message.channel.send({
@@ -445,24 +445,54 @@ client.on("message", async message => {
     }
 
     if (command === "purge" || command === "clean") {
+        asend = true;
         if (message.member.hasPermission('MANAGE_MESSAGES')) {
             if (args[0]) {
                 var rawamount = args.map(function(x) {
                     return amount = parseInt(x, 10);
                 });
                 var amount = amount + 1;
-                message.channel.bulkDelete(amount, true).catch(e => Sentry.captureException(e));
-                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
-                setTimeout(function() {
-                    m.delete();
-                }, 4000);
+
+                const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+                await message.channel.bulkDelete(amount, true).catch(e => {
+                    Sentry.captureException(e);
+                    const errembed = new Discord.MessageEmbed()
+                        .setTitle("ERROR")
+                        .setDescription("Error while evaluating your code!")
+                        .setColor(0xaf0606)
+                        .setAuthor(message.author.tag, message.author.avatarURL())
+                        .setFooter("Message sent on: " + timestamp)
+                        .addField("Reason", e);
+                    message.channel.send(errembed);
+                    asend = false;
+                });
+                if(await asend === true) {
+                    const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
+                    setTimeout(function() {
+                        m.delete();
+                    }, 4000);
+                }
             } else {
+                asend = true;
                 message.delete().catch(e => Sentry.captureException(e));
-                message.channel.bulkDelete('11', true).catch(e => Sentry.captureException(e));
-                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
-                setTimeout(function() {
-                    m.delete();
-                }, 4000);
+                await message.channel.bulkDelete('11', true).catch(e => {
+                    Sentry.captureException(e);
+                    const errembed = new Discord.MessageEmbed()
+                        .setTitle("ERROR")
+                        .setDescription("Error while evaluating your code!")
+                        .setColor(0xaf0606)
+                        .setAuthor(message.author.tag, message.author.avatarURL())
+                        .setFooter("Message sent on: " + timestamp)
+                        .addField("Reason", e);
+                    message.channel.send(errembed);
+                    asend = false;
+                });
+                if(await asend === "true") {
+                    const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
+                    setTimeout(function() {
+                        m.delete();
+                    }, 4000);
+                }
             }
         } else {
             const embed = new Discord.MessageEmbed() // Typical perm eor
