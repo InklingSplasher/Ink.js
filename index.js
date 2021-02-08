@@ -729,41 +729,22 @@ client.on("message", async message => {
         }
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
         const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-        if (user.presence.activities !== null) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("User Information")
-                .setDescription("of <@!" + user.id + "> " + emote)
-                .addField("Username:", user.username, true)
-                .addField("Discriminator:", user.discriminator, true)
-                .addField("ID:", "`" + user.id + "`", true)
-                .addField("Status:", user.presence.status, true)
-                .addField("Playing:", user.presence.activities, true)
-                .addField("Joined Discord:", joindate, true)
-                .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL())
-                .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL());
-            message.channel.send({
-                embed: embed
-            }).catch(e => Sentry.captureException(e));
-        } else {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("User Information")
-                .setDescription("of <@!" + user.id + "> " + emote)
-                .addField("Username:", user.username, true)
-                .addField("Discriminator:", user.discriminator, true)
-                .addField("ID:", "`" + user.id + "`", true)
-                .addField("Status:", user.presence.status, true)
-                .addField("Playing:", "Nothing!", true)
-                .addField("Joined Discord:", joindate, true)
-                .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL())
-                .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL());
-            message.channel.send({
-                embed: embed
-            }).catch(e => Sentry.captureException(e));
-        }
+        const embed = new Discord.MessageEmbed()
+            .setTitle("User Information")
+            .setDescription("of <@!" + user.id + "> " + emote)
+            .addField("Username:", user.username, true)
+            .addField("Discriminator:", user.discriminator, true)
+            .addField("ID:", "`" + user.id + "`", true)
+            .addField("Status:", user.presence.status, true)
+            .addField("Playing:", `${user.presence.activities[0] ? user.presence.activities[0].name : "User isn't playing"}`, true)
+            .addField("Joined Discord:", joindate, true)
+            .setColor(0x1abc9c)
+            .setAuthor(user.tag, user.avatarURL())
+            .setFooter("Message sent on: " + timestamp)
+            .setThumbnail(user.avatarURL());
+        message.channel.send({
+            embed: embed
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "serverinfo" || command === "server" || command === "guildinfo") {
