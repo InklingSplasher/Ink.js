@@ -171,7 +171,7 @@ client.on("message", async message => {
             .addField("API Latency:", `${Math.round(client.ws.ping)}ms`, true)
             .setTimestamp()
             .setColor(0xd35400);
-        m.edit({
+        await m.edit({
             embed: embed
         }).catch(e => Sentry.captureException(e));
     }
