@@ -10,6 +10,7 @@ const fs = require("fs");
 const client = new Discord.Client({
     autoReconnect: config.autorestart
 });
+const motd = { };
 
 Sentry.init({ dsn: config.sentryDSN });
 
@@ -17,10 +18,12 @@ Sentry.init({ dsn: config.sentryDSN });
 client.on("ready", async() => {
     console.log(`Logged in as ${client.user.username}...`);
     console.log(`\nSettings:\n\nPrefix: ${config.prefix}\nOwner ID / Tag: ${config.owner} / ${config.ownertag}\nSentryDSN: ${config.sentryDSN}\nAutorestart: ${config.autorestart}\n----------------------------------------\nThanks for using Ink.js!\nI'm ready to receive commands!`);
-    client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, {
-        type: 'PLAYING'
-    }).catch(e => Sentry.captureException(e));
-    client.user.setStatus('online').catch(e => Sentry.captureException(e));
+    await client.user.setActivity(config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`, { type: "PLAYING" });
+    await client.user.setStatus('online').catch(e => Sentry.captureException(e));
+    motd[" "] = {
+        ac: config.prefix + "help | " + `Serving ${client.guilds.cache.size} guilds!`,
+        tp: "PLAYING"
+    }
 });
 
 client.on("guildCreate", guild => {
@@ -171,7 +174,7 @@ client.on("message", async message => {
             .addField("API Latency:", `${Math.round(client.ws.ping)}ms`, true)
             .setTimestamp()
             .setColor(0xd35400);
-        m.edit({
+        await m.edit({
             embed: embed
         }).catch(e => Sentry.captureException(e));
     }
@@ -199,7 +202,7 @@ client.on("message", async message => {
             }
         } else {
             const embed = new Discord.MessageEmbed() // Typical perm eor
-                .setTitle("Permission eor!")
+                .setTitle("Permission err!")
                 .setDescription("You don't have the permission to use this command! <:NoShield:500245155266166784>\nMissing: `MANAGE_MESSAGES`")
                 .setAuthor(message.author.username, message.author.avatarURL())
                 .setColor(0xe74c3c);
@@ -282,7 +285,7 @@ client.on("message", async message => {
                     if (message.member.hasPermission('MENTION_EVERYONE')) {
                         if (args[3]) {
                             message.delete().catch(O_o => {});
-                            const color = args[1];
+                            const color = args[1].toUpperCase();
                             const description = args.slice(3).join(" ");
                             const embed = new Discord.MessageEmbed()
                                 .setAuthor(message.author.tag, message.author.avatarURL())
@@ -395,7 +398,7 @@ client.on("message", async message => {
             .addField("Prefix:", prefix, true)
             .addField("(Inaccurate) Total Users:", count.length, true)
             .addField("General Stats:", client.guilds.cache.size + " Guilds\n" + client.users.cache.size + " Users", true)
-            .setAuthor(client.user.tag, client.user.avatar)
+            .setAuthor(client.user.tag, client.user.avatarURL())
             .setFooter("Thanks so much for using me!", 'https://cdn.discordapp.com/emojis/466609019050524673.png?v=1')
             .setThumbnail('https://cdn.discordapp.com/avatars/223058695100170241/a_ebbefb609630aa6e54cefa0337868fe8.gif');
         message.channel.send({
@@ -445,24 +448,54 @@ client.on("message", async message => {
     }
 
     if (command === "purge" || command === "clean") {
+        asend = true;
         if (message.member.hasPermission('MANAGE_MESSAGES')) {
             if (args[0]) {
                 var rawamount = args.map(function(x) {
                     return amount = parseInt(x, 10);
                 });
                 var amount = amount + 1;
-                message.channel.bulkDelete(amount, true).catch(e => Sentry.captureException(e));
-                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
-                setTimeout(function() {
-                    m.delete();
-                }, 4000);
+
+                const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
+                await message.channel.bulkDelete(amount, true).catch(e => {
+                    Sentry.captureException(e);
+                    const errembed = new Discord.MessageEmbed()
+                        .setTitle("ERROR")
+                        .setDescription("Error while evaluating your code!")
+                        .setColor(0xaf0606)
+                        .setAuthor(message.author.tag, message.author.avatarURL())
+                        .setFooter("Message sent on: " + timestamp)
+                        .addField("Reason", e);
+                    message.channel.send(errembed);
+                    asend = false;
+                });
+                if(await asend === true) {
+                    const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
+                    setTimeout(function() {
+                        m.delete();
+                    }, 4000);
+                }
             } else {
+                asend = true;
                 message.delete().catch(e => Sentry.captureException(e));
-                message.channel.bulkDelete('11', true).catch(e => Sentry.captureException(e));
-                const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
-                setTimeout(function() {
-                    m.delete();
-                }, 4000);
+                await message.channel.bulkDelete('11', true).catch(e => {
+                    Sentry.captureException(e);
+                    const errembed = new Discord.MessageEmbed()
+                        .setTitle("ERROR")
+                        .setDescription("Error while evaluating your code!")
+                        .setColor(0xaf0606)
+                        .setAuthor(message.author.tag, message.author.avatarURL())
+                        .setFooter("Message sent on: " + timestamp)
+                        .addField("Reason", e);
+                    message.channel.send(errembed);
+                    asend = false;
+                });
+                if(await asend === "true") {
+                    const m = await message.channel.send(":white_check_mark:").catch(e => Sentry.captureException(e));
+                    setTimeout(function() {
+                        m.delete();
+                    }, 4000);
+                }
             }
         } else {
             const embed = new Discord.MessageEmbed() // Typical perm eor
@@ -568,7 +601,7 @@ client.on("message", async message => {
 
     if (command === "role") {
         const user = message.mentions.users.first();
-        const role = message.guild.roles.cache.find(r => r.name === args[2]);
+        const role = message.guild.roles.cache.find(r => r.name === args.slice(2).join(" "));
 
         if (args[0] === "add") {
             if (message.member.hasPermission('MANAGE_ROLES') && message.member.roles.highest.position > role.position) {
@@ -636,7 +669,7 @@ client.on("message", async message => {
         if (args[1]) {
             if (message.member.hasPermission('MENTION_EVERYONE')) {
                 const channel1 = args[0];
-                const role = message.guild.roles.cache.find(r => r.name === args[1]);
+                const role = message.guild.roles.cache.find(r => r.name === args.slice(1).join(" "));
                 const text = `[<@&${role.id}>] Notification!`;
                 role.setMentionable(true, `Tempmention called by ${message.author.tag}`).catch(e => {
                     message.channel.send("I don't have permissions to edit this role!").catch(e => Sentry.captureException(e));
@@ -699,41 +732,22 @@ client.on("message", async message => {
         }
         const timestamp = new moment().tz("Europe/Berlin").format('MMMM Do YYYY');
         const joindate = new moment(user.createdAt).tz("Europe/Berlin").format('MMMM Do YYYY, H:mm');
-        if (user.presence.activities !== null) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("User Information")
-                .setDescription("of <@!" + user.id + "> " + emote)
-                .addField("Username:", user.username, true)
-                .addField("Discriminator:", user.discriminator, true)
-                .addField("ID:", "`" + user.id + "`", true)
-                .addField("Status:", user.presence.status, true)
-                .addField("Playing:", user.presence.activities, true)
-                .addField("Joined Discord:", joindate, true)
-                .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL())
-                .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL());
-            message.channel.send({
-                embed: embed
-            }).catch(e => Sentry.captureException(e));
-        } else {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("User Information")
-                .setDescription("of <@!" + user.id + "> " + emote)
-                .addField("Username:", user.username, true)
-                .addField("Discriminator:", user.discriminator, true)
-                .addField("ID:", "`" + user.id + "`", true)
-                .addField("Status:", user.presence.status, true)
-                .addField("Playing:", "Nothing!", true)
-                .addField("Joined Discord:", joindate, true)
-                .setColor(0x1abc9c)
-                .setAuthor(user.tag, user.avatarURL())
-                .setFooter("Message sent on: " + timestamp)
-                .setThumbnail(user.avatarURL());
-            message.channel.send({
-                embed: embed
-            }).catch(e => Sentry.captureException(e));
-        }
+        const embed = new Discord.MessageEmbed()
+            .setTitle("User Information")
+            .setDescription("of <@!" + user.id + "> " + emote)
+            .addField("Username:", user.username, true)
+            .addField("Discriminator:", user.discriminator, true)
+            .addField("ID:", "`" + user.id + "`", true)
+            .addField("Status:", user.presence.status, true)
+            .addField("Playing:", `${user.presence.activities[0] ? user.presence.activities[0].name : "User isn't playing"}`, true)
+            .addField("Joined Discord:", joindate, true)
+            .setColor(0x1abc9c)
+            .setAuthor(user.tag, user.avatarURL())
+            .setFooter("Message sent on: " + timestamp)
+            .setThumbnail(user.avatarURL());
+        message.channel.send({
+            embed: embed
+        }).catch(e => Sentry.captureException(e));
     }
 
     if (command === "serverinfo" || command === "server" || command === "guildinfo") {
@@ -743,8 +757,8 @@ client.on("message", async message => {
         const embed = new Discord.MessageEmbed()
             .setTitle("Server Information")
             .setDescription("of " + guild.name + "!")
-            .addField("Owner:", "<@!" + guild.owner.id + ">", true)
-            .addField("Owner ID:", "`" + guild.owner.id + "`", true)
+            .addField("Owner:", "<@!" + guild.ownerID + ">", true)
+            .addField("Owner ID:", "`" + guild.ownerID + "`", true)
             .addField("Members:", guild.memberCount, true)
             .addField("Created At:", created, true)
             .addField("Server Region:", guild.region, true)
@@ -935,17 +949,26 @@ client.on("message", async message => {
         } else if (args[0] === "game") {
             if (args[2]) {
                 const type = args[1].toUpperCase();
-                const activity = args.slice(2).join(" ");
-                client.user.setActivity(activity, { type: type }).catch(e => Sentry.captureException(e));
-                const embed = new Discord.MessageEmbed()
-                    .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
-                    .setAuthor(message.author.username, message.author.avatarURL())
-                    .setFooter("Requested by: " + message.author.tag)
-                    .setColor(0x27ae60);
-                message.channel.send({
-                    embed: embed
-                }).catch(e => Sentry.captureException(e));
-                console.log("Bot Activity has been changed to " + type + " " + activity);
+                if(type === "PLAYING" || type === "WATCHING" || type === "LISTENING" || type === "STREAMING")
+                {
+                    const activity = args.slice(2).join(" ");
+                    motd[" "] = {
+                        ac: activity,
+                        tp: type
+                    }
+                    client.user.setActivity(activity, { type: type, url: `https://twitch.tv/${config.twitchName}` }).catch(e => Sentry.captureException(e));
+                    const embed = new Discord.MessageEmbed()
+                        .setDescription("The Playing Status has been changed to " + args[1] + " " + activity)
+                        .setAuthor(message.author.username, message.author.avatarURL())
+                        .setFooter("Requested by: " + message.author.tag)
+                        .setColor(0x27ae60);
+                    message.channel.send({
+                        embed: embed
+                    }).catch(e => Sentry.captureException(e));
+                    console.log("Bot Activity has been changed to " + type + " " + activity);
+                } else {
+                    message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
+                }
             } else {
                 message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
@@ -959,8 +982,10 @@ client.on("message", async message => {
                 message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "status") {
-            if (args[1]) {
-                client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
+            if (args[1] === "dnd" || args[1] === "idle" || args[1] === "invisible" || args[1] === "online") {
+                if(motd[" "].tp === "STREAMING") return message.channel.send('The Bot is currently in the "Streaming" mode. I can\'t switch the status!');
+                await client.user.setActivity(motd[" "].ac, { type: motd[" "].tp, url: `https://twitch.tv/${config.twitchName}` }).catch(e => Sentry.captureException(e));
+                await client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
                     .setAuthor(message.author.username, message.author.avatarURL())
