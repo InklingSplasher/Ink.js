@@ -970,7 +970,7 @@ client.on("message", async message => {
                 message.channel.send("Invalid arguments provided!").catch(e => Sentry.captureException(e));
             }
         } else if (args[0] === "status") {
-            if (args[1]) {
+            if (args[1] === "dnd" || args[1] === "idle" || args[1] === "invisible" || args[1] === "online") {
                 client.user.setStatus(args[1]).catch(e => Sentry.captureException(e));
                 const embed = new Discord.MessageEmbed()
                     .setDescription("The Bot Status has been changed to " + args[1] + "!")
